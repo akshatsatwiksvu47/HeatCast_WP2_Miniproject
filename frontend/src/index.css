@@ -1,0 +1,178 @@
+/* =========================================================
+   HEATCAST - GLOBAL STYLES
+   File: src/index.css
+   Purpose: Global reset, base typography and browser defaults
+   ========================================================= */
+
+/* ---------- Box sizing ---------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* ---------- Document ---------- */
+
+html {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: #0b111b;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  min-width: 320px;
+  min-height: 100vh;
+
+  background: #0b111b;
+  color: #f4f7fb;
+
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  font-size: 14px;
+  line-height: 1.5;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ---------- React root ---------- */
+
+#root {
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ---------- Headings ---------- */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+}
+
+/* ---------- Paragraphs ---------- */
+
+p {
+  margin: 0;
+}
+
+/* ---------- Links ---------- */
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- Buttons ---------- */
+
+button {
+  margin: 0;
+  padding: 0;
+
+  border: 0;
+  outline: 0;
+
+  font: inherit;
+  color: inherit;
+
+  background: none;
+
+  cursor: pointer;
+}
+
+/* ---------- Inputs ---------- */
+
+input,
+select,
+textarea {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+}
+
+/* ---------- Images ---------- */
+
+img,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+/* ---------- Tables ---------- */
+
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* ---------- Lists ---------- */
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* ---------- Selection ---------- */
+
+::selection {
+  background: rgba(255, 138, 26, 0.25);
+  color: #ffffff;
+}
+
+/* ---------- Scrollbar ---------- */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #0b111b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #273342;
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #354355;
+}
+
+/* ---------- Focus ---------- */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid #ff8a1a;
+  outline-offset: 2px;
+}
+
+/* ---------- Mobile ---------- */
+
+@media (max-width: 768px) {
+  body {
+    font-size: 13px;
+  }
+}
