@@ -1,0 +1,37 @@
+.dashboard-intelligence-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 16px;
+
+  margin-top: 16px;
+}
+
+
+@media (max-width: 850px) {
+
+  .dashboard-intelligence-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+.dashboard-explanation-row {
+  margin-top: 16px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr);
+}
+
+.dashboard-advisory-row {
+  margin-top: 16px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr);
+}

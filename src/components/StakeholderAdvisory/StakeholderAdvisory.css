@@ -1,0 +1,431 @@
+.stakeholder-advisory-card {
+  min-width: 0;
+
+  overflow: hidden;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.stakeholder-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 20px;
+}
+
+.stakeholder-header h3 {
+  margin:
+    4px 0 5px;
+
+  font-size: 15px;
+}
+
+.stakeholder-header p {
+  margin: 0;
+
+  max-width: 500px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+  line-height: 1.5;
+}
+
+.stakeholder-region {
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   STAKEHOLDER TABS
+===================================================== */
+
+.stakeholder-tabs {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 8px;
+
+  margin-top: 20px;
+
+  padding-bottom: 15px;
+
+  border-bottom:
+    1px solid var(--border);
+}
+
+.stakeholder-tab {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  min-height: 38px;
+
+  padding:
+    8px 10px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 6px;
+
+  background:
+    rgba(255, 255, 255, 0.02);
+
+  color: var(--text-muted);
+
+  font-family: inherit;
+
+  font-size: 9px;
+
+  cursor: pointer;
+
+  transition:
+    all 0.2s ease;
+}
+
+.stakeholder-tab:hover {
+  color: var(--text-soft);
+
+  border-color:
+    rgba(255, 138, 42, 0.3);
+
+  background:
+    rgba(255, 138, 42, 0.04);
+}
+
+.stakeholder-tab.active {
+  color:
+    var(--orange);
+
+  border-color:
+    rgba(255, 138, 42, 0.5);
+
+  background:
+    rgba(255, 138, 42, 0.08);
+}
+
+.stakeholder-icon {
+  font-size: 13px;
+
+  line-height: 1;
+}
+
+
+/* =====================================================
+   ADVISORY CONTENT
+===================================================== */
+
+.stakeholder-advisory-content {
+  padding-top: 18px;
+}
+
+
+/* =====================================================
+   ADVISORY HEADING
+===================================================== */
+
+.stakeholder-advisory-heading {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-start;
+
+  gap: 15px;
+}
+
+.stakeholder-type {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  color: var(--text-muted);
+
+  font-size: 9px;
+
+  letter-spacing: 0.04em;
+}
+
+.stakeholder-advisory-heading h4 {
+  margin:
+    6px 0 0;
+
+  color: var(--text-soft);
+
+  font-size: 14px;
+}
+
+
+/* =====================================================
+   PRIORITY
+===================================================== */
+
+.advisory-priority {
+  flex-shrink: 0;
+
+  padding:
+    6px 9px;
+
+  border-radius: 4px;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+}
+
+.advisory-priority.normal {
+  color: #2dd4a3;
+
+  background:
+    rgba(45, 212, 163, 0.1);
+
+  border:
+    1px solid
+    rgba(45, 212, 163, 0.2);
+}
+
+.advisory-priority.high {
+  color: #ff8a2a;
+
+  background:
+    rgba(255, 138, 42, 0.1);
+
+  border:
+    1px solid
+    rgba(255, 138, 42, 0.2);
+}
+
+.advisory-priority.urgent {
+  color: #ff4f6d;
+
+  background:
+    rgba(255, 79, 109, 0.1);
+
+  border:
+    1px solid
+    rgba(255, 79, 109, 0.2);
+}
+
+
+/* =====================================================
+   SUMMARY
+===================================================== */
+
+.stakeholder-summary {
+  margin:
+    15px 0 0;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+  line-height: 1.65;
+}
+
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.stakeholder-actions {
+  margin-top: 18px;
+
+  padding:
+    15px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 7px;
+
+  background:
+    rgba(255, 255, 255, 0.015);
+}
+
+.actions-heading {
+  margin-bottom: 3px;
+
+  color: var(--text-muted);
+
+  font-size: 8px;
+
+  letter-spacing: 0.1em;
+
+  font-weight: 700;
+}
+
+.stakeholder-action {
+  display: flex;
+
+  align-items: flex-start;
+
+  gap: 12px;
+
+  padding:
+    10px 0;
+
+  border-bottom:
+    1px solid var(--border);
+}
+
+.stakeholder-action:last-child {
+  border-bottom: none;
+
+  padding-bottom: 0;
+}
+
+.stakeholder-action:first-of-type {
+  padding-top: 10px;
+}
+
+.action-number {
+  width: 23px;
+  height: 23px;
+
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 4px;
+
+  color: var(--orange);
+
+  background:
+    rgba(255, 138, 42, 0.08);
+
+  font-size: 8px;
+
+  font-weight: 700;
+}
+
+.stakeholder-action p {
+  margin: 0;
+
+  color: var(--text-soft);
+
+  font-size: 9px;
+
+  line-height: 1.6;
+}
+
+
+/* =====================================================
+   METRICS
+===================================================== */
+
+.stakeholder-metrics {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 10px;
+
+  margin-top: 15px;
+}
+
+.stakeholder-metric {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding:
+    11px;
+
+  border:
+    1px solid var(--border);
+
+  border-radius: 5px;
+}
+
+.stakeholder-metric span {
+  color: var(--text-muted);
+
+  font-size: 8px;
+
+  letter-spacing: 0.08em;
+}
+
+.stakeholder-metric strong {
+  color: var(--text-soft);
+
+  font-size: 11px;
+}
+
+
+/* =====================================================
+   NOTE
+===================================================== */
+
+.stakeholder-note {
+  margin-top: 15px;
+
+  padding-top: 12px;
+
+  border-top:
+    1px solid var(--border);
+
+  color: var(--text-muted);
+
+  font-size: 8px;
+
+  line-height: 1.5;
+}
+
+
+/* =====================================================
+   RESPONSIVE
+===================================================== */
+
+@media (max-width: 800px) {
+
+  .stakeholder-tabs {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+@media (max-width: 550px) {
+
+  .stakeholder-header {
+    flex-direction: column;
+  }
+
+  .stakeholder-advisory-heading {
+    flex-direction: column;
+  }
+
+  .stakeholder-metrics {
+    grid-template-columns: 1fr;
+  }
+
+}

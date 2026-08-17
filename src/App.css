@@ -1111,3 +1111,7 @@ td small {
     gap: 8px;
   }
 }
+
+.primary-btn {
+  text-decoration: none;
+}

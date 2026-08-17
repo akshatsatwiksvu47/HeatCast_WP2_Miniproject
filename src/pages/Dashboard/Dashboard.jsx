@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import {
   getDashboard,
   getRegions,
-  getAlerts,
 } from "../../services/api";
 
 import StatCard from "../../components/StatCard/StatCard";
@@ -11,68 +11,54 @@ import SeverityBadge from "../../components/SeverityBadge/SeverityBadge";
 import TemperatureChart from "../../components/TemperatureChart/TemperatureChart";
 import RegionalTable from "../../components/RegionalTable/RegionalTable";
 
-import "./Dashboard.css";
-
+import HeatRiskCard from "../../components/HeatRiskCard/HeatRiskCard";
+import HeatwaveProbability from "../../components/HeatwaveProbability/HeatwaveProbability";
+import RiskExplanation from "../../components/RiskExplanation/RiskExplanation";
+import StakeholderAdvisory from "../../components/StakeholderAdvisory/StakeholderAdvisory";
 
 function Dashboard() {
 
-  const [dashboard, setDashboard] = useState(null);
+  const [dashboard, setDashboard] =
+    useState(null);
 
-  const [regions, setRegions] = useState([]);
-
-  const [alerts, setAlerts] = useState([]);
+  const [regions, setRegions] =
+    useState([]);
 
   const [selectedRegion, setSelectedRegion] =
     useState("Delhi NCR");
 
 
-  /* =========================
-     LOAD DASHBOARD DATA
-  ========================= */
-
   useEffect(() => {
 
     getDashboard()
-      .then((data) => {
-        setDashboard(data);
-      })
+      .then((data) =>
+        setDashboard(data)
+      )
       .catch((error) => {
+
         console.error(
           "Dashboard data error:",
           error
         );
+
       });
 
 
     getRegions()
-      .then((data) => {
-        setRegions(data);
-      })
+      .then((data) =>
+        setRegions(data)
+      )
       .catch((error) => {
+
         console.error(
           "Regions data error:",
           error
         );
-      });
 
-
-    getAlerts()
-      .then((data) => {
-        setAlerts(data);
-      })
-      .catch((error) => {
-        console.error(
-          "Alerts data error:",
-          error
-        );
       });
 
   }, []);
 
-
-  /* =========================
-     LOADING
-  ========================= */
 
   if (
     !dashboard ||
@@ -98,48 +84,22 @@ function Dashboard() {
   }
 
 
-  /* =========================
-     SELECTED REGION
-  ========================= */
-
   const region =
     regions.find(
       (item) =>
-        item.name === selectedRegion
+        item.name ===
+        selectedRegion
     ) || regions[0];
 
-
-  /* =========================
-     SELECTED REGION WARNING
-  ========================= */
-
-  const selectedWarning =
-    alerts.find(
-      (alert) =>
-        alert.region === region.name
-    ) || null;
-
-
-  /* =========================
-     WARNING STATUS
-  ========================= */
-
-  const hasWarning =
-    selectedWarning !== null;
-
-
-  /* =========================
-     MAIN DASHBOARD
-  ========================= */
 
   return (
 
     <div className="page">
 
 
-      {/* =========================
+      {/* =====================================================
           PAGE HEADER
-      ========================= */}
+      ====================================================== */}
 
       <div className="page-heading">
 
@@ -154,15 +114,12 @@ function Dashboard() {
           </h1>
 
           <p>
-            A single-screen view of current
-            heatwave conditions, risk,
-            forecasts and active warnings.
+            A single-screen view of current heatwave
+            conditions, risk, forecasts and active warnings.
           </p>
 
         </div>
 
-
-        {/* REGION SELECTOR */}
 
         <div className="heading-control">
 
@@ -170,9 +127,10 @@ function Dashboard() {
             REGION
           </label>
 
+
           <select
             id="region-select"
-            value={region.name}
+            value={selectedRegion}
             onChange={(event) =>
               setSelectedRegion(
                 event.target.value
@@ -180,16 +138,18 @@ function Dashboard() {
             }
           >
 
-            {regions.map((item) => (
+            {regions.map(
+              (item) => (
 
-              <option
-                key={item.name}
-                value={item.name}
-              >
-                {item.name}
-              </option>
+                <option
+                  key={item.name}
+                  value={item.name}
+                >
+                  {item.name}
+                </option>
 
-            ))}
+              )
+            )}
 
           </select>
 
@@ -198,9 +158,9 @@ function Dashboard() {
       </div>
 
 
-      {/* =========================
+      {/* =====================================================
           CURRENT REGION STATUS
-      ========================= */}
+      ====================================================== */}
 
       <section className="hero-status">
 
@@ -256,9 +216,8 @@ function Dashboard() {
         </div>
 
 
-        {/* REGION MINI STATS */}
-
         <div className="hero-mini-grid">
+
 
           <div>
 
@@ -280,10 +239,7 @@ function Dashboard() {
             </span>
 
             <strong>
-              {region.departure >= 0
-                ? "+"
-                : ""}
-              {region.departure}°C
+              +{region.departure}°C
             </strong>
 
           </div>
@@ -314,37 +270,48 @@ function Dashboard() {
 
           </div>
 
+
         </div>
 
       </section>
 
 
-      {/* =========================
+      {/* =====================================================
           STAT CARDS
-      ========================= */}
+      ====================================================== */}
 
       <div className="stats-grid">
 
 
         <StatCard
           label="MAX TEMPERATURE"
-          value={region.temperature}
+          value={
+            dashboard.maxTemperature
+          }
           unit="°C"
-          subtext={`Normal ${region.normal}°C`}
+          subtext={
+            `Normal ${dashboard.normalMax}°C`
+          }
         />
 
 
         <StatCard
           label="HEATWAVE RISK"
-          value={region.risk}
-          subtext={region.status}
+          value={
+            dashboard.heatwaveRisk
+          }
+          subtext={
+            dashboard.heatwaveStatus
+          }
           tone="red"
         />
 
 
         <StatCard
           label="SEVERITY"
-          value={region.severity}
+          value={
+            dashboard.severity
+          }
           subtext="Current classification"
           tone="orange"
         />
@@ -352,45 +319,100 @@ function Dashboard() {
 
         <StatCard
           label="FORECAST PEAK"
-          value={dashboard.forecastPeak}
+          value={
+            dashboard.forecastPeak
+          }
           unit="°C"
-          subtext={`Expected ${dashboard.forecastPeakDay}`}
+          subtext={
+            `Expected ${dashboard.forecastPeakDay}`
+          }
         />
 
 
         <StatCard
           label="ACTIVE ALERTS"
-          value={dashboard.activeAlerts}
+          value={
+            dashboard.activeAlerts
+          }
           subtext="Across monitored regions"
           tone="red"
+        />
+
+
+      </div>
+
+
+      {/* =====================================================
+          HEAT INTELLIGENCE
+      ====================================================== */}
+
+      <div className="dashboard-intelligence-grid">
+
+
+        <HeatRiskCard
+          region={region}
+        />
+
+
+        <HeatwaveProbability
+          region={region}
+        />
+
+
+      </div>
+
+
+      {/* =====================================================
+          EXPLAINABLE RISK
+      ====================================================== */}
+
+      <div className="dashboard-explanation-row">
+
+        <RiskExplanation
+          region={region}
         />
 
       </div>
 
 
-      {/* =========================
-          CHART + WARNING
-      ========================= */}
+      {/* =====================================================
+          STAKEHOLDER ADVISORY
+      ====================================================== */}
+
+      <div className="dashboard-advisory-row">
+
+        <StakeholderAdvisory
+          region={region}
+        />
+
+      </div>
+
+
+      {/* =====================================================
+          TEMPERATURE + WARNING
+      ====================================================== */}
 
       <div className="dashboard-grid">
 
 
-        {/* TEMPERATURE TREND */}
+        {/* TEMPERATURE CHART */}
 
         <section className="panel">
 
+
           <div className="panel-title-row">
+
 
             <div>
 
               <h3>
-                Temperature trend —
-                last 14 days
+                Temperature trend — last 14 days
               </h3>
 
+
               <p>
-                Observed maximum temperature
-                for {region.name}.
+                Observed maximum temperature for the
+                selected region.
               </p>
 
             </div>
@@ -404,13 +426,17 @@ function Dashboard() {
 
             </div>
 
+
           </div>
 
 
           <TemperatureChart
             regionName={region.name}
-            normalTemperature={region.normal}
+            normalTemperature={
+              region.normal
+            }
           />
+
 
         </section>
 
@@ -418,6 +444,7 @@ function Dashboard() {
         {/* ACTIVE WARNING */}
 
         <section className="panel warning-panel">
+
 
           <div className="panel-title-row">
 
@@ -428,153 +455,114 @@ function Dashboard() {
           </div>
 
 
-          {hasWarning ? (
-
-            <div className="warning-card">
-
-              <div className="warning-title">
-
-                {selectedWarning.title}
-
-              </div>
+          <div className="warning-card">
 
 
-              <SeverityBadge>
-                {selectedWarning.severity}
-              </SeverityBadge>
+            <div className="warning-title">
 
-
-              <p>
-                {selectedWarning.description}
-              </p>
-
-
-              <div className="warning-meta">
-
-
-                <span>
-
-                  Region
-
-                  <strong>
-                    {selectedWarning.region}
-                  </strong>
-
-                </span>
-
-
-                <span>
-
-                  Expected max
-
-                  <strong>
-                    {selectedWarning.expected}
-                  </strong>
-
-                </span>
-
-
-                <span>
-
-                  Valid until
-
-                  <strong>
-                    {selectedWarning.valid}
-                  </strong>
-
-                </span>
-
-
-              </div>
+              {region.name ===
+              dashboard.activeWarning.region
+                ? dashboard.activeWarning.title
+                : `Heatwave monitoring — ${region.name}`}
 
             </div>
 
-          ) : (
 
-            /* =========================
-               NO WARNING STATE
-            ========================= */
+            <SeverityBadge>
 
-            <div className="warning-card no-warning-card">
+              {region.name ===
+              dashboard.activeWarning.region
+                ? dashboard.activeWarning.severity
+                : region.severity}
 
-              <div className="warning-title">
-                NO ACTIVE WARNING
-              </div>
+            </SeverityBadge>
 
 
-              <SeverityBadge>
-                {region.severity}
-              </SeverityBadge>
+            <p>
+
+              {region.name ===
+              dashboard.activeWarning.region
+                ? dashboard.activeWarning.description
+                : `Current conditions in ${region.name} are being monitored for heatwave risk.`}
+
+            </p>
 
 
-              <p>
-                There is currently no active
-                warning issued for{" "}
+            <div className="warning-meta">
+
+
+              <span>
+
+                Region
+
                 <strong>
                   {region.name}
-                </strong>.
-              </p>
+                </strong>
+
+              </span>
 
 
-              <div className="warning-meta">
+              <span>
 
-                <span>
+                Expected max
 
-                  Region
+                <strong>
 
-                  <strong>
-                    {region.name}
-                  </strong>
+                  {region.name ===
+                  dashboard.activeWarning.region
+                    ? dashboard.activeWarning.expectedMax
+                    : `${region.temperature}°C`}
 
-                </span>
+                </strong>
 
-
-                <span>
-
-                  Current status
-
-                  <strong>
-                    {region.status}
-                  </strong>
-
-                </span>
+              </span>
 
 
-                <span>
+              <span>
 
-                  Risk
+                Valid until
 
-                  <strong>
-                    {region.risk}
-                  </strong>
+                <strong>
 
-                </span>
+                  {region.name ===
+                  dashboard.activeWarning.region
+                    ? dashboard.activeWarning.validUntil
+                    : "Current monitoring period"}
 
-              </div>
+                </strong>
+
+              </span>
+
 
             </div>
 
-          )}
+
+          </div>
 
 
-          <button className="primary-btn">
-
+          <Link
+            to="/alerts"
+            className="primary-btn"
+          >
             Open alerts & advisories
+          </Link>
 
-          </button>
 
         </section>
+
 
       </div>
 
 
-      {/* =========================
+      {/* =====================================================
           REGIONAL SUMMARY
-      ========================= */}
+      ====================================================== */}
 
       <section>
 
+
         <div className="section-heading">
+
 
           <div>
 
@@ -582,24 +570,31 @@ function Dashboard() {
               Regional summary
             </h3>
 
+
             <p>
-              Current heatwave conditions
-              across monitored regions.
+              Current heatwave conditions across
+              monitored regions.
             </p>
 
           </div>
 
 
-          <span className="text-link">
+          <Link
+            to="/monitoring"
+            className="text-link"
+          >
             Regional monitoring →
-          </span>
+          </Link>
+
 
         </div>
 
 
         <RegionalTable />
 
+
       </section>
+
 
     </div>
 

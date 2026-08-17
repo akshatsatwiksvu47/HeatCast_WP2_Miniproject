@@ -1,0 +1,297 @@
+.heat-risk-card {
+  min-width: 0;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.heat-risk-header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 15px;
+}
+
+.heat-risk-header h3 {
+  margin:
+    4px 0 0;
+
+  font-size: 15px;
+}
+
+.heat-risk-region {
+  font-size: 10px;
+
+  color: var(--text-muted);
+
+  white-space: nowrap;
+}
+
+
+/* =====================================================
+   SCORE
+===================================================== */
+
+.heat-risk-score-area {
+  display: flex;
+
+  align-items: center;
+
+  gap: 16px;
+
+  margin-top: 18px;
+}
+
+.heat-risk-score {
+  font-size: 48px;
+
+  line-height: 1;
+
+  font-weight: 700;
+
+  letter-spacing: -0.04em;
+}
+
+.heat-risk-score-info {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.heat-risk-score-info strong {
+  font-size: 12px;
+
+  letter-spacing: 0.08em;
+}
+
+.heat-risk-score-info span {
+  font-size: 10px;
+
+  color: var(--text-muted);
+}
+
+
+/* =====================================================
+   SCORE TONES
+===================================================== */
+
+.heat-risk-card.low .heat-risk-score,
+.heat-risk-card.low
+  .heat-risk-score-info strong {
+  color: #2dd4a3;
+}
+
+.heat-risk-card.moderate .heat-risk-score,
+.heat-risk-card.moderate
+  .heat-risk-score-info strong {
+  color: #f6c344;
+}
+
+.heat-risk-card.high .heat-risk-score,
+.heat-risk-card.high
+  .heat-risk-score-info strong {
+  color: #ff8a2a;
+}
+
+.heat-risk-card.severe .heat-risk-score,
+.heat-risk-card.severe
+  .heat-risk-score-info strong {
+  color: #ff4f6d;
+}
+
+
+/* =====================================================
+   SCALE
+===================================================== */
+
+.heat-risk-scale {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+
+  margin-top: 20px;
+}
+
+.heat-risk-scale span {
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+}
+
+.scale-low {
+  color: #2dd4a3;
+}
+
+.scale-severe {
+  color: #ff4f6d;
+}
+
+.scale-track {
+  position: relative;
+
+  flex: 1;
+
+  height: 5px;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(45, 212, 163, 0.25),
+      rgba(246, 195, 68, 0.25),
+      rgba(255, 138, 42, 0.25),
+      rgba(255, 79, 109, 0.25)
+    );
+}
+
+.scale-fill {
+  height: 100%;
+
+  border-radius: 999px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #2dd4a3,
+      #f6c344,
+      #ff8a2a,
+      #ff4f6d
+    );
+
+  transition:
+    width 0.5s ease;
+}
+
+.scale-marker {
+  position: absolute;
+
+  top: 50%;
+
+  width: 10px;
+  height: 10px;
+
+  transform:
+    translate(-50%, -50%);
+
+  border-radius: 50%;
+
+  background: #fff;
+
+  border:
+    2px solid
+    #111923;
+
+  box-shadow:
+    0 0 8px
+      rgba(255, 255, 255, 0.5);
+
+  transition:
+    left 0.5s ease;
+}
+
+
+/* =====================================================
+   FACTORS
+===================================================== */
+
+.heat-risk-factors {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 13px;
+
+  margin-top: 20px;
+
+  padding-top: 16px;
+
+  border-top:
+    1px solid var(--border);
+}
+
+.heat-risk-factor {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+}
+
+.factor-heading {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+.factor-heading span {
+  font-size: 10px;
+
+  color: var(--text-muted);
+}
+
+.factor-heading strong {
+  font-size: 10px;
+
+  color: var(--text-soft);
+}
+
+.factor-track {
+  width: 100%;
+
+  height: 4px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.06);
+}
+
+.factor-fill {
+  height: 100%;
+
+  border-radius: 999px;
+
+  background:
+    var(--orange);
+
+  transition:
+    width 0.4s ease;
+}
+
+
+/* =====================================================
+   NOTE
+===================================================== */
+
+.heat-risk-note {
+  margin-top: 16px;
+
+  padding-top: 12px;
+
+  border-top:
+    1px solid var(--border);
+
+  color: var(--text-muted);
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}

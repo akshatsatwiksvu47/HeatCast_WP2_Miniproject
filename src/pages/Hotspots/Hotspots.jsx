@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+
 import { getHotspots } from "../../services/api";
+
 import SeverityBadge from "../../components/SeverityBadge/SeverityBadge";
+
 import "./Hotspots.css";
 
 function Hotspots() {
@@ -22,27 +26,32 @@ function Hotspots() {
       });
   }, []);
 
+
   if (!hotspots.length) {
     return (
       <div className="page">
+
         <div className="page-placeholder">
-          <h2>Loading hotspot data...</h2>
+
+          <h2>
+            Loading hotspot data...
+          </h2>
+
         </div>
+
       </div>
     );
   }
+
 
   /*
    * =====================================================
    * REAL CITY COORDINATES
    * =====================================================
-   *
-   * Actual latitude / longitude values.
-   * These are converted into positions on the
-   * India SVG below.
    */
 
   const cityCoordinates = {
+
     "Delhi NCR": {
       latitude: 28.6139,
       longitude: 77.2090,
@@ -102,6 +111,7 @@ function Hotspots() {
       latitude: 13.0827,
       longitude: 80.2707,
     },
+
   };
 
 
@@ -109,10 +119,6 @@ function Hotspots() {
    * =====================================================
    * MAP CALIBRATION
    * =====================================================
-   *
-   * Based on the India SVG currently being used.
-   *
-   * These are geographic bounds, NOT city positions.
    */
 
   const MIN_LONGITUDE = 68.0;
@@ -123,13 +129,13 @@ function Hotspots() {
 
 
   /*
-   * Web Mercator projection.
-   *
-   * This gives us proper geographic spacing vertically
-   * instead of treating latitude as a simple flat number.
+   * =====================================================
+   * MERCATOR PROJECTION
+   * =====================================================
    */
 
   const mercatorY = (latitude) => {
+
     const radians =
       (latitude * Math.PI) / 180;
 
@@ -139,6 +145,7 @@ function Hotspots() {
         radians / 2
       )
     );
+
   };
 
 
@@ -150,28 +157,26 @@ function Hotspots() {
 
 
   /*
-   * Convert latitude / longitude into percentage
-   * coordinates inside the map.
+   * =====================================================
+   * CONVERT GEO COORDINATES TO MAP POSITION
+   * =====================================================
    */
 
   const getMapPosition = (cityName) => {
+
     const coordinates =
       cityCoordinates[cityName];
 
+
     if (!coordinates) {
+
       return {
         left: 50,
         top: 50,
       };
+
     }
 
-
-    /*
-     * Longitude:
-     *
-     * West  -> 0%
-     * East  -> 100%
-     */
 
     const longitudeRatio =
       (
@@ -183,13 +188,6 @@ function Hotspots() {
         MIN_LONGITUDE
       );
 
-
-    /*
-     * Latitude:
-     *
-     * North -> 0%
-     * South -> 100%
-     */
 
     const latitudeMercator =
       mercatorY(
@@ -209,23 +207,30 @@ function Hotspots() {
 
 
     return {
+
       left:
         longitudeRatio * 100,
 
       top:
         latitudeRatio * 100,
+
     };
+
   };
 
 
   /*
    * =====================================================
-   * SEVERITY
+   * SEVERITY CLASS
    * =====================================================
    */
 
   const getSeverityClass = (severity) => {
-    switch (severity?.toLowerCase()) {
+
+    switch (
+      severity?.toLowerCase()
+    ) {
+
       case "low":
         return "hotspot-low";
 
@@ -240,7 +245,9 @@ function Hotspots() {
 
       default:
         return "hotspot-moderate";
+
     }
+
   };
 
 
@@ -261,15 +268,18 @@ function Hotspots() {
 
 
   const selected =
-    selectedHotspot || hotspots[0];
+    selectedHotspot ||
+    hotspots[0];
 
 
   return (
+
     <div className="page hotspots-page">
 
-      {/* ================================================
-          HEADER
-      ================================================= */}
+
+      {/* ==========================================
+          PAGE HEADER
+      =========================================== */}
 
       <div className="page-heading">
 
@@ -295,9 +305,9 @@ function Hotspots() {
       </div>
 
 
-      {/* ================================================
+      {/* ==========================================
           FILTERS
-      ================================================= */}
+      =========================================== */}
 
       <div className="hotspot-filters">
 
@@ -318,7 +328,9 @@ function Hotspots() {
                     option.toLowerCase()
                 ).length;
 
+
           return (
+
             <button
               key={option}
               type="button"
@@ -339,22 +351,24 @@ function Hotspots() {
               </span>
 
             </button>
+
           );
+
         })}
 
       </div>
 
 
-      {/* ================================================
+      {/* ==========================================
           MAIN CONTENT
-      ================================================= */}
+      =========================================== */}
 
       <div className="hotspots-grid">
 
 
-        {/* ==============================================
+        {/* ========================================
             INDIA MAP
-        =============================================== */}
+        ========================================= */}
 
         <section className="panel hotspot-map-panel">
 
@@ -377,10 +391,6 @@ function Hotspots() {
 
           <div className="india-map-wrapper">
 
-            {/* ==========================================
-                MAP
-            =========================================== */}
-
             <div className="india-map-stage">
 
               <img
@@ -390,9 +400,7 @@ function Hotspots() {
               />
 
 
-              {/* ========================================
-                  CITY MARKERS
-              ========================================= */}
+              {/* CITY MARKERS */}
 
               {filteredHotspots.map(
                 (hotspot) => {
@@ -409,6 +417,7 @@ function Hotspots() {
 
 
                   return (
+
                     <button
                       key={hotspot.name}
                       type="button"
@@ -447,17 +456,16 @@ function Hotspots() {
                       </span>
 
                     </button>
+
                   );
+
                 }
               )}
 
             </div>
 
 
-            {/* ==========================================
-                LEGEND
-                OUTSIDE THE MAP
-            =========================================== */}
+            {/* LEGEND */}
 
             <div className="hotspot-map-legend">
 
@@ -488,16 +496,14 @@ function Hotspots() {
         </section>
 
 
-        {/* ==============================================
-            RIGHT DETAILS
-        =============================================== */}
+        {/* ========================================
+            RIGHT SIDE DETAILS
+        ========================================= */}
 
         <div className="hotspot-details">
 
 
-          {/* ============================================
-              SELECTED HOTSPOT
-          ============================================= */}
+          {/* SELECTED HOTSPOT */}
 
           <section className="panel selected-hotspot-panel">
 
@@ -600,9 +606,7 @@ function Hotspots() {
           </section>
 
 
-          {/* ============================================
-              SHORT RANGE FORECAST
-          ============================================= */}
+          {/* SHORT RANGE FORECAST */}
 
           <section className="panel">
 
@@ -682,9 +686,7 @@ function Hotspots() {
           </section>
 
 
-          {/* ============================================
-              WARNING STATUS
-          ============================================= */}
+          {/* WARNING STATUS */}
 
           <section
             className={`
@@ -718,12 +720,14 @@ function Hotspots() {
             </p>
 
 
-            <button
-              type="button"
+            {/* FIXED: NOW NAVIGATES TO ALERTS */}
+
+            <Link
+              to="/alerts"
               className="primary-btn"
             >
               View advisory
-            </button>
+            </Link>
 
           </section>
 
@@ -732,6 +736,7 @@ function Hotspots() {
       </div>
 
     </div>
+
   );
 }
 

@@ -11,7 +11,9 @@ import "./Monitoring.css";
 
 
 function Monitoring() {
-  const [regions, setRegions] = useState([]);
+
+  const [regions, setRegions] =
+    useState([]);
 
   const [selectedRegion, setSelectedRegion] =
     useState("Nagpur");
@@ -34,14 +36,23 @@ function Monitoring() {
   const [selectedIndex, setSelectedIndex] =
     useState(null);
 
+  /*
+   * Regional comparison selections.
+   * Maximum of 4 regions can be compared.
+   */
+  const [comparisonRegions, setComparisonRegions] =
+    useState([]);
 
-  /* =========================
+
+  /* =====================================================
      LOAD REGIONS
-  ========================= */
+  ===================================================== */
 
   useEffect(() => {
+
     getRegions()
       .then((data) => {
+
         setRegions(data);
 
         if (
@@ -51,59 +62,97 @@ function Monitoring() {
               item.name === selectedRegion
           )
         ) {
-          setSelectedRegion(data[0].name);
+          setSelectedRegion(
+            data[0].name
+          );
         }
+
+        /*
+         * Start comparison with first
+         * two available regions.
+         */
+        if (data.length > 1) {
+
+          setComparisonRegions([
+            data[0].name,
+            data[1].name,
+          ]);
+
+        } else if (data.length === 1) {
+
+          setComparisonRegions([
+            data[0].name,
+          ]);
+
+        }
+
       })
       .catch((error) => {
+
         console.error(
           "Monitoring regions error:",
           error
         );
+
       });
+
   }, []);
 
 
-  /* =========================
+  /* =====================================================
      LOAD TEMPERATURE DATA
-  ========================= */
+  ===================================================== */
 
   useEffect(() => {
+
     setTemperatureData(null);
+
     setHoveredIndex(null);
+
     setSelectedIndex(null);
 
     getTemperatureData(selectedRegion)
       .then((data) => {
+
         setTemperatureData(data);
+
       })
       .catch((error) => {
+
         console.error(
           "Monitoring temperature error:",
           error
         );
 
         setTemperatureData(null);
+
       });
+
   }, [selectedRegion]);
 
 
-  /* =========================
+  /* =====================================================
      SELECTED REGION
-  ========================= */
+  ===================================================== */
 
   const region = useMemo(() => {
+
     return (
       regions.find(
         (item) =>
           item.name === selectedRegion
       ) || regions[0]
     );
-  }, [regions, selectedRegion]);
+
+  }, [
+    regions,
+    selectedRegion,
+  ]);
 
 
-  /* =========================
+  /* =====================================================
      SEASONAL DATA
-  ========================= */
+  ===================================================== */
 
   const seasonalValues = [
     {
@@ -133,9 +182,9 @@ function Monitoring() {
     );
 
 
-  /* =========================
+  /* =====================================================
      TEMPERATURE DATA
-  ========================= */
+  ===================================================== */
 
   const temperatures =
     temperatureData?.temperatures || [];
@@ -157,58 +206,112 @@ function Monitoring() {
 
 
   if (period === "7") {
+
     displayedTemperatures =
       temperatures.slice(-7);
 
     displayedLabels =
       labels.slice(-7);
+
   }
 
 
-  /* =========================
+  /*
+   * If 30 days is selected but the
+   * JSON has fewer values, use all
+   * available values.
+   */
+  if (period === "30") {
+
+    displayedTemperatures =
+      temperatures.slice(-30);
+
+    displayedLabels =
+      labels.slice(-30);
+
+  }
+
+
+  /* =====================================================
      GRAPH CALCULATIONS
-  ========================= */
+  ===================================================== */
 
   const minTemperature =
     displayedTemperatures.length > 0
-      ? Math.min(...displayedTemperatures)
+      ? Math.min(
+          ...displayedTemperatures
+        )
       : 0;
+
 
   const maxTemperature =
     displayedTemperatures.length > 0
-      ? Math.max(...displayedTemperatures)
+      ? Math.max(
+          ...displayedTemperatures
+        )
       : 1;
 
 
-  const getHeight = (temperature) =>
-    ((temperature - minTemperature) /
-      (maxTemperature - minTemperature || 1)) *
-      85 +
-    15;
+  const getHeight = (temperature) => {
+
+    return (
+      (
+        (temperature -
+          minTemperature) /
+        (
+          maxTemperature -
+          minTemperature ||
+          1
+        )
+      ) *
+        85 +
+      15
+    );
+
+  };
 
 
   /*
-    These values are only used for
-    positioning the temperature line.
-    The normal temperature is NOT
-    drawn inside the graph.
-  */
+   * These values are only used
+   * for positioning the line.
+   *
+   * Normal temperature is NOT
+   * drawn inside the graph.
+   */
 
   const graphMin =
-    Math.floor(minTemperature - 1);
+    Math.floor(
+      minTemperature - 1
+    );
+
 
   const graphMax =
-    Math.ceil(maxTemperature + 1);
+    Math.ceil(
+      maxTemperature + 1
+    );
+
 
   const graphRange =
-    graphMax - graphMin || 1;
+    graphMax -
+      graphMin ||
+    1;
 
 
-  const getLineY = (temperature) =>
-    100 -
-    ((temperature - graphMin) /
-      graphRange) *
-      100;
+  const getLineY = (temperature) => {
+
+    return (
+      100 -
+      (
+        (
+          temperature -
+          graphMin
+        ) /
+        graphRange
+      ) *
+        100
+    );
+
+  };
 
 
   const activeIndex =
@@ -218,44 +321,211 @@ function Monitoring() {
 
 
   const toggleSelected = (index) => {
+
     setSelectedIndex(
       selectedIndex === index
         ? null
         : index
     );
+
   };
 
 
-  /* =========================
+  /* =====================================================
      LINE POINTS
-  ========================= */
+  ===================================================== */
 
   const linePoints =
     displayedTemperatures
-      .map((temperature, index) => {
-        const x =
-          displayedTemperatures.length === 1
-            ? 50
-            : (
-                index /
-                (displayedTemperatures.length - 1)
-              ) *
-              100;
+      .map(
+        (
+          temperature,
+          index
+        ) => {
 
-        const y =
-          getLineY(temperature);
+          const x =
+            displayedTemperatures.length === 1
+              ? 50
+              : (
+                  index /
+                  (
+                    displayedTemperatures.length -
+                    1
+                  )
+                ) *
+                100;
 
-        return `${x},${y}`;
-      })
+
+          const y =
+            getLineY(
+              temperature
+            );
+
+
+          return `${x},${y}`;
+
+        }
+      )
       .join(" ");
 
 
-  /* =========================
-     LOADING
-  ========================= */
+  /* =====================================================
+     REGIONAL COMPARISON
+  ===================================================== */
 
-  if (!region || !temperatureData) {
+  const comparisonData =
+    comparisonRegions
+      .map(
+        (name) =>
+          regions.find(
+            (item) =>
+              item.name === name
+          )
+      )
+      .filter(Boolean);
+
+
+  /*
+   * Select / deselect a region.
+   *
+   * Maximum = 4 regions.
+   */
+
+  const toggleComparisonRegion = (
+    regionName
+  ) => {
+
+    setComparisonRegions(
+      (current) => {
+
+        if (
+          current.includes(
+            regionName
+          )
+        ) {
+
+          return current.filter(
+            (name) =>
+              name !== regionName
+          );
+
+        }
+
+
+        if (
+          current.length >= 4
+        ) {
+
+          return current;
+
+        }
+
+
+        return [
+          ...current,
+          regionName,
+        ];
+
+      }
+    );
+
+  };
+
+
+  /*
+   * Select all first 4 regions.
+   */
+
+  const selectComparisonRegions = () => {
+
+    setComparisonRegions(
+      regions
+        .slice(0, 4)
+        .map(
+          (item) =>
+            item.name
+        )
+    );
+
+  };
+
+
+  /*
+   * Clear comparison.
+   */
+
+  const clearComparison = () => {
+
+    setComparisonRegions([]);
+
+  };
+
+
+  /*
+   * Make selected comparison region
+   * the active monitoring region.
+   */
+
+  const openComparisonRegion = (
+    regionName
+  ) => {
+
+    setSelectedRegion(
+      regionName
+    );
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+
+  };
+
+
+  /*
+   * Highest values used by comparison
+   * bars.
+   */
+
+  const comparisonMaxTemperature =
+    comparisonData.length > 0
+      ? Math.max(
+          ...comparisonData.map(
+            (item) =>
+              Number(
+                item.temperature
+              ) || 0
+          )
+        )
+      : 1;
+
+
+  const comparisonMaxDeparture =
+    comparisonData.length > 0
+      ? Math.max(
+          ...comparisonData.map(
+            (item) =>
+              Math.abs(
+                Number(
+                  item.departure
+                ) || 0
+              )
+          )
+        )
+      : 1;
+
+
+  /* =====================================================
+     LOADING
+  ===================================================== */
+
+  if (
+    !region ||
+    !temperatureData
+  ) {
+
     return (
+
       <div className="page">
 
         <div className="page-placeholder">
@@ -267,16 +537,20 @@ function Monitoring() {
         </div>
 
       </div>
+
     );
+
   }
 
 
   return (
+
     <div className="page monitoring-page">
 
-      {/* =========================
+
+      {/* =====================================================
           PAGE HEADER
-      ========================= */}
+      ===================================================== */}
 
       <div className="page-heading">
 
@@ -301,11 +575,12 @@ function Monitoring() {
       </div>
 
 
-      {/* =========================
+      {/* =====================================================
           FILTER PANEL
-      ========================= */}
+      ===================================================== */}
 
       <section className="monitoring-filters">
+
 
         {/* REGION */}
 
@@ -325,21 +600,24 @@ function Monitoring() {
               );
 
               setHoveredIndex(null);
+
               setSelectedIndex(null);
 
             }}
           >
 
-            {regions.map((item) => (
+            {regions.map(
+              (item) => (
 
-              <option
-                key={item.name}
-                value={item.name}
-              >
-                {item.name}
-              </option>
+                <option
+                  key={item.name}
+                  value={item.name}
+                >
+                  {item.name}
+                </option>
 
-            ))}
+              )
+            )}
 
           </select>
 
@@ -356,23 +634,28 @@ function Monitoring() {
 
           <div className="filter-buttons">
 
-            {seasonalValues.map((item) => (
+            {seasonalValues.map(
+              (item) => (
 
-              <button
-                key={item.name}
-                className={
-                  season === item.name
-                    ? "filter-btn active"
-                    : "filter-btn"
-                }
-                onClick={() =>
-                  setSeason(item.name)
-                }
-              >
-                {item.name}
-              </button>
+                <button
+                  type="button"
+                  key={item.name}
+                  className={
+                    season === item.name
+                      ? "filter-btn active"
+                      : "filter-btn"
+                  }
+                  onClick={() =>
+                    setSeason(
+                      item.name
+                    )
+                  }
+                >
+                  {item.name}
+                </button>
 
-            ))}
+              )
+            )}
 
           </div>
 
@@ -402,28 +685,34 @@ function Monitoring() {
                 value: "30",
                 label: "Last 30 days",
               },
-            ].map((item) => (
+            ].map(
+              (item) => (
 
-              <button
-                key={item.value}
-                className={
-                  period === item.value
-                    ? "filter-btn active"
-                    : "filter-btn"
-                }
-                onClick={() => {
+                <button
+                  type="button"
+                  key={item.value}
+                  className={
+                    period === item.value
+                      ? "filter-btn active"
+                      : "filter-btn"
+                  }
+                  onClick={() => {
 
-                  setPeriod(item.value);
+                    setPeriod(
+                      item.value
+                    );
 
-                  setHoveredIndex(null);
-                  setSelectedIndex(null);
+                    setHoveredIndex(null);
 
-                }}
-              >
-                {item.label}
-              </button>
+                    setSelectedIndex(null);
 
-            ))}
+                  }}
+                >
+                  {item.label}
+                </button>
+
+              )
+            )}
 
           </div>
 
@@ -432,9 +721,9 @@ function Monitoring() {
       </section>
 
 
-      {/* =========================
+      {/* =====================================================
           STAT CARDS
-      ========================= */}
+      ===================================================== */}
 
       <div className="monitoring-stats">
 
@@ -512,11 +801,12 @@ function Monitoring() {
       </div>
 
 
-      {/* =========================
+      {/* =====================================================
           CHARTS
-      ========================= */}
+      ===================================================== */}
 
       <div className="monitoring-chart-grid">
+
 
         {/* TEMPERATURE CHART */}
 
@@ -570,6 +860,7 @@ function Monitoring() {
                   );
 
                   setHoveredIndex(null);
+
                   setSelectedIndex(null);
 
                 }}
@@ -590,9 +881,7 @@ function Monitoring() {
           </div>
 
 
-          {/* =========================
-              LINE CHART
-          ========================= */}
+          {/* LINE CHART */}
 
           {chartType === "line" && (
 
@@ -625,30 +914,40 @@ function Monitoring() {
 
 
                 {displayedTemperatures.map(
-                  (temperature, index) => {
+                  (
+                    temperature,
+                    index
+                  ) => {
 
                     const x =
                       displayedTemperatures.length === 1
                         ? 50
                         : (
                             index /
-                            (displayedTemperatures.length - 1)
+                            (
+                              displayedTemperatures.length -
+                              1
+                            )
                           ) *
                           100;
 
+
                     const y =
-                      getLineY(temperature);
+                      getLineY(
+                        temperature
+                      );
+
 
                     const isActive =
-                      activeIndex === index;
+                      activeIndex ===
+                      index;
+
 
                     return (
 
                       <g
                         key={`${displayedLabels[index]}-${temperature}`}
                       >
-
-                        {/* Invisible hit area */}
 
                         <circle
                           cx={x}
@@ -657,18 +956,22 @@ function Monitoring() {
                           fill="transparent"
                           className="monitoring-hit-area"
                           onMouseEnter={() =>
-                            setHoveredIndex(index)
+                            setHoveredIndex(
+                              index
+                            )
                           }
                           onMouseLeave={() =>
-                            setHoveredIndex(null)
+                            setHoveredIndex(
+                              null
+                            )
                           }
                           onClick={() =>
-                            toggleSelected(index)
+                            toggleSelected(
+                              index
+                            )
                           }
                         />
 
-
-                        {/* Visible point */}
 
                         <circle
                           cx={x}
@@ -697,8 +1000,6 @@ function Monitoring() {
               </svg>
 
 
-              {/* TOOLTIP */}
-
               {activeIndex !== null && (
 
                 <div
@@ -709,7 +1010,10 @@ function Monitoring() {
                         ? 50
                         : (
                             activeIndex /
-                            (displayedTemperatures.length - 1)
+                            (
+                              displayedTemperatures.length -
+                              1
+                            )
                           ) *
                           100
                     }%`,
@@ -717,15 +1021,19 @@ function Monitoring() {
                 >
 
                   <strong>
-                    {displayedTemperatures[
-                      activeIndex
-                    ]}°C
+                    {
+                      displayedTemperatures[
+                        activeIndex
+                      ]
+                    }°C
                   </strong>
 
                   <span>
-                    {displayedLabels[
-                      activeIndex
-                    ]}
+                    {
+                      displayedLabels[
+                        activeIndex
+                      ]
+                    }
                   </span>
 
                 </div>
@@ -737,9 +1045,7 @@ function Monitoring() {
           )}
 
 
-          {/* =========================
-              COLUMN CHART
-          ========================= */}
+          {/* COLUMN CHART */}
 
           {chartType === "columns" && (
 
@@ -759,13 +1065,21 @@ function Monitoring() {
               <div className="monitoring-columns">
 
                 {displayedTemperatures.map(
-                  (temperature, index) => {
+                  (
+                    temperature,
+                    index
+                  ) => {
 
                     const height =
-                      getHeight(temperature);
+                      getHeight(
+                        temperature
+                      );
+
 
                     const isActive =
-                      activeIndex === index;
+                      activeIndex ===
+                      index;
+
 
                     return (
 
@@ -773,17 +1087,21 @@ function Monitoring() {
                         key={`${displayedLabels[index]}-${temperature}`}
                         className="monitoring-column-item"
                         onMouseEnter={() =>
-                          setHoveredIndex(index)
+                          setHoveredIndex(
+                            index
+                          )
                         }
                         onMouseLeave={() =>
-                          setHoveredIndex(null)
+                          setHoveredIndex(
+                            null
+                          )
                         }
                         onClick={() =>
-                          toggleSelected(index)
+                          toggleSelected(
+                            index
+                          )
                         }
                       >
-
-                        {/* TOOLTIP */}
 
                         {isActive && (
 
@@ -794,17 +1112,17 @@ function Monitoring() {
                             </strong>
 
                             <span>
-                              {displayedLabels[
-                                index
-                              ]}
+                              {
+                                displayedLabels[
+                                  index
+                                ]
+                              }
                             </span>
 
                           </div>
 
                         )}
 
-
-                        {/* BAR */}
 
                         <div
                           className={
@@ -813,7 +1131,8 @@ function Monitoring() {
                               : "monitoring-temperature-column"
                           }
                           style={{
-                            height: `${height}%`,
+                            height:
+                              `${height}%`,
                           }}
                         />
 
@@ -835,18 +1154,18 @@ function Monitoring() {
 
           <div className="monitoring-chart-labels">
 
-            {displayedLabels.map((label) => (
+            {displayedLabels.map(
+              (label) => (
 
-              <span key={label}>
-                {label}
-              </span>
+                <span key={label}>
+                  {label}
+                </span>
 
-            ))}
+              )
+            )}
 
           </div>
 
-
-          {/* NORMAL TEMPERATURE */}
 
           <div className="monitoring-chart-footer">
 
@@ -862,9 +1181,7 @@ function Monitoring() {
         </section>
 
 
-        {/* =========================
-            SEASONAL ANALYSIS
-        ========================= */}
+        {/* SEASONAL ANALYSIS */}
 
         <section className="panel monitoring-season-panel">
 
@@ -887,50 +1204,62 @@ function Monitoring() {
 
           <div className="season-chart">
 
-            {seasonalValues.map((item) => {
+            {seasonalValues.map(
+              (item) => {
 
-              const height =
-                (item.value /
-                  maxSeasonValue) *
-                100;
+                const height =
+                  (
+                    item.value /
+                    maxSeasonValue
+                  ) *
+                  100;
 
-              const isSelected =
-                item.name === season;
 
-              return (
+                const isSelected =
+                  item.name === season;
 
-                <button
-                  key={item.name}
-                  className={
-                    isSelected
-                      ? "season-column-wrap selected"
-                      : "season-column-wrap"
-                  }
-                  onClick={() =>
-                    setSeason(item.name)
-                  }
-                >
 
-                  <span className="season-value">
-                    {item.value}
-                  </span>
+                return (
 
-                  <div
-                    className="season-column"
-                    style={{
-                      height: `${height}%`,
-                    }}
-                  />
+                  <button
+                    type="button"
+                    key={item.name}
+                    className={
+                      isSelected
+                        ? "season-column-wrap selected"
+                        : "season-column-wrap"
+                    }
+                    onClick={() =>
+                      setSeason(
+                        item.name
+                      )
+                    }
+                  >
 
-                  <span className="season-label">
-                    {item.name}
-                  </span>
+                    <span className="season-value">
+                      {item.value}
+                    </span>
 
-                </button>
 
-              );
+                    <div
+                      className="season-column"
+                      style={{
+                        height:
+                          `${height}%`,
+                      }}
+                    />
 
-            })}
+
+                    <span className="season-label">
+                      {item.name}
+                    </span>
+
+                  </button>
+
+                );
+
+              }
+            )}
 
           </div>
 
@@ -939,75 +1268,122 @@ function Monitoring() {
       </div>
 
 
-      {/* =========================
+      {/* =====================================================
           REGIONAL COMPARISON
-      ========================= */}
+      ===================================================== */}
 
       <section className="monitoring-comparison">
+
 
         <div className="section-heading">
 
           <div>
+
+            <div className="eyebrow">
+              CROSS-REGION ANALYSIS
+            </div>
 
             <h3>
               Regional comparison
             </h3>
 
             <p>
-              Current maximum temperature
-              across monitored regions.
+              Select up to four regions to compare
+              current heatwave conditions side by side.
             </p>
+
+          </div>
+
+
+          <div className="comparison-actions">
+
+            <button
+              type="button"
+              className="comparison-action"
+              onClick={
+                selectComparisonRegions
+              }
+            >
+              Compare first 4
+            </button>
+
+
+            <button
+              type="button"
+              className="comparison-action secondary"
+              onClick={
+                clearComparison
+              }
+            >
+              Clear
+            </button>
 
           </div>
 
         </div>
 
 
-        <div className="monitoring-table-wrap">
+        {/* REGION SELECTOR */}
 
-          <table className="monitoring-table">
+        <div className="comparison-selector">
 
-            <thead>
+          <div className="comparison-selector-header">
 
-              <tr>
+            <span>
+              SELECT REGIONS
+            </span>
 
-                <th>REGION</th>
-                <th>MAX TEMP</th>
-                <th>DEPARTURE</th>
-                <th>STATUS</th>
-                <th>SEVERITY</th>
-                <th>RISK</th>
-                <th>TREND</th>
+            <small>
+              {comparisonRegions.length}/4 selected
+            </small>
 
-              </tr>
-
-            </thead>
+          </div>
 
 
-            <tbody>
+          <div className="comparison-region-options">
 
-              {regions.map((item) => {
+            {regions.map(
+              (item) => {
 
                 const isSelected =
-                  item.name === selectedRegion;
+                  comparisonRegions.includes(
+                    item.name
+                  );
+
+
+                const disabled =
+                  !isSelected &&
+                  comparisonRegions.length >= 4;
+
 
                 return (
 
-                  <tr
+                  <button
+                    type="button"
                     key={item.name}
+                    disabled={disabled}
                     className={
                       isSelected
-                        ? "selected-region-row"
-                        : ""
+                        ? "comparison-region-option selected"
+                        : "comparison-region-option"
                     }
                     onClick={() =>
-                      setSelectedRegion(
+                      toggleComparisonRegion(
                         item.name
                       )
                     }
                   >
 
-                    <td>
+                    <span className="comparison-check">
+
+                      {isSelected
+                        ? "✓"
+                        : ""}
+
+                    </span>
+
+
+                    <span>
 
                       <strong>
                         {item.name}
@@ -1017,93 +1393,547 @@ function Monitoring() {
                         {item.state}
                       </small>
 
-                    </td>
+                    </span>
 
 
-                    <td>
+                    <b>
                       {item.temperature}°C
-                    </td>
+                    </b>
 
-
-                    <td
-                      className={
-                        item.departure >= 3
-                          ? "departure-high"
-                          : ""
-                      }
-                    >
-
-                      {item.departure >= 0
-                        ? "+"
-                        : ""}
-
-                      {item.departure}°C
-
-                    </td>
-
-
-                    <td>
-
-                      <span className="status-badge">
-                        {item.status}
-                      </span>
-
-                    </td>
-
-
-                    <td>
-
-                      <SeverityBadge>
-                        {item.severity}
-                      </SeverityBadge>
-
-                    </td>
-
-
-                    <td>
-
-                      <SeverityBadge>
-                        {item.risk}
-                      </SeverityBadge>
-
-                    </td>
-
-
-                    <td>
-
-                      <span
-                        className={`trend-${item.trend}`}
-                      >
-
-                        {item.trend === "up" &&
-                          "↗"}
-
-                        {item.trend === "down" &&
-                          "↘"}
-
-                        {item.trend === "flat" &&
-                          "—"}
-
-                      </span>
-
-                    </td>
-
-                  </tr>
+                  </button>
 
                 );
 
-              })}
+              }
+            )}
 
-            </tbody>
-
-          </table>
+          </div>
 
         </div>
+
+
+        {/* EMPTY STATE */}
+
+        {comparisonData.length === 0 && (
+
+          <div className="comparison-empty">
+
+            <strong>
+              Select at least one region
+            </strong>
+
+            <span>
+              Choose regions above to start comparing
+              their current conditions.
+            </span>
+
+          </div>
+
+        )}
+
+
+        {/* COMPARISON DASHBOARD */}
+
+        {comparisonData.length > 0 && (
+
+          <>
+
+            {/* SUMMARY CARDS */}
+
+            <div className="comparison-summary-grid">
+
+              {comparisonData.map(
+                (item) => {
+
+                  const isMainRegion =
+                    item.name ===
+                    selectedRegion;
+
+
+                  return (
+
+                    <button
+                      type="button"
+                      key={item.name}
+                      className={
+                        isMainRegion
+                          ? "comparison-summary-card active"
+                          : "comparison-summary-card"
+                      }
+                      onClick={() =>
+                        openComparisonRegion(
+                          item.name
+                        )
+                      }
+                    >
+
+                      <div className="comparison-summary-top">
+
+                        <span>
+                          {item.name}
+                        </span>
+
+                        {isMainRegion && (
+
+                          <small>
+                            ACTIVE
+                          </small>
+
+                        )}
+
+                      </div>
+
+
+                      <strong>
+                        {item.temperature}°C
+                      </strong>
+
+
+                      <div className="comparison-summary-meta">
+
+                        <span>
+                          Normal{" "}
+                          {item.normal}°C
+                        </span>
+
+                        <span
+                          className="comparison-departure"
+                        >
+                          {item.departure >= 0
+                            ? "+"
+                            : ""}
+                          {item.departure}°C
+                        </span>
+
+                      </div>
+
+
+                      <div className="comparison-summary-risk">
+
+                        <SeverityBadge>
+                          {item.risk}
+                        </SeverityBadge>
+
+                      </div>
+
+                    </button>
+
+                  );
+
+                }
+              )}
+
+            </div>
+
+
+            {/* VISUAL COMPARISON */}
+
+            <div className="comparison-chart-grid">
+
+
+              {/* TEMPERATURE */}
+
+              <section className="comparison-chart-card">
+
+                <div className="comparison-chart-heading">
+
+                  <div>
+
+                    <h4>
+                      Maximum temperature
+                    </h4>
+
+                    <p>
+                      Current observed maximum
+                    </p>
+
+                  </div>
+
+                  <span>
+                    °C
+                  </span>
+
+                </div>
+
+
+                <div className="comparison-bars">
+
+                  {comparisonData.map(
+                    (item) => {
+
+                      const temperature =
+                        Number(
+                          item.temperature
+                        ) || 0;
+
+
+                      const width =
+                        (
+                          temperature /
+                          comparisonMaxTemperature
+                        ) *
+                        100;
+
+
+                      return (
+
+                        <button
+                          type="button"
+                          key={item.name}
+                          className="comparison-bar-row"
+                          onClick={() =>
+                            openComparisonRegion(
+                              item.name
+                            )
+                          }
+                        >
+
+                          <span className="comparison-bar-label">
+                            {item.name}
+                          </span>
+
+
+                          <div className="comparison-bar-track">
+
+                            <div
+                              className="comparison-bar-fill temperature"
+                              style={{
+                                width:
+                                  `${width}%`,
+                              }}
+                            />
+
+                          </div>
+
+
+                          <strong>
+                            {item.temperature}°
+                          </strong>
+
+                        </button>
+
+                      );
+
+                    }
+                  )}
+
+                </div>
+
+              </section>
+
+
+              {/* DEPARTURE */}
+
+              <section className="comparison-chart-card">
+
+                <div className="comparison-chart-heading">
+
+                  <div>
+
+                    <h4>
+                      Temperature departure
+                    </h4>
+
+                    <p>
+                      Difference from normal maximum
+                    </p>
+
+                  </div>
+
+                  <span>
+                    °C
+                  </span>
+
+                </div>
+
+
+                <div className="comparison-bars">
+
+                  {comparisonData.map(
+                    (item) => {
+
+                      const departure =
+                        Number(
+                          item.departure
+                        ) || 0;
+
+
+                      const width =
+                        (
+                          Math.abs(
+                            departure
+                          ) /
+                          comparisonMaxDeparture
+                        ) *
+                        100;
+
+
+                      return (
+
+                        <button
+                          type="button"
+                          key={item.name}
+                          className="comparison-bar-row"
+                          onClick={() =>
+                            openComparisonRegion(
+                              item.name
+                            )
+                          }
+                        >
+
+                          <span className="comparison-bar-label">
+                            {item.name}
+                          </span>
+
+
+                          <div className="comparison-bar-track">
+
+                            <div
+                              className={
+                                departure >= 3
+                                  ? "comparison-bar-fill departure high"
+                                  : "comparison-bar-fill departure"
+                              }
+                              style={{
+                                width:
+                                  `${width}%`,
+                              }}
+                            />
+
+                          </div>
+
+
+                          <strong>
+                            {departure >= 0
+                              ? "+"
+                              : ""}
+                            {departure}°
+                          </strong>
+
+                        </button>
+
+                      );
+
+                    }
+                  )}
+
+                </div>
+
+              </section>
+
+            </div>
+
+
+            {/* DETAILED TABLE */}
+
+            <div className="monitoring-table-wrap comparison-table-wrap">
+
+              <table className="monitoring-table comparison-table">
+
+                <thead>
+
+                  <tr>
+
+                    <th>
+                      REGION
+                    </th>
+
+                    <th>
+                      TEMP
+                    </th>
+
+                    <th>
+                      NORMAL
+                    </th>
+
+                    <th>
+                      DEPARTURE
+                    </th>
+
+                    <th>
+                      MIN TEMP
+                    </th>
+
+                    <th>
+                      HUMIDITY
+                    </th>
+
+                    <th>
+                      STATUS
+                    </th>
+
+                    <th>
+                      SEVERITY
+                    </th>
+
+                    <th>
+                      RISK
+                    </th>
+
+                    <th>
+                      TREND
+                    </th>
+
+                  </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                  {comparisonData.map(
+                    (item) => {
+
+                      const isSelected =
+                        item.name ===
+                        selectedRegion;
+
+
+                      return (
+
+                        <tr
+                          key={item.name}
+                          className={
+                            isSelected
+                              ? "selected-region-row"
+                              : ""
+                          }
+                          onClick={() =>
+                            openComparisonRegion(
+                              item.name
+                            )
+                          }
+                        >
+
+                          <td>
+
+                            <strong>
+                              {item.name}
+                            </strong>
+
+                            <small>
+                              {item.state}
+                            </small>
+
+                          </td>
+
+
+                          <td>
+                            {item.temperature}°C
+                          </td>
+
+
+                          <td>
+                            {item.normal}°C
+                          </td>
+
+
+                          <td
+                            className={
+                              Number(
+                                item.departure
+                              ) >= 3
+                                ? "departure-high"
+                                : ""
+                            }
+                          >
+
+                            {item.departure >= 0
+                              ? "+"
+                              : ""}
+
+                            {item.departure}°C
+
+                          </td>
+
+
+                          <td>
+                            {item.minTemp}°C
+                          </td>
+
+
+                          <td>
+                            {item.humidity}%
+                          </td>
+
+
+                          <td>
+
+                            <span className="status-badge">
+                              {item.status}
+                            </span>
+
+                          </td>
+
+
+                          <td>
+
+                            <SeverityBadge>
+                              {item.severity}
+                            </SeverityBadge>
+
+                          </td>
+
+
+                          <td>
+
+                            <SeverityBadge>
+                              {item.risk}
+                            </SeverityBadge>
+
+                          </td>
+
+
+                          <td>
+
+                            <span
+                              className={`trend-${item.trend}`}
+                            >
+
+                              {item.trend === "up" &&
+                                "↗"}
+
+                              {item.trend === "down" &&
+                                "↘"}
+
+                              {item.trend === "flat" &&
+                                "—"}
+
+                            </span>
+
+                          </td>
+
+                        </tr>
+
+                      );
+
+                    }
+                  )}
+
+                </tbody>
+
+              </table>
+
+            </div>
+
+
+            <div className="comparison-footer-note">
+
+              Click any compared region to make it
+              the active monitoring region.
+
+            </div>
+
+          </>
+
+        )}
 
       </section>
 
     </div>
+
   );
+
 }
 
 
