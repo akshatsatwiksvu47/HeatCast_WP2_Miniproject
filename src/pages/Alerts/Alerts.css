@@ -1,0 +1,585 @@
+/* =========================================================
+   ALERTS PAGE
+========================================================= */
+
+.alerts-page {
+  width: 100%;
+  padding-bottom: 50px;
+}
+
+
+/* =========================================================
+   TWO COLUMN LAYOUT
+========================================================= */
+
+.alerts-layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(420px, 0.9fr)
+    minmax(620px, 1.4fr);
+
+  gap: 18px;
+
+  align-items: start;
+
+  width: 100%;
+}
+
+
+/* =========================================================
+   LEFT COLUMN
+========================================================= */
+
+.alerts-column {
+  min-width: 0;
+}
+
+
+.alerts-section-heading,
+.advisory-section-heading {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  margin-bottom: 9px;
+
+  min-height: 22px;
+}
+
+
+.alerts-section-heading h3,
+.advisory-section-heading h3 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 14px;
+
+  font-weight: 700;
+}
+
+
+.alerts-section-heading span {
+  color: var(--text-muted);
+
+  font-size: 9px;
+}
+
+
+/* =========================================================
+   ALERT LIST
+========================================================= */
+
+.alerts-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+/* =========================================================
+   ALERT CARD
+========================================================= */
+
+.alert-list-card {
+  width: 100%;
+
+  padding: 14px 15px;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--border);
+
+  border-radius: 7px;
+
+  background: var(--surface);
+
+  color: var(--text);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  font-family: inherit;
+
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+
+.alert-list-card:hover {
+  border-color: rgba(255, 138, 31, 0.6);
+}
+
+
+.alert-list-card.selected {
+  border-color: #ff8a1f;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 138, 31, 0.08),
+      rgba(255, 138, 31, 0.025)
+    );
+
+  box-shadow:
+    inset 3px 0 0 #ff8a1f;
+}
+
+
+/* =========================================================
+   CARD TOP
+========================================================= */
+
+.alert-card-top {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+
+.alert-title {
+  margin-bottom: 4px;
+
+  color: var(--text);
+
+  font-size: 12px;
+
+  font-weight: 700;
+
+  line-height: 1.3;
+}
+
+
+.alert-id {
+  color: var(--text-muted);
+
+  font-size: 8px;
+
+  letter-spacing: 0.05em;
+}
+
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.alert-description {
+  margin: 10px 0;
+
+  color: var(--text-soft);
+
+  font-size: 9px;
+
+  line-height: 1.5;
+}
+
+
+/* =========================================================
+   META
+========================================================= */
+
+.alert-meta {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr 1fr;
+
+  gap: 10px;
+
+  padding-top: 9px;
+
+  border-top: 1px solid var(--border);
+}
+
+
+.alert-meta span {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 3px;
+
+  min-width: 0;
+}
+
+
+.alert-meta small {
+  color: var(--text-muted);
+
+  font-size: 7px;
+}
+
+
+.alert-meta strong {
+  color: var(--text-soft);
+
+  font-size: 8px;
+
+  white-space: nowrap;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+}
+
+
+/* =========================================================
+   ACTION
+========================================================= */
+
+.alert-card-action {
+  margin-top: 9px;
+
+  color: #ff8a1f;
+
+  font-size: 8px;
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   RIGHT COLUMN
+========================================================= */
+
+.advisory-section {
+  min-width: 0;
+}
+
+
+.advisory-section-heading {
+  height: 22px;
+
+  margin-bottom: 9px;
+}
+
+
+/* =========================================================
+   ADVISORY PANEL
+========================================================= */
+
+.advisory-panel {
+  width: 100%;
+
+  padding: 16px;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--border);
+
+  border-radius: 8px;
+
+  background: var(--surface);
+}
+
+
+/* =========================================================
+   ADVISORY HEADER
+========================================================= */
+
+.advisory-header {
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid var(--border);
+}
+
+
+.advisory-id {
+  margin-bottom: 3px;
+
+  color: var(--text-muted);
+
+  font-size: 7px;
+
+  letter-spacing: 0.08em;
+}
+
+
+.advisory-header h2 {
+  margin: 0 0 4px;
+
+  color: var(--text);
+
+  font-size: 18px;
+
+  line-height: 1.2;
+}
+
+
+.advisory-header p {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 8px;
+}
+
+
+/* =========================================================
+   WARNING FACTS
+========================================================= */
+
+.warning-facts {
+  margin: 11px 0;
+
+  padding-left: 16px;
+
+  color: var(--text-soft);
+
+  font-size: 9px;
+
+  line-height: 1.55;
+}
+
+
+.warning-facts li {
+  margin-bottom: 3px;
+}
+
+
+/* =========================================================
+   STAKEHOLDER TABS
+========================================================= */
+
+.stakeholder-tabs {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 6px;
+
+  margin-bottom: 12px;
+}
+
+
+.stakeholder-tab {
+  min-width: 0;
+
+  min-height: 58px;
+
+  padding: 9px;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--border);
+
+  border-radius: 5px;
+
+  background: transparent;
+
+  color: var(--text);
+
+  text-align: left;
+
+  cursor: pointer;
+
+  font-family: inherit;
+}
+
+
+.stakeholder-tab:hover {
+  border-color:
+    rgba(255, 138, 31, 0.55);
+}
+
+
+.stakeholder-tab.active {
+  border-color: #ff8a1f;
+
+  background:
+    rgba(255, 138, 31, 0.08);
+}
+
+
+.stakeholder-tab strong {
+  display: block;
+
+  margin-bottom: 4px;
+
+  color: var(--text);
+
+  font-size: 9px;
+
+  line-height: 1.2;
+}
+
+
+.stakeholder-tab span {
+  display: block;
+
+  color: var(--text-muted);
+
+  font-size: 7px;
+
+  line-height: 1.35;
+}
+
+
+/* =========================================================
+   ADVISORY CONTENT
+========================================================= */
+
+.advisory-content {
+  padding: 15px;
+
+  box-sizing: border-box;
+
+  border: 1px solid var(--border);
+
+  border-radius: 6px;
+
+  background:
+    rgba(5, 12, 22, 0.45);
+}
+
+
+.advisory-label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 6px;
+
+  margin-bottom: 8px;
+
+  color: #ff8a1f;
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.08em;
+}
+
+
+.advisory-label span {
+  font-size: 7px;
+}
+
+
+.advisory-content h3 {
+  margin: 0 0 9px;
+
+  color: var(--text);
+
+  font-size: 14px;
+
+  line-height: 1.35;
+}
+
+
+.advisory-description {
+  margin: 0 0 10px;
+
+  color: var(--text-soft);
+
+  font-size: 9px;
+
+  line-height: 1.55;
+}
+
+
+.advisory-content ul {
+  margin: 0;
+
+  padding-left: 16px;
+
+  color: var(--text-soft);
+
+  font-size: 9px;
+
+  line-height: 1.55;
+}
+
+
+.advisory-content li {
+  margin-bottom: 4px;
+}
+
+
+/* =========================================================
+   AI PLACEHOLDER
+========================================================= */
+
+.advisory-placeholder {
+  margin-top: 13px;
+
+  padding: 9px;
+
+  border-left: 2px solid #ff8a1f;
+
+  background:
+    rgba(255, 138, 31, 0.035);
+
+  color: var(--text-muted);
+
+  font-size: 7px;
+
+  line-height: 1.45;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 1150px) {
+
+  .alerts-layout {
+    grid-template-columns:
+      minmax(360px, 0.9fr)
+      minmax(500px, 1.2fr);
+
+    gap: 14px;
+  }
+
+}
+
+
+@media (max-width: 900px) {
+
+  .alerts-layout {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+
+@media (max-width: 600px) {
+
+  .stakeholder-tabs {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .alert-meta {
+    grid-template-columns: 1fr;
+  }
+
+
+  .advisory-header {
+    flex-direction: column;
+  }
+
+}

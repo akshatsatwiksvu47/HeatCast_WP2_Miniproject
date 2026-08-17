@@ -1,0 +1,41 @@
+{
+  "selectedRegion": "Delhi NCR",
+  "updated": "15 Aug 2026, 14:25 IST",
+  "maxTemperature": 44.6,
+  "normalMax": 39.8,
+  "departure": 4.8,
+  "minTemperature": 30.2,
+  "humidity": 24,
+  "heatwaveStatus": "HEATWAVE ONGOING",
+  "heatwaveRisk": "Extreme",
+  "severity": "Severe",
+  "forecastPeak": 47.3,
+  "forecastPeakDay": "Day 4",
+  "activeAlerts": 4,
+  "activeWarning": {
+    "title": "SEVERE HEATWAVE WARNING",
+    "region": "Delhi NCR",
+    "severity": "Severe",
+    "expectedMax": "47.3°C",
+    "validUntil": "18 Aug 2026",
+    "description": "Maximum temperature expected to remain 5–6°C above normal for three consecutive days with limited overnight cooling."
+  },
+  "seasonalAnalysis": [
+    {
+      "name": "Pre-Monsoon",
+      "value": 2
+    },
+    {
+      "name": "Summer",
+      "value": 8
+    },
+    {
+      "name": "Monsoon",
+      "value": 1
+    },
+    {
+      "name": "Post-Monsoon",
+      "value": 1
+    }
+  ]
+}

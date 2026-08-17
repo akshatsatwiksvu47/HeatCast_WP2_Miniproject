@@ -1,0 +1,38 @@
+[
+  {
+    "id": "ALT-2026-0431",
+    "title": "SEVERE HEATWAVE WARNING",
+    "region": "Delhi NCR",
+    "severity": "Severe",
+    "expected": "47.3°C",
+    "valid": "18 Aug 2026, 20:00 IST",
+    "description": "Maximum temperature expected to remain 5–6°C above normal for three consecutive days with limited overnight cooling."
+  },
+  {
+    "id": "ALT-2026-0429",
+    "title": "SEVERE HEATWAVE WARNING",
+    "region": "Nagpur",
+    "severity": "Severe",
+    "expected": "46.8°C",
+    "valid": "17 Aug 2026, 20:00 IST",
+    "description": "Ongoing heatwave conditions expected to intensify with departure crossing 5°C over central Vidarbha."
+  },
+  {
+    "id": "ALT-2026-0424",
+    "title": "HEATWAVE WARNING",
+    "region": "Lucknow",
+    "severity": "High",
+    "expected": "45.6°C",
+    "valid": "17 Aug 2026, 18:00 IST",
+    "description": "Heatwave conditions likely to persist across the region for the next 48 hours."
+  },
+  {
+    "id": "ALT-2026-0418",
+    "title": "HEATWAVE WATCH",
+    "region": "Bhubaneswar",
+    "severity": "Moderate",
+    "expected": "43.2°C",
+    "valid": "16 Aug 2026, 18:00 IST",
+    "description": "Warm and humid conditions raising apparent temperature; heatwave criteria may be met by Day 3."
+  }
+]

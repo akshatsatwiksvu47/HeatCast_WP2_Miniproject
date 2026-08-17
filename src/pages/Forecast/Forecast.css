@@ -1,0 +1,659 @@
+/* =========================================
+   FORECAST INFO
+========================================= */
+
+.forecast-info {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  padding: 12px 15px;
+
+  margin-bottom: 16px;
+
+  background: #101c2a;
+
+  border: 1px solid var(--border);
+
+  border-radius: 6px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+}
+
+.forecast-info strong {
+  color: #4da3ff;
+
+  white-space: nowrap;
+}
+
+
+/* =========================================
+   CONTROLS
+========================================= */
+
+.forecast-controls {
+  display: flex;
+
+  align-items: flex-end;
+
+  gap: 35px;
+
+  padding: 17px;
+
+  margin-bottom: 18px;
+
+  background: var(--panel);
+
+  border: 1px solid var(--border);
+
+  border-radius: 7px;
+}
+
+
+.forecast-control-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+}
+
+
+.forecast-control-group label {
+  color: var(--text-muted);
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+}
+
+
+.forecast-control-group select {
+  min-width: 190px;
+
+  padding: 9px 12px;
+
+  background: #111b28;
+
+  border: 1px solid var(--border);
+
+  border-radius: 5px;
+
+  color: var(--text);
+
+  outline: none;
+
+  cursor: pointer;
+}
+
+
+.forecast-control-group select:focus {
+  border-color: #ff8a1f;
+}
+
+
+/* =========================================
+   PERIOD BUTTONS
+========================================= */
+
+.period-buttons {
+  display: flex;
+
+  gap: 5px;
+}
+
+
+.period-btn {
+  padding: 9px 13px;
+
+  background: #111b28;
+
+  border: 1px solid var(--border);
+
+  border-radius: 5px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+
+.period-btn:hover {
+  color: var(--text);
+
+  border-color: #506078;
+}
+
+
+.period-btn.active {
+  background: #ff8a1f;
+
+  border-color: #ff8a1f;
+
+  color: #111;
+}
+
+
+/* =========================================
+   PREDICTION BANNER
+========================================= */
+
+.prediction-banner {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr)
+    240px;
+
+  gap: 30px;
+
+  padding: 22px;
+
+  margin-bottom: 25px;
+
+  background:
+    linear-gradient(
+      110deg,
+      rgba(255, 138, 31, 0.08),
+      rgba(255, 138, 31, 0)
+    ),
+    var(--panel);
+
+  border: 1px solid var(--border);
+
+  border-radius: 7px;
+}
+
+
+.prediction-main h2 {
+  margin: 6px 0 8px;
+
+  font-size: 22px;
+
+  color: var(--text);
+}
+
+
+.prediction-main p {
+  margin-top: 10px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+}
+
+
+.prediction-main p strong {
+  color: var(--text);
+}
+
+
+.prediction-badges {
+  display: flex;
+
+  gap: 6px;
+}
+
+
+/* =========================================
+   CONFIDENCE
+========================================= */
+
+.confidence-box {
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  padding-left: 20px;
+
+  border-left: 1px solid var(--border);
+}
+
+
+.confidence-box > span {
+  color: var(--text-muted);
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+}
+
+
+.confidence-box > strong {
+  margin: 6px 0;
+
+  font-size: 28px;
+
+  color: var(--text);
+}
+
+
+.confidence-bar {
+  width: 100%;
+
+  height: 4px;
+
+  overflow: hidden;
+
+  background: #263444;
+
+  border-radius: 4px;
+}
+
+
+.confidence-bar div {
+  height: 100%;
+
+  background: #ff8a1f;
+
+  border-radius: 4px;
+}
+
+
+.confidence-box small {
+  margin-top: 7px;
+
+  color: var(--text-muted);
+
+  font-size: 8px;
+}
+
+
+/* =========================================
+   FORECAST SECTION
+========================================= */
+
+.forecast-section {
+  margin-bottom: 22px;
+}
+
+
+/* =========================================
+   FORECAST CARDS
+========================================= */
+
+.forecast-cards {
+  display: grid;
+
+  grid-template-columns:
+    repeat(7, minmax(0, 1fr));
+
+  gap: 7px;
+}
+
+
+.forecast-card {
+  position: relative;
+
+  min-width: 0;
+
+  padding: 13px 10px;
+
+  text-align: left;
+
+  background: var(--panel);
+
+  border: 1px solid var(--border);
+
+  border-radius: 6px;
+
+  color: var(--text);
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.forecast-card:hover {
+  transform: translateY(-2px);
+
+  border-color: #56667a;
+}
+
+
+.forecast-card.selected {
+  border-color: #ff8a1f;
+
+  box-shadow:
+    0 0 0 1px
+      rgba(255, 138, 31, 0.12);
+}
+
+
+.forecast-card.peak {
+  border-color: #ff8a1f;
+}
+
+
+.forecast-card-top {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 2px;
+
+  margin-bottom: 18px;
+}
+
+
+.forecast-card-top strong {
+  font-size: 10px;
+}
+
+
+.forecast-card-top span {
+  color: var(--text-muted);
+
+  font-size: 8px;
+}
+
+
+.forecast-max {
+  margin-bottom: 3px;
+
+  font-size: 21px;
+
+  font-weight: 700;
+}
+
+
+.forecast-max small {
+  margin-left: 1px;
+
+  font-size: 9px;
+
+  font-weight: 400;
+}
+
+
+.forecast-min {
+  margin-bottom: 12px;
+
+  color: var(--text-muted);
+
+  font-size: 8px;
+}
+
+
+.forecast-card .severity-badge {
+  margin-bottom: 14px;
+}
+
+
+/* =========================================
+   PROBABILITY
+========================================= */
+
+.forecast-probability {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-top: 5px;
+
+  color: var(--text-muted);
+
+  font-size: 7px;
+}
+
+
+.forecast-probability strong {
+  color: var(--text);
+}
+
+
+.probability-bar {
+  width: 100%;
+
+  height: 4px;
+
+  margin-top: 5px;
+
+  overflow: hidden;
+
+  background: #263444;
+
+  border-radius: 4px;
+}
+
+
+.probability-bar div {
+  height: 100%;
+
+  background: #ff8a1f;
+
+  border-radius: 4px;
+}
+
+
+/* =========================================
+   SUMMARY
+========================================= */
+
+.forecast-summary-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, 1fr);
+
+  gap: 10px;
+
+  margin-bottom: 20px;
+}
+
+
+.forecast-summary-card {
+  padding: 18px;
+
+  background: var(--panel);
+
+  border: 1px solid var(--border);
+
+  border-radius: 6px;
+
+  border-top: 2px solid transparent;
+}
+
+
+.forecast-summary-card.orange {
+  border-top-color: #ff8a1f;
+}
+
+
+.forecast-summary-card.red {
+  border-top-color: #ff4757;
+}
+
+
+.forecast-summary-card span {
+  display: block;
+
+  margin-bottom: 9px;
+
+  color: var(--text-muted);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+}
+
+
+.forecast-summary-card strong {
+  display: block;
+
+  font-size: 19px;
+
+  color: var(--text);
+}
+
+
+.forecast-summary-card small {
+  display: block;
+
+  margin-top: 6px;
+
+  color: var(--text-muted);
+
+  font-size: 8px;
+}
+
+
+/* =========================================
+   EXPLANATION
+========================================= */
+
+.prediction-explanation {
+  padding: 18px;
+
+  margin-bottom: 30px;
+
+  background: var(--panel);
+
+  border: 1px solid var(--border);
+
+  border-radius: 6px;
+}
+
+
+.prediction-explanation h3 {
+  margin: 0 0 5px;
+
+  font-size: 12px;
+}
+
+
+.prediction-explanation p {
+  margin: 0;
+
+  color: var(--text-muted);
+
+  font-size: 9px;
+}
+
+
+.prediction-explanation ul {
+  margin: 14px 0 0;
+
+  padding-left: 18px;
+
+  color: var(--text-muted);
+
+  font-size: 9px;
+
+  line-height: 1.8;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1000px) {
+
+  .forecast-cards {
+    grid-template-columns:
+      repeat(4, 1fr);
+  }
+
+}
+
+
+@media (max-width: 750px) {
+
+  .forecast-controls {
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 15px;
+  }
+
+
+  .forecast-control-group select {
+    width: 100%;
+  }
+
+
+  .prediction-banner {
+    grid-template-columns: 1fr;
+  }
+
+
+  .confidence-box {
+    padding-left: 0;
+
+    padding-top: 15px;
+
+    border-left: 0;
+
+    border-top: 1px solid var(--border);
+  }
+
+
+  .forecast-cards {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+
+  .forecast-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+}
+
+.mock-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  width: 100%;
+  box-sizing: border-box;
+
+  margin-bottom: 16px;
+  padding: 12px 14px;
+
+  border: 1px solid var(--border);
+  border-radius: 6px;
+
+  background: #101d2d;
+
+  color: var(--text-soft);
+
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.mock-info strong {
+  color: #5ca8ff;
+  white-space: nowrap;
+}
+
+.mock-info span {
+  color: var(--text-muted);
+}

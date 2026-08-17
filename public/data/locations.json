@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Delhi NCR",
+    "state": "Delhi"
+  },
+  {
+    "name": "Jaipur",
+    "state": "Rajasthan"
+  },
+  {
+    "name": "Ahmedabad",
+    "state": "Gujarat"
+  },
+  {
+    "name": "Nagpur",
+    "state": "Maharashtra"
+  },
+  {
+    "name": "Mumbai",
+    "state": "Maharashtra"
+  },
+  {
+    "name": "Hyderabad",
+    "state": "Telangana"
+  },
+  {
+    "name": "Bhubaneswar",
+    "state": "Odisha"
+  },
+  {
+    "name": "Lucknow",
+    "state": "Uttar Pradesh"
+  },
+  {
+    "name": "Patna",
+    "state": "Bihar"
+  },
+  {
+    "name": "Kolkata",
+    "state": "West Bengal"
+  },
+  {
+    "name": "Bengaluru",
+    "state": "Karnataka"
+  },
+  {
+    "name": "Chennai",
+    "state": "Tamil Nadu"
+  }
+]
