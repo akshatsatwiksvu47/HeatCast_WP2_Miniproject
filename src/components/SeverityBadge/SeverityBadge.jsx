@@ -1,3 +1,5 @@
+import "./SeverityBadge.css";
+
 function SeverityBadge({ children }) {
   const value = String(children).toLowerCase();
 

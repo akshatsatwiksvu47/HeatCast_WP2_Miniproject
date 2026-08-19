@@ -4,15 +4,21 @@ function About() {
   return (
     <div className="page about-page">
 
-      {/* HEADER */}
-      <div className="page-heading">
-        <div>
-          <div className="eyebrow">
-            ABOUT HEATCAST
-          </div>
+      {/* =====================================================
+          PAGE INTRO
+      ===================================================== */}
+
+      <header className="about-intro">
+
+        <div className="eyebrow">
+          ABOUT HEATCAST
+        </div>
+
+        <div className="about-intro-main">
 
           <h1>
-            Climate Intelligence for Heatwave Monitoring
+            Climate intelligence
+            <span> for a hotter world.</span>
           </h1>
 
           <p>
@@ -20,20 +26,22 @@ function About() {
             to monitor, understand and communicate heatwave risk
             across regions.
           </p>
+
         </div>
-      </div>
+
+      </header>
 
 
-      {/* MAIN INTRO */}
+      {/* =====================================================
+          MAIN INTRODUCTION
+      ===================================================== */}
+
       <section className="about-hero panel">
 
-        <div className="about-hero-content">
-
-          <div className="about-icon">
-            H
-          </div>
+        <div className="about-hero-top">
 
           <div>
+
             <div className="eyebrow">
               CLIMATE INTELLIGENCE
             </div>
@@ -42,13 +50,35 @@ function About() {
               Turning climate data into actionable insight.
             </h2>
 
-            <p>
-              HeatCast brings together temperature observations,
-              regional monitoring, forecasts and heatwave warnings
-              into a single interface. The goal is to make
-              heat-related information easier to understand and
-              act upon.
-            </p>
+          </div>
+
+        </div>
+
+
+        <div className="about-hero-body">
+
+          <p>
+            HeatCast brings together temperature observations,
+            regional monitoring, forecasts and heatwave warnings
+            into a single interface. The goal is to make
+            heat-related information easier to understand and
+            act upon.
+          </p>
+
+          <div className="about-hero-points">
+
+            <span>
+              Regional monitoring
+            </span>
+
+            <span>
+              Heatwave forecasting
+            </span>
+
+            <span>
+              Early warning
+            </span>
+
           </div>
 
         </div>
@@ -56,22 +86,29 @@ function About() {
       </section>
 
 
-      {/* WHAT HEATCAST DOES */}
+      {/* =====================================================
+          PLATFORM FEATURES
+      ===================================================== */}
+
       <section className="about-section">
 
         <div className="about-section-heading">
-          <div className="eyebrow">
-            PLATFORM
-          </div>
 
-          <h2>
-            What HeatCast does
-          </h2>
+          <div>
+            <div className="eyebrow">
+              PLATFORM
+            </div>
+
+            <h2>
+              What HeatCast does
+            </h2>
+          </div>
 
           <p>
             The platform is organized around the key stages of
             heatwave intelligence.
           </p>
+
         </div>
 
 
@@ -83,15 +120,19 @@ function About() {
               01
             </span>
 
-            <h3>
-              Monitor
-            </h3>
+            <div className="about-feature-content">
 
-            <p>
-              Track current temperature, humidity, heatwave
-              status and regional conditions across monitored
-              locations.
-            </p>
+              <h3>
+                Monitor
+              </h3>
+
+              <p>
+                Track current temperature, humidity, heatwave
+                status and regional conditions across monitored
+                locations.
+              </p>
+
+            </div>
 
           </div>
 
@@ -102,14 +143,18 @@ function About() {
               02
             </span>
 
-            <h3>
-              Forecast
-            </h3>
+            <div className="about-feature-content">
 
-            <p>
-              View expected temperature conditions and forecast
-              heatwave risk over the coming days.
-            </p>
+              <h3>
+                Forecast
+              </h3>
+
+              <p>
+                View expected temperature conditions and forecast
+                heatwave risk over the coming days.
+              </p>
+
+            </div>
 
           </div>
 
@@ -120,15 +165,19 @@ function About() {
               03
             </span>
 
-            <h3>
-              Identify Hotspots
-            </h3>
+            <div className="about-feature-content">
 
-            <p>
-              Compare monitored regions geographically and
-              identify areas experiencing elevated heat
-              conditions.
-            </p>
+              <h3>
+                Identify Hotspots
+              </h3>
+
+              <p>
+                Compare monitored regions geographically and
+                identify areas experiencing elevated heat
+                conditions.
+              </p>
+
+            </div>
 
           </div>
 
@@ -139,14 +188,18 @@ function About() {
               04
             </span>
 
-            <h3>
-              Alert
-            </h3>
+            <div className="about-feature-content">
 
-            <p>
-              Communicate heatwave warnings and provide
-              stakeholder-specific guidance when risk increases.
-            </p>
+              <h3>
+                Alert
+              </h3>
+
+              <p>
+                Communicate heatwave warnings and provide
+                stakeholder-specific guidance when risk increases.
+              </p>
+
+            </div>
 
           </div>
 
@@ -155,18 +208,30 @@ function About() {
       </section>
 
 
-      {/* HOW IT WORKS */}
+      {/* =====================================================
+          SYSTEM WORKFLOW
+      ===================================================== */}
+
       <section className="panel about-workflow">
 
-        <div className="about-section-heading">
+        <div className="about-section-heading workflow-heading">
 
-          <div className="eyebrow">
-            SYSTEM WORKFLOW
+          <div>
+
+            <div className="eyebrow">
+              SYSTEM WORKFLOW
+            </div>
+
+            <h2>
+              From climate data to action
+            </h2>
+
           </div>
 
-          <h2>
-            From climate data to action
-          </h2>
+          <p>
+            A continuous path from observation to informed
+            heat-response decisions.
+          </p>
 
         </div>
 
@@ -179,7 +244,12 @@ function About() {
               01
             </div>
 
-            <div>
+            <div className="workflow-step-content">
+
+              <span>
+                INPUT
+              </span>
+
               <h3>
                 Data
               </h3>
@@ -188,6 +258,7 @@ function About() {
                 Climate and regional observations provide the
                 underlying information.
               </p>
+
             </div>
 
           </div>
@@ -202,7 +273,12 @@ function About() {
               02
             </div>
 
-            <div>
+            <div className="workflow-step-content">
+
+              <span>
+                PROCESS
+              </span>
+
               <h3>
                 Analysis
               </h3>
@@ -211,6 +287,7 @@ function About() {
                 Temperature trends and heatwave indicators are
                 analyzed to understand regional conditions.
               </p>
+
             </div>
 
           </div>
@@ -225,7 +302,12 @@ function About() {
               03
             </div>
 
-            <div>
+            <div className="workflow-step-content">
+
+              <span>
+                PREDICT
+              </span>
+
               <h3>
                 Prediction
               </h3>
@@ -234,6 +316,7 @@ function About() {
                 Forecast information helps identify potential
                 future heatwave conditions.
               </p>
+
             </div>
 
           </div>
@@ -248,7 +331,12 @@ function About() {
               04
             </div>
 
-            <div>
+            <div className="workflow-step-content">
+
+              <span>
+                ACTION
+              </span>
+
               <h3>
                 Warning
               </h3>
@@ -257,6 +345,7 @@ function About() {
                 The resulting intelligence can support timely
                 warnings and heat-response decisions.
               </p>
+
             </div>
 
           </div>
@@ -266,18 +355,30 @@ function About() {
       </section>
 
 
-      {/* STAKEHOLDERS */}
+      {/* =====================================================
+          STAKEHOLDERS
+      ===================================================== */}
+
       <section className="about-section">
 
         <div className="about-section-heading">
 
-          <div className="eyebrow">
-            WHO IT SUPPORTS
+          <div>
+
+            <div className="eyebrow">
+              WHO IT SUPPORTS
+            </div>
+
+            <h2>
+              Designed for different stakeholders
+            </h2>
+
           </div>
 
-          <h2>
-            Designed for different stakeholders
-          </h2>
+          <p>
+            Heat intelligence can support people and organizations
+            with different responsibilities during extreme heat.
+          </p>
 
         </div>
 
@@ -286,57 +387,89 @@ function About() {
 
           <div className="panel stakeholder-card">
 
-            <h3>
-              Citizen
-            </h3>
+            <div className="stakeholder-number">
+              01
+            </div>
 
-            <p>
-              Understand heat conditions and receive practical
-              information for staying safe during periods of
-              elevated heat.
-            </p>
+            <div className="stakeholder-content">
 
-          </div>
+              <h3>
+                Citizen
+              </h3>
 
+              <p>
+                Understand heat conditions and receive practical
+                information for staying safe during periods of
+                elevated heat.
+              </p>
 
-          <div className="panel stakeholder-card">
-
-            <h3>
-              Farmer
-            </h3>
-
-            <p>
-              Understand heat conditions that may affect crops,
-              livestock and field activities.
-            </p>
+            </div>
 
           </div>
 
 
           <div className="panel stakeholder-card">
 
-            <h3>
-              Health Department
-            </h3>
+            <div className="stakeholder-number">
+              02
+            </div>
 
-            <p>
-              Support facility readiness and public-health
-              response during heatwave events.
-            </p>
+            <div className="stakeholder-content">
+
+              <h3>
+                Farmer
+              </h3>
+
+              <p>
+                Understand heat conditions that may affect crops,
+                livestock and field activities.
+              </p>
+
+            </div>
 
           </div>
 
 
           <div className="panel stakeholder-card">
 
-            <h3>
-              Local Authority
-            </h3>
+            <div className="stakeholder-number">
+              03
+            </div>
 
-            <p>
-              Support coordinated local heat-action measures and
-              communication during high-risk conditions.
-            </p>
+            <div className="stakeholder-content">
+
+              <h3>
+                Health Department
+              </h3>
+
+              <p>
+                Support facility readiness and public-health
+                response during heatwave events.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div className="panel stakeholder-card">
+
+            <div className="stakeholder-number">
+              04
+            </div>
+
+            <div className="stakeholder-content">
+
+              <h3>
+                Local Authority
+              </h3>
+
+              <p>
+                Support coordinated local heat-action measures and
+                communication during high-risk conditions.
+              </p>
+
+            </div>
 
           </div>
 
@@ -345,13 +478,16 @@ function About() {
       </section>
 
 
-      {/* PROJECT STATUS */}
+      {/* =====================================================
+          PROJECT STATUS
+      ===================================================== */}
+
       <section className="panel about-status">
 
-        <div>
+        <div className="about-status-main">
 
           <div className="eyebrow">
-            PROJECT
+            THE PROJECT
           </div>
 
           <h2>
@@ -366,8 +502,17 @@ function About() {
         </div>
 
 
-        <div className="about-status-badge">
-          WP2 MINI PROJECT
+        <div className="about-status-right">
+
+          <div className="about-status-badge">
+            WP2 MINI PROJECT
+          </div>
+
+          <div className="about-status-line">
+            <span />
+            Climate intelligence
+          </div>
+
         </div>
 
       </section>

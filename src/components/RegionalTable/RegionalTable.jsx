@@ -4,6 +4,8 @@ import { getRegions } from "../../services/api";
 
 import SeverityBadge from "../SeverityBadge/SeverityBadge";
 
+import "./RegionalTable.css";
+
 function RegionalTable() {
   const [regions, setRegions] = useState([]);
 

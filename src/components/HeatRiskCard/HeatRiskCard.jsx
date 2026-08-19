@@ -38,13 +38,6 @@ function HeatRiskCard({
     Number(region.humidity) || 0;
 
 
-  /*
-   * Temperature component
-   *
-   * Approximate contribution:
-   * 30 points
-   */
-
   const temperatureScore =
     Math.min(
       30,
@@ -54,13 +47,6 @@ function HeatRiskCard({
       )
     );
 
-
-  /*
-   * Temperature anomaly component
-   *
-   * Approximate contribution:
-   * 30 points
-   */
 
   const anomalyScore =
     Math.min(
@@ -72,15 +58,6 @@ function HeatRiskCard({
     );
 
 
-  /*
-   * Humidity component
-   *
-   * Higher humidity can increase heat stress.
-   *
-   * Approximate contribution:
-   * 15 points
-   */
-
   const humidityScore =
     Math.min(
       15,
@@ -91,13 +68,6 @@ function HeatRiskCard({
     );
 
 
-  /*
-   * Severity component
-   *
-   * Approximate contribution:
-   * 15 points
-   */
-
   const severityMap = {
     low: 2,
     moderate: 6,
@@ -106,18 +76,12 @@ function HeatRiskCard({
     extreme: 15,
   };
 
+
   const severityScore =
     severityMap[
       region.severity?.toLowerCase()
     ] || 0;
 
-
-  /*
-   * Risk classification component
-   *
-   * Approximate contribution:
-   * 10 points
-   */
 
   const riskMap = {
     low: 2,
@@ -127,15 +91,12 @@ function HeatRiskCard({
     extreme: 10,
   };
 
+
   const riskScore =
     riskMap[
       region.risk?.toLowerCase()
     ] || 0;
 
-
-  /*
-   * Final score
-   */
 
   const rawScore =
     temperatureScore +
@@ -154,10 +115,6 @@ function HeatRiskCard({
   );
 
 
-  /*
-   * Classification
-   */
-
   let classification = "LOW";
   let tone = "low";
 
@@ -172,10 +129,6 @@ function HeatRiskCard({
     tone = "moderate";
   }
 
-
-  /*
-   * Progress values for the factor bars
-   */
 
   const temperatureProgress =
     Math.min(

@@ -1,3 +1,5 @@
+import "./StatCard.css";
+
 function StatCard({
   label,
   value,

@@ -1,37 +1,468 @@
+/* =========================================================
+   HEATCAST — DASHBOARD PAGE
+   Dashboard-specific layout + typography
+   Global theme remains in App.css
+========================================================= */
+
+
+/* =========================================================
+   DASHBOARD INTELLIGENCE GRID
+========================================================= */
+
 .dashboard-intelligence-grid {
   display: grid;
 
   grid-template-columns:
     repeat(2, minmax(0, 1fr));
 
-  gap: 16px;
+  gap: 26px;
 
-  margin-top: 16px;
+  margin-top: 28px;
 }
 
+
+.dashboard-intelligence-grid > * {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   DASHBOARD EXPLANATION
+========================================================= */
+
+.dashboard-explanation-row {
+  margin-top: 34px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr);
+
+  gap: 26px;
+}
+
+
+/* =========================================================
+   DASHBOARD ADVISORY
+========================================================= */
+
+.dashboard-advisory-row {
+  margin-top: 34px;
+
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1fr);
+
+  gap: 26px;
+}
+
+
+/* =========================================================
+   DASHBOARD TEMPERATURE + WARNING
+========================================================= */
+
+/*
+   Both panels belong to the same grid.
+   Force them to begin at exactly the same
+   vertical position.
+*/
+
+.dashboard-grid {
+  display: grid;
+
+  grid-template-columns:
+    minmax(0, 1.75fr)
+    minmax(420px, 1fr);
+
+  gap: 32px;
+
+  align-items: stretch;
+
+  margin-top: 34px;
+}
+
+
+/*
+   Prevent component/global styles from pushing
+   either panel downward.
+*/
+
+.dashboard-grid > * {
+  min-width: 0;
+
+  margin-top: 0 !important;
+}
+
+
+/*
+   The warning panel must start exactly where
+   the temperature panel starts.
+*/
+
+.dashboard-grid .warning-panel {
+  margin-top: 0 !important;
+
+  align-self: stretch;
+}
+
+
+/*
+   Make sure the temperature panel behaves
+   consistently with the warning panel.
+*/
+
+.dashboard-grid > .panel {
+  margin-top: 0 !important;
+
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   DASHBOARD SECTION SPACING
+========================================================= */
+
+.dashboard-intelligence-grid + * {
+  margin-top: 34px;
+}
+
+
+.dashboard-explanation-row + * {
+  margin-top: 34px;
+}
+
+
+.dashboard-advisory-row + * {
+  margin-top: 34px;
+}
+
+
+/* =========================================================
+   DASHBOARD TYPOGRAPHY
+========================================================= */
+
+.dashboard-intelligence-grid h2,
+.dashboard-intelligence-grid h3,
+.dashboard-explanation-row h2,
+.dashboard-explanation-row h3,
+.dashboard-advisory-row h2,
+.dashboard-advisory-row h3 {
+  color: var(--text);
+
+  line-height: 1.3;
+
+  letter-spacing: -0.015em;
+}
+
+
+.dashboard-intelligence-grid h2,
+.dashboard-explanation-row h2,
+.dashboard-advisory-row h2 {
+  font-size: 23px;
+
+  font-weight: 700;
+
+  margin-bottom: 12px;
+}
+
+
+.dashboard-intelligence-grid h3,
+.dashboard-explanation-row h3,
+.dashboard-advisory-row h3 {
+  font-size: 19px;
+
+  font-weight: 700;
+
+  margin-bottom: 10px;
+}
+
+
+.dashboard-intelligence-grid p,
+.dashboard-explanation-row p,
+.dashboard-advisory-row p {
+  color: var(--text-secondary);
+
+  font-size: 14px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   DASHBOARD DATA TEXT
+========================================================= */
+
+.dashboard-intelligence-grid strong,
+.dashboard-explanation-row strong,
+.dashboard-advisory-row strong {
+  color: var(--text);
+
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   IMPORTANT NUMERICAL VALUES
+========================================================= */
+
+.dashboard-intelligence-grid .value,
+.dashboard-intelligence-grid .metric-value,
+.dashboard-explanation-row .value,
+.dashboard-advisory-row .value {
+  font-size: 28px;
+
+  font-weight: 750;
+
+  line-height: 1.1;
+
+  letter-spacing: -0.025em;
+}
+
+
+/* =========================================================
+   SMALL LABELS
+========================================================= */
+
+.dashboard-intelligence-grid .label,
+.dashboard-intelligence-grid .metric-label,
+.dashboard-explanation-row .label,
+.dashboard-advisory-row .label {
+  color: var(--text-muted);
+
+  font-size: 11px;
+
+  font-weight: 750;
+
+  letter-spacing: 0.8px;
+
+  line-height: 1.3;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   DASHBOARD CARD CONTENT SPACING
+========================================================= */
+
+.dashboard-intelligence-grid .panel,
+.dashboard-explanation-row .panel,
+.dashboard-advisory-row .panel {
+  min-width: 0;
+}
+
+
+.dashboard-intelligence-grid .panel > * + *,
+.dashboard-explanation-row .panel > * + *,
+.dashboard-advisory-row .panel > * + * {
+  margin-top: 18px;
+}
+
+
+/* =========================================================
+   RESPONSIVE — 1100px
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .dashboard-intelligence-grid {
+    gap: 22px;
+
+    margin-top: 26px;
+  }
+
+
+  .dashboard-explanation-row {
+    margin-top: 30px;
+  }
+
+
+  .dashboard-advisory-row {
+    margin-top: 30px;
+  }
+
+
+  .dashboard-grid {
+    gap: 24px;
+
+    grid-template-columns:
+      minmax(0, 1.6fr)
+      minmax(360px, 1fr);
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 850px
+========================================================= */
 
 @media (max-width: 850px) {
 
   .dashboard-intelligence-grid {
     grid-template-columns: 1fr;
+
+    gap: 24px;
+
+    margin-top: 24px;
+  }
+
+
+  .dashboard-explanation-row {
+    grid-template-columns: 1fr;
+
+    gap: 24px;
+
+    margin-top: 28px;
+  }
+
+
+  .dashboard-advisory-row {
+    grid-template-columns: 1fr;
+
+    gap: 24px;
+
+    margin-top: 28px;
+  }
+
+
+  /*
+     Stack temperature and warning panels
+     on smaller screens.
+  */
+
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+
+    gap: 24px;
+
+    margin-top: 28px;
+  }
+
+
+  .dashboard-intelligence-grid + *,
+  .dashboard-explanation-row + *,
+  .dashboard-advisory-row + * {
+    margin-top: 28px;
   }
 
 }
 
-.dashboard-explanation-row {
-  margin-top: 16px;
 
-  display: grid;
+/* =========================================================
+   RESPONSIVE — 620px
+========================================================= */
 
-  grid-template-columns:
-    minmax(0, 1fr);
+@media (max-width: 620px) {
+
+  .dashboard-intelligence-grid {
+    gap: 18px;
+
+    margin-top: 22px;
+  }
+
+
+  .dashboard-explanation-row {
+    gap: 18px;
+
+    margin-top: 24px;
+  }
+
+
+  .dashboard-advisory-row {
+    gap: 18px;
+
+    margin-top: 24px;
+  }
+
+
+  .dashboard-grid {
+    gap: 18px;
+
+    margin-top: 24px;
+  }
+
+
+  .dashboard-intelligence-grid h2,
+  .dashboard-explanation-row h2,
+  .dashboard-advisory-row h2 {
+    font-size: 21px;
+  }
+
+
+  .dashboard-intelligence-grid h3,
+  .dashboard-explanation-row h3,
+  .dashboard-advisory-row h3 {
+    font-size: 18px;
+  }
+
+
+  .dashboard-intelligence-grid p,
+  .dashboard-explanation-row p,
+  .dashboard-advisory-row p {
+    font-size: 14px;
+
+    line-height: 1.65;
+  }
+
+
+  .dashboard-intelligence-grid .value,
+  .dashboard-intelligence-grid .metric-value,
+  .dashboard-explanation-row .value,
+  .dashboard-advisory-row .value {
+    font-size: 26px;
+  }
+
 }
 
-.dashboard-advisory-row {
-  margin-top: 16px;
 
-  display: grid;
+/* =========================================================
+   RESPONSIVE — 430px
+========================================================= */
 
-  grid-template-columns:
-    minmax(0, 1fr);
+@media (max-width: 430px) {
+
+  .dashboard-intelligence-grid {
+    gap: 16px;
+
+    margin-top: 20px;
+  }
+
+
+  .dashboard-explanation-row {
+    gap: 16px;
+
+    margin-top: 22px;
+  }
+
+
+  .dashboard-advisory-row {
+    gap: 16px;
+
+    margin-top: 22px;
+  }
+
+
+  .dashboard-grid {
+    gap: 16px;
+
+    margin-top: 22px;
+  }
+
+
+  .dashboard-intelligence-grid h2,
+  .dashboard-explanation-row h2,
+  .dashboard-advisory-row h2 {
+    font-size: 20px;
+  }
+
+
+  .dashboard-intelligence-grid .value,
+  .dashboard-intelligence-grid .metric-value,
+  .dashboard-explanation-row .value,
+  .dashboard-advisory-row .value {
+    font-size: 24px;
+  }
+
 }

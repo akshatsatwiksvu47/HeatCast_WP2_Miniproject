@@ -1,26 +1,56 @@
-/* =========================================
+/* =========================================================
+   HEATCAST — MONITORING
+   Monitoring-specific design system
+   Global theme: App.css
+========================================================= */
+
+
+/* =========================================================
    FILTERS
-========================================= */
+========================================================= */
 
 .monitoring-filters {
   display: grid;
 
   grid-template-columns:
     150px
-    1fr
-    1fr;
+    minmax(0, 1fr)
+    minmax(0, 1fr);
 
   gap: 20px;
 
-  padding: 18px;
+  padding: 22px;
 
-  margin-bottom: 20px;
+  margin-bottom: 32px;
 
-  background: var(--panel);
+  background: var(--surface);
 
   border: 1px solid var(--border);
 
-  border-radius: 10px;
+  border-radius: var(--radius-lg);
+
+  box-shadow: var(--shadow);
+
+  position: relative;
+
+  overflow: hidden;
+}
+
+
+/* Subtle cyan structural accent */
+
+.monitoring-filters::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 2px;
+
+  background: var(--ui-gradient);
 }
 
 
@@ -29,183 +59,290 @@
 
   flex-direction: column;
 
-  gap: 8px;
+  gap: 9px;
+
+  min-width: 0;
 }
 
 
 .monitoring-filter-group > label {
   color: var(--text-muted);
 
-  font-size: 10px;
+  font-size: 11px;
 
-  font-weight: 700;
+  font-weight: 800;
 
-  letter-spacing: 0.12em;
+  letter-spacing: 0.09em;
+
+  line-height: 1.3;
+
+  text-transform: uppercase;
 }
 
 
 .monitoring-filter-group select {
   width: 100%;
 
-  padding: 10px 12px;
+  min-height: 44px;
 
-  background: #111b28;
+  padding: 10px 13px;
 
-  border: 1px solid var(--border);
+  background: #181716;
 
-  border-radius: 6px;
+  border: 1px solid var(--border-light);
+
+  border-radius: 7px;
 
   color: var(--text);
 
-  font-size: 12px;
+  font-size: 13px;
+
+  font-weight: 600;
 
   outline: none;
+
+  cursor: pointer;
+
+  transition:
+    background var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition);
+}
+
+
+.monitoring-filter-group select:hover {
+  background: #211f1d;
+
+  border-color: var(--cyan-border);
 }
 
 
 .monitoring-filter-group select:focus {
-  border-color: #ff8a1f;
+  border-color: var(--cyan);
+
+  box-shadow:
+    0 0 0 3px var(--cyan-soft);
 }
 
+
+/* =========================================================
+   FILTER BUTTONS
+========================================================= */
 
 .filter-buttons {
   display: flex;
 
   flex-wrap: wrap;
 
-  gap: 6px;
+  gap: 8px;
 }
 
 
 .filter-btn {
-  padding: 9px 12px;
+  min-height: 38px;
 
-  background: #111b28;
+  padding: 8px 13px;
 
-  border: 1px solid var(--border);
+  background: #181716;
 
-  border-radius: 6px;
+  border: 1px solid var(--border-light);
+
+  border-radius: 7px;
 
   color: var(--text-muted);
 
-  font-size: 10px;
+  font-size: 11px;
+
+  font-weight: 700;
 
   cursor: pointer;
 
   transition:
-    background 0.2s ease,
-    border-color 0.2s ease,
-    color 0.2s ease;
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition);
 }
 
 
 .filter-btn:hover {
-  border-color: #ff8a1f;
+  background: var(--cyan-soft);
+
+  border-color: var(--cyan-border);
 
   color: var(--text);
+
+  transform: translateY(-1px);
 }
 
 
 .filter-btn.active {
-  background: #ff8a1f;
+  background: var(--cyan-soft);
 
-  border-color: #ff8a1f;
+  border-color: var(--cyan);
 
-  color: #111;
+  color: var(--cyan-light);
+
+  box-shadow:
+    inset 0 0 0 1px rgba(85, 199, 201, 0.08);
 }
 
 
-/* =========================================
+/* =========================================================
    STATS
-========================================= */
+========================================================= */
 
 .monitoring-stats {
   display: grid;
 
   grid-template-columns:
-    repeat(4, 1fr);
+    repeat(4, minmax(0, 1fr));
 
-  gap: 12px;
+  gap: 20px;
 
-  margin-bottom: 20px;
+  margin-bottom: 38px;
 }
 
 
 .monitoring-stat-card {
-  min-height: 100px;
+  position: relative;
 
-  padding: 18px;
+  min-height: 135px;
 
-  background: var(--panel);
+  padding: 25px 22px;
+
+  background: var(--surface);
 
   border: 1px solid var(--border);
 
-  border-radius: 9px;
+  border-radius: var(--radius);
 
   display: flex;
 
   flex-direction: column;
 
   justify-content: center;
+
+  overflow: hidden;
+
+  transition:
+    transform var(--transition),
+    background var(--transition),
+    border-color var(--transition);
+}
+
+
+.monitoring-stat-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 2px;
+
+  background: var(--ui-gradient);
+}
+
+
+.monitoring-stat-card:hover {
+  transform: translateY(-2px);
+
+  background: var(--surface-hover);
+
+  border-color: var(--border-light);
 }
 
 
 .monitoring-stat-card > span {
   color: var(--text-muted);
 
-  font-size: 9px;
+  font-size: 11px;
 
-  font-weight: 700;
+  font-weight: 800;
 
-  letter-spacing: 0.12em;
+  letter-spacing: 0.09em;
 
-  margin-bottom: 8px;
+  line-height: 1.3;
+
+  margin-bottom: 10px;
+
+  text-transform: uppercase;
 }
 
 
 .monitoring-stat-card > strong {
   color: var(--text);
 
-  font-size: 20px;
+  font-size: 28px;
 
-  line-height: 1.1;
+  font-weight: 750;
 
-  margin-bottom: 6px;
+  line-height: 1.05;
+
+  letter-spacing: -0.025em;
+
+  margin-bottom: 8px;
 }
 
 
 .monitoring-stat-card > small {
   color: var(--text-muted);
 
-  font-size: 9px;
+  font-size: 11px;
+
+  line-height: 1.45;
 }
 
 
+/*
+   Heat-related statistic.
+   Orange is intentional here.
+*/
+
+.monitoring-stat-card.monitoring-stat-red,
 .monitoring-stat-red {
-  border-top: 2px solid #ff5065;
+  border-color: rgba(255, 82, 103, 0.22);
 }
 
 
-/* =========================================
+.monitoring-stat-red::before {
+  background:
+    linear-gradient(
+      90deg,
+      #ff7a18,
+      #ff5267
+    );
+}
+
+
+/* =========================================================
    CHART GRID
-========================================= */
+========================================================= */
 
 .monitoring-chart-grid {
   display: grid;
 
   grid-template-columns:
     minmax(0, 2fr)
-    minmax(280px, 1fr);
+    minmax(300px, 1fr);
 
-  gap: 14px;
+  gap: 28px;
 
-  margin-bottom: 24px;
+  margin-bottom: 42px;
 }
 
 
-/* =========================================
+.monitoring-chart-grid > * {
+  min-width: 0;
+}
+
+
+/* =========================================================
    CHART CONTROLS
-========================================= */
+========================================================= */
 
 .monitoring-chart-controls {
   display: flex;
@@ -216,9 +353,9 @@
 
   gap: 20px;
 
-  margin-top: 15px;
+  margin-top: 22px;
 
-  margin-bottom: 8px;
+  margin-bottom: 12px;
 }
 
 
@@ -227,29 +364,35 @@
 
   align-items: center;
 
-  gap: 9px;
+  gap: 10px;
 }
 
 
 .monitoring-chart-type label {
   color: var(--text-muted);
 
-  font-size: 10px;
+  font-size: 11px;
+
+  font-weight: 700;
 }
 
 
 .monitoring-chart-type select {
-  padding: 7px 28px 7px 10px;
+  min-height: 36px;
 
-  background: #111b28;
+  padding: 7px 30px 7px 11px;
 
-  border: 1px solid var(--border);
+  background: #181716;
+
+  border: 1px solid var(--border-light);
 
   border-radius: 6px;
 
   color: var(--text);
 
-  font-size: 10px;
+  font-size: 11px;
+
+  font-weight: 600;
 
   outline: none;
 
@@ -257,14 +400,22 @@
 }
 
 
-.monitoring-chart-type select:focus {
-  border-color: #ff8a1f;
+.monitoring-chart-type select:hover {
+  border-color: var(--cyan-border);
 }
 
 
-/* =========================================
+.monitoring-chart-type select:focus {
+  border-color: var(--cyan);
+
+  box-shadow:
+    0 0 0 3px var(--cyan-soft);
+}
+
+
+/* =========================================================
    GRAPH GRID
-========================================= */
+========================================================= */
 
 .monitoring-grid-lines,
 .monitoring-column-grid {
@@ -287,20 +438,20 @@
   width: 100%;
 
   border-top: 1px dashed
-    rgba(120, 140, 165, 0.12);
+    rgba(180, 185, 180, 0.10);
 }
 
 
-/* =========================================
+/* =========================================================
    LINE CHART
-========================================= */
+========================================================= */
 
 .monitoring-line-chart {
   position: relative;
 
-  height: 280px;
+  height: 310px;
 
-  margin-top: 10px;
+  margin-top: 16px;
 
   overflow: visible;
 
@@ -322,11 +473,11 @@
 
 
 .monitoring-line-point {
-  fill: #ff8a1f;
+  fill: var(--orange);
 
-  stroke: var(--panel);
+  stroke: var(--surface);
 
-  stroke-width: 1;
+  stroke-width: 2;
 
   transition:
     r 0.15s ease,
@@ -337,9 +488,9 @@
 .monitoring-line-point.active {
   fill: #ffffff;
 
-  stroke: #ff8a1f;
+  stroke: var(--orange);
 
-  stroke-width: 2;
+  stroke-width: 2.5;
 }
 
 
@@ -348,9 +499,9 @@
 }
 
 
-/* =========================================
+/* =========================================================
    LINE TOOLTIP
-========================================= */
+========================================================= */
 
 .monitoring-tooltip {
   position: absolute;
@@ -365,15 +516,18 @@
 
   align-items: center;
 
-  min-width: 65px;
+  min-width: 78px;
 
-  padding: 7px 9px;
+  padding: 9px 11px;
 
-  background: #101924;
+  background: #1a1918;
 
-  border: 1px solid #ff8a1f;
+  border: 1px solid var(--orange-border);
 
-  border-radius: 5px;
+  border-radius: 7px;
+
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.28);
 
   pointer-events: none;
 
@@ -382,31 +536,35 @@
 
 
 .monitoring-tooltip strong {
-  color: #ffffff;
+  color: var(--text);
 
-  font-size: 11px;
+  font-size: 13px;
+
+  font-weight: 750;
 }
 
 
 .monitoring-tooltip span {
-  margin-top: 2px;
+  margin-top: 3px;
 
   color: var(--text-muted);
 
-  font-size: 8px;
+  font-size: 10px;
+
+  line-height: 1.3;
 }
 
 
-/* =========================================
+/* =========================================================
    COLUMN CHART
-========================================= */
+========================================================= */
 
 .monitoring-column-chart {
   position: relative;
 
-  height: 280px;
+  height: 310px;
 
-  margin-top: 10px;
+  margin-top: 16px;
 
   overflow: visible;
 
@@ -423,11 +581,11 @@
 
   align-items: flex-end;
 
-  gap: 7px;
+  gap: 9px;
 
   padding:
-    15px
-    8px
+    18px
+    10px
     0;
 }
 
@@ -456,15 +614,16 @@
 
   min-height: 12px;
 
-  background: linear-gradient(
-    180deg,
-    #ff8a1f,
-    #d95d00
-  );
+  background:
+    linear-gradient(
+      180deg,
+      #ff9b32,
+      #e56d0a
+    );
 
-  border-radius: 5px 5px 0 0;
+  border-radius: 6px 6px 0 0;
 
-  opacity: 0.82;
+  opacity: 0.84;
 
   transition:
     height 0.25s ease,
@@ -484,15 +643,14 @@
 
 .monitoring-temperature-column.active {
   box-shadow:
-    0 0 0 1px #ff8a1f,
-    0 0 12px
-      rgba(255, 138, 31, 0.25);
+    0 0 0 1px var(--orange),
+    0 0 14px rgba(255, 138, 31, 0.20);
 }
 
 
-/* =========================================
+/* =========================================================
    COLUMN TOOLTIP
-========================================= */
+========================================================= */
 
 .monitoring-column-tooltip {
   position: absolute;
@@ -503,7 +661,7 @@
 
   transform: translateX(-50%);
 
-  margin-bottom: 8px;
+  margin-bottom: 9px;
 
   display: flex;
 
@@ -511,15 +669,18 @@
 
   align-items: center;
 
-  min-width: 62px;
+  min-width: 75px;
 
-  padding: 7px 8px;
+  padding: 9px 10px;
 
-  background: #101924;
+  background: #1a1918;
 
-  border: 1px solid #ff8a1f;
+  border: 1px solid var(--orange-border);
 
-  border-radius: 5px;
+  border-radius: 7px;
+
+  box-shadow:
+    0 8px 22px rgba(0, 0, 0, 0.28);
 
   z-index: 10;
 
@@ -528,37 +689,39 @@
 
 
 .monitoring-column-tooltip strong {
-  color: #ffffff;
+  color: var(--text);
+
+  font-size: 12px;
+
+  font-weight: 750;
+}
+
+
+.monitoring-column-tooltip span {
+  margin-top: 3px;
+
+  color: var(--text-muted);
 
   font-size: 10px;
 }
 
 
-.monitoring-column-tooltip span {
-  margin-top: 2px;
-
-  color: var(--text-muted);
-
-  font-size: 8px;
-}
-
-
-/* =========================================
+/* =========================================================
    CHART LABELS
-========================================= */
+========================================================= */
 
 .monitoring-chart-labels {
   display: flex;
 
   justify-content: space-between;
 
-  gap: 6px;
+  gap: 8px;
 
-  margin-top: 9px;
+  margin-top: 11px;
 
   color: var(--text-muted);
 
-  font-size: 8px;
+  font-size: 10px;
 }
 
 
@@ -572,29 +735,34 @@
 
 
 .monitoring-chart-footer {
-  margin-top: 12px;
+  margin-top: 15px;
 
   color: var(--text-muted);
 
-  font-size: 10px;
+  font-size: 11px;
+
+  line-height: 1.5;
 }
 
 
 .monitoring-chart-footer strong {
-  color: var(--text-soft);
+  color: var(--text-secondary);
 }
 
 
-/* =========================================
+/* =========================================================
    SEASONAL CHART
-========================================= */
+========================================================= */
 
 .season-chart {
-  height: 300px;
+  height: 320px;
 
-  margin-top: 15px;
+  margin-top: 18px;
 
-  padding: 10px 15px 0;
+  padding:
+    10px
+    16px
+    0;
 
   display: flex;
 
@@ -602,7 +770,7 @@
 
   justify-content: space-around;
 
-  gap: 10px;
+  gap: 12px;
 
   border-bottom: 1px solid var(--border);
 }
@@ -636,11 +804,13 @@
 
 
 .season-value {
-  color: var(--text-soft);
+  color: var(--text-secondary);
 
-  font-size: 10px;
+  font-size: 11px;
 
-  margin-bottom: 5px;
+  font-weight: 650;
+
+  margin-bottom: 7px;
 }
 
 
@@ -651,13 +821,19 @@
 
   min-height: 8px;
 
-  background: #47566a;
+  background:
+    linear-gradient(
+      180deg,
+      #4c656c,
+      #35474b
+    );
 
-  border-radius: 4px 4px 0 0;
+  border-radius: 5px 5px 0 0;
 
   transition:
     height 0.25s ease,
-    background 0.2s ease;
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
 
@@ -665,20 +841,29 @@
 .season-column,
 .season-column-wrap.selected
 .season-column {
-  background: #ff8a1f;
+  background:
+    linear-gradient(
+      180deg,
+      #67cacc,
+      #378f92
+    );
+
+  transform: translateY(-2px);
 }
 
 
 .season-label {
   width: 100%;
 
-  margin-top: 8px;
+  margin-top: 9px;
 
-  margin-bottom: 8px;
+  margin-bottom: 9px;
 
   color: var(--text-muted);
 
-  font-size: 8px;
+  font-size: 10px;
+
+  font-weight: 650;
 
   text-align: center;
 
@@ -686,79 +871,73 @@
 }
 
 
-/* =====================================================
+/* =========================================================
    REGIONAL COMPARISON
-===================================================== */
+========================================================= */
 
 .monitoring-comparison {
-  margin-top: 24px;
+  margin-top: 34px;
 
-  padding-top: 6px;
+  padding-top: 8px;
 }
 
 
-/* =========================================
+/* =========================================================
    COMPARISON ACTIONS
-========================================= */
+========================================================= */
 
 .comparison-actions {
   display: flex;
 
   align-items: center;
 
-  gap: 7px;
+  gap: 9px;
 }
 
 
 .comparison-action {
+  min-height: 36px;
+
   padding:
-    8px 11px;
+    8px 12px;
 
   border:
-    1px solid rgba(
-      255,
-      138,
-      31,
-      0.35
-    );
+    1px solid var(--cyan-border);
 
-  border-radius: 5px;
+  border-radius: 6px;
 
   background:
-    rgba(
-      255,
-      138,
-      31,
-      0.08
-    );
+    var(--cyan-soft);
 
-  color: #ff8a1f;
+  color: var(--cyan);
 
   font-family: inherit;
 
-  font-size: 9px;
+  font-size: 10px;
 
-  font-weight: 600;
+  font-weight: 700;
 
   cursor: pointer;
 
   transition:
-    background 0.2s ease,
-    border-color 0.2s ease;
+    background var(--transition),
+    border-color var(--transition),
+    color var(--transition),
+    transform var(--transition);
 }
 
 
 .comparison-action:hover {
   background:
-    rgba(
-      255,
-      138,
-      31,
-      0.15
-    );
+    rgba(85, 199, 201, 0.14);
 
   border-color:
-    #ff8a1f;
+    var(--cyan);
+
+  color:
+    var(--cyan-light);
+
+  transform: translateY(-1px);
 }
 
 
@@ -776,24 +955,27 @@
 
 .comparison-action.secondary:hover {
   color:
-    var(--text-soft);
+    var(--text-secondary);
 
   border-color:
-    var(--text-muted);
+    var(--border-light);
+
+  background:
+    rgba(255, 255, 255, 0.025);
 }
 
 
-/* =========================================
+/* =========================================================
    REGION SELECTOR
-========================================= */
+========================================================= */
 
 .comparison-selector {
-  margin-top: 16px;
+  margin-top: 20px;
 
-  padding: 15px;
+  padding: 20px;
 
   background:
-    var(--panel);
+    #191817;
 
   border:
     1px solid var(--border);
@@ -809,7 +991,9 @@
 
   justify-content: space-between;
 
-  margin-bottom: 11px;
+  margin-bottom: 13px;
+
+  gap: 16px;
 }
 
 
@@ -817,11 +1001,13 @@
   color:
     var(--text-muted);
 
-  font-size: 9px;
+  font-size: 11px;
 
-  font-weight: 700;
+  font-weight: 800;
 
-  letter-spacing: 0.12em;
+  letter-spacing: 0.09em;
+
+  text-transform: uppercase;
 }
 
 
@@ -829,7 +1015,7 @@
   color:
     var(--text-muted);
 
-  font-size: 9px;
+  font-size: 10px;
 }
 
 
@@ -845,7 +1031,7 @@
       )
     );
 
-  gap: 8px;
+  gap: 10px;
 }
 
 
@@ -856,18 +1042,20 @@
 
   align-items: center;
 
-  gap: 9px;
+  gap: 10px;
+
+  min-height: 49px;
 
   padding:
-    10px 11px;
+    10px 12px;
 
   background:
-    #111b28;
+    #1b1a19;
 
   border:
     1px solid var(--border);
 
-  border-radius: 6px;
+  border-radius: 7px;
 
   color:
     var(--text-muted);
@@ -879,38 +1067,29 @@
   cursor: pointer;
 
   transition:
-    background 0.2s ease,
-    border-color 0.2s ease;
+    background var(--transition),
+    border-color var(--transition),
+    transform var(--transition);
 }
 
 
 .comparison-region-option:hover {
+  background:
+    #211f1d;
+
   border-color:
-    rgba(
-      255,
-      138,
-      31,
-      0.45
-    );
+    var(--cyan-border);
+
+  transform: translateY(-1px);
 }
 
 
 .comparison-region-option.selected {
   background:
-    rgba(
-      255,
-      138,
-      31,
-      0.08
-    );
+    rgba(85, 199, 201, 0.07);
 
   border-color:
-    rgba(
-      255,
-      138,
-      31,
-      0.55
-    );
+    rgba(85, 199, 201, 0.48);
 }
 
 
@@ -922,9 +1101,9 @@
 
 
 .comparison-check {
-  width: 17px;
+  width: 18px;
 
-  height: 17px;
+  height: 18px;
 
   flex-shrink: 0;
 
@@ -935,7 +1114,7 @@
   justify-content: center;
 
   border:
-    1px solid var(--border);
+    1px solid var(--border-light);
 
   border-radius: 4px;
 
@@ -954,10 +1133,10 @@
 .comparison-region-option.selected
 .comparison-check {
   background:
-    #ff8a1f;
+    var(--cyan);
 
   border-color:
-    #ff8a1f;
+    var(--cyan);
 }
 
 
@@ -968,7 +1147,7 @@
 
   flex-direction: column;
 
-  gap: 2px;
+  gap: 3px;
 
   flex: 1;
 }
@@ -978,9 +1157,11 @@
   overflow: hidden;
 
   color:
-    var(--text-soft);
+    var(--text-secondary);
 
-  font-size: 10px;
+  font-size: 11px;
+
+  font-weight: 700;
 
   text-overflow: ellipsis;
 
@@ -992,7 +1173,7 @@
   color:
     var(--text-muted);
 
-  font-size: 8px;
+  font-size: 9px;
 }
 
 
@@ -1000,20 +1181,20 @@
   color:
     var(--text);
 
-  font-size: 10px;
+  font-size: 11px;
 
   white-space: nowrap;
 }
 
 
-/* =========================================
+/* =========================================================
    EMPTY STATE
-========================================= */
+========================================================= */
 
 .comparison-empty {
-  margin-top: 14px;
+  margin-top: 16px;
 
-  padding: 30px;
+  padding: 34px;
 
   display: flex;
 
@@ -1023,10 +1204,10 @@
 
   justify-content: center;
 
-  gap: 5px;
+  gap: 7px;
 
   border:
-    1px dashed var(--border);
+    1px dashed var(--border-light);
 
   border-radius: 8px;
 
@@ -1036,9 +1217,9 @@
 
 .comparison-empty strong {
   color:
-    var(--text-soft);
+    var(--text-secondary);
 
-  font-size: 11px;
+  font-size: 12px;
 }
 
 
@@ -1046,13 +1227,13 @@
   color:
     var(--text-muted);
 
-  font-size: 9px;
+  font-size: 10px;
 }
 
 
-/* =========================================
+/* =========================================================
    SUMMARY CARDS
-========================================= */
+========================================================= */
 
 .comparison-summary-grid {
   display: grid;
@@ -1066,19 +1247,21 @@
       )
     );
 
-  gap: 10px;
+  gap: 14px;
 
-  margin-top: 14px;
+  margin-top: 18px;
 }
 
 
 .comparison-summary-card {
+  position: relative;
+
   min-width: 0;
 
-  padding: 15px;
+  padding: 19px;
 
   background:
-    var(--panel);
+    var(--surface);
 
   border:
     1px solid var(--border);
@@ -1091,10 +1274,27 @@
 
   cursor: pointer;
 
+  overflow: hidden;
+
   transition:
-    transform 0.2s ease,
-    background 0.2s ease,
-    border-color 0.2s ease;
+    transform var(--transition),
+    background var(--transition),
+    border-color var(--transition);
+}
+
+
+.comparison-summary-card::before {
+  content: "";
+
+  position: absolute;
+
+  top: 0;
+  left: 0;
+  right: 0;
+
+  height: 2px;
+
+  background: var(--ui-gradient);
 }
 
 
@@ -1102,31 +1302,29 @@
   transform:
     translateY(-2px);
 
+  background:
+    var(--surface-hover);
+
   border-color:
-    rgba(
-      255,
-      138,
-      31,
-      0.4
-    );
+    var(--cyan-border);
 }
 
 
 .comparison-summary-card.active {
   border-color:
-    rgba(
-      255,
-      138,
-      31,
-      0.65
-    );
+    rgba(85, 199, 201, 0.55);
 
   background:
-    rgba(
-      255,
-      138,
-      31,
-      0.06
+    rgba(85, 199, 201, 0.055);
+}
+
+
+.comparison-summary-card.active::before {
+  background:
+    linear-gradient(
+      90deg,
+      var(--cyan),
+      rgba(85, 199, 201, 0.12)
     );
 }
 
@@ -1146,9 +1344,9 @@
   overflow: hidden;
 
   color:
-    var(--text-soft);
+    var(--text-secondary);
 
-  font-size: 10px;
+  font-size: 11px;
 
   font-weight: 700;
 
@@ -1160,38 +1358,39 @@
 
 .comparison-summary-top small {
   padding:
-    3px 5px;
+    4px 6px;
 
-  border-radius: 3px;
+  border-radius: 4px;
 
   color:
-    #ff8a1f;
+    var(--cyan);
 
   background:
-    rgba(
-      255,
-      138,
-      31,
-      0.1
-    );
+    var(--cyan-soft);
 
-  font-size: 7px;
+  font-size: 8px;
 
-  font-weight: 700;
+  font-weight: 800;
+
+  letter-spacing: 0.04em;
 }
 
 
 .comparison-summary-card > strong {
   display: block;
 
-  margin-top: 10px;
+  margin-top: 12px;
 
   color:
     var(--text);
 
-  font-size: 24px;
+  font-size: 27px;
+
+  font-weight: 750;
 
   line-height: 1;
+
+  letter-spacing: -0.025em;
 }
 
 
@@ -1204,31 +1403,31 @@
 
   gap: 8px;
 
-  margin-top: 9px;
+  margin-top: 10px;
 
   color:
     var(--text-muted);
 
-  font-size: 8px;
+  font-size: 9px;
 }
 
 
 .comparison-departure {
   color:
-    #ff8a1f;
+    var(--orange);
 
-  font-weight: 700;
+  font-weight: 750;
 }
 
 
 .comparison-summary-risk {
-  margin-top: 11px;
+  margin-top: 12px;
 }
 
 
-/* =========================================
+/* =========================================================
    COMPARISON VISUALS
-========================================= */
+========================================================= */
 
 .comparison-chart-grid {
   display: grid;
@@ -1242,19 +1441,19 @@
       )
     );
 
-  gap: 14px;
+  gap: 20px;
 
-  margin-top: 14px;
+  margin-top: 20px;
 }
 
 
 .comparison-chart-card {
   min-width: 0;
 
-  padding: 16px;
+  padding: 20px;
 
   background:
-    var(--panel);
+    var(--surface);
 
   border:
     1px solid var(--border);
@@ -1272,7 +1471,7 @@
 
   gap: 10px;
 
-  margin-bottom: 17px;
+  margin-bottom: 20px;
 }
 
 
@@ -1280,20 +1479,24 @@
   margin: 0;
 
   color:
-    var(--text-soft);
+    var(--text-secondary);
 
-  font-size: 11px;
+  font-size: 13px;
+
+  font-weight: 700;
 }
 
 
 .comparison-chart-heading p {
   margin:
-    4px 0 0;
+    5px 0 0;
 
   color:
     var(--text-muted);
 
-  font-size: 8px;
+  font-size: 10px;
+
+  line-height: 1.4;
 }
 
 
@@ -1301,16 +1504,20 @@
   color:
     var(--text-muted);
 
-  font-size: 9px;
+  font-size: 10px;
 }
 
+
+/* =========================================================
+   COMPARISON BARS
+========================================================= */
 
 .comparison-bars {
   display: flex;
 
   flex-direction: column;
 
-  gap: 13px;
+  gap: 15px;
 }
 
 
@@ -1320,13 +1527,13 @@
   display: grid;
 
   grid-template-columns:
-    75px
-    1fr
-    42px;
+    85px
+    minmax(0, 1fr)
+    48px;
 
   align-items: center;
 
-  gap: 9px;
+  gap: 10px;
 
   padding: 0;
 
@@ -1348,7 +1555,7 @@
   color:
     var(--text-muted);
 
-  font-size: 8px;
+  font-size: 10px;
 
   text-overflow: ellipsis;
 
@@ -1357,7 +1564,7 @@
 
 
 .comparison-bar-track {
-  height: 8px;
+  height: 9px;
 
   overflow: hidden;
 
@@ -1365,10 +1572,10 @@
 
   background:
     rgba(
-      120,
-      140,
-      165,
-      0.1
+      180,
+      185,
+      180,
+      0.09
     );
 }
 
@@ -1382,6 +1589,8 @@
 
   transition:
     width 0.35s ease;
+
+  position: relative;
 }
 
 
@@ -1390,7 +1599,8 @@
     linear-gradient(
       90deg,
       #d95d00,
-      #ff8a1f
+      #ff8a1f,
+      #ffad38
     );
 }
 
@@ -1399,8 +1609,8 @@
   background:
     linear-gradient(
       90deg,
-      #9c5a20,
-      #ffb347
+      #b87832,
+      #f2a84b
     );
 }
 
@@ -1410,7 +1620,7 @@
     linear-gradient(
       90deg,
       #d95d00,
-      #ff5065
+      #ff5267
     );
 }
 
@@ -1418,26 +1628,32 @@
 .comparison-bar-row:hover
 .comparison-bar-fill {
   filter:
-    brightness(1.2);
+    brightness(1.15);
 }
 
 
 .comparison-bar-row strong {
   color:
-    var(--text-soft);
+    var(--text-secondary);
 
-  font-size: 9px;
+  font-size: 10px;
+
+  font-weight: 700;
 
   text-align: right;
 }
 
 
-/* =========================================
+/* =========================================================
    COMPARISON TABLE
-========================================= */
+========================================================= */
 
 .comparison-table-wrap {
-  margin-top: 14px;
+  margin-top: 18px;
+
+  overflow-x: auto;
+
+  border-radius: 8px;
 }
 
 
@@ -1453,20 +1669,101 @@
 
 
 .comparison-footer-note {
-  margin-top: 9px;
+  margin-top: 10px;
 
   color:
     var(--text-muted);
 
-  font-size: 8px;
+  font-size: 9px;
+
+  line-height: 1.5;
 
   text-align: right;
 }
 
 
-/* =========================================
-   RESPONSIVE
-========================================= */
+/* =========================================================
+   MONITORING CARD VISUAL SEPARATION
+========================================================= */
+
+/*
+   These help the chart panels feel distinct without
+   turning every section into a glowing box.
+*/
+
+.monitoring-chart-grid > .panel:nth-child(1) {
+  border-color: #36332f;
+}
+
+
+.monitoring-chart-grid > .panel:nth-child(2) {
+  border-color: #343331;
+}
+
+
+.monitoring-comparison .panel {
+  background:
+    #1a1918;
+}
+
+
+/* =========================================================
+   FOCUS / ACCESSIBILITY
+========================================================= */
+
+.filter-btn:focus-visible,
+.comparison-action:focus-visible,
+.comparison-region-option:focus-visible,
+.comparison-summary-card:focus-visible,
+.comparison-bar-row:focus-visible,
+.season-column-wrap:focus-visible {
+  outline: 2px solid var(--cyan);
+
+  outline-offset: 2px;
+}
+
+
+/* =========================================================
+   RESPONSIVE — 1100px
+========================================================= */
+
+@media (max-width: 1100px) {
+
+  .monitoring-filters {
+    grid-template-columns:
+      130px
+      minmax(0, 1fr)
+      minmax(0, 1fr);
+  }
+
+
+  .monitoring-chart-grid {
+    grid-template-columns:
+      minmax(0, 1.5fr)
+      minmax(280px, 1fr);
+  }
+
+
+  .monitoring-stats {
+    gap: 16px;
+  }
+
+
+  .monitoring-stat-card {
+    padding: 22px 19px;
+  }
+
+
+  .monitoring-stat-card > strong {
+    font-size: 25px;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 1000px
+========================================================= */
 
 @media (max-width: 1000px) {
 
@@ -1486,7 +1783,7 @@
     grid-template-columns:
       repeat(
         2,
-        1fr
+        minmax(0, 1fr)
       );
   }
 
@@ -1505,11 +1802,66 @@
 }
 
 
+/* =========================================================
+   RESPONSIVE — 850px
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .monitoring-filters {
+    gap: 16px;
+
+    padding: 20px;
+
+    margin-bottom: 28px;
+  }
+
+
+  .monitoring-stats {
+    gap: 16px;
+
+    margin-bottom: 32px;
+  }
+
+
+  .monitoring-chart-grid {
+    gap: 24px;
+
+    margin-bottom: 36px;
+  }
+
+
+  .monitoring-line-chart,
+  .monitoring-column-chart {
+    height: 280px;
+  }
+
+
+  .season-chart {
+    height: 290px;
+  }
+
+
+  .comparison-chart-grid {
+    gap: 18px;
+  }
+
+}
+
+
+/* =========================================================
+   RESPONSIVE — 650px
+========================================================= */
+
 @media (max-width: 650px) {
 
   .monitoring-filters {
     grid-template-columns:
       1fr;
+
+    gap: 16px;
+
+    padding: 18px;
   }
 
 
@@ -1519,9 +1871,59 @@
   }
 
 
+  .monitoring-filter-group > label {
+    font-size: 10px;
+  }
+
+
+  .monitoring-filter-group select {
+    min-height: 42px;
+
+    font-size: 12px;
+  }
+
+
+  .filter-buttons {
+    gap: 7px;
+  }
+
+
+  .filter-btn {
+    min-height: 36px;
+
+    padding:
+      7px 11px;
+
+    font-size: 10px;
+  }
+
+
   .monitoring-stats {
     grid-template-columns:
       1fr;
+
+    gap: 14px;
+
+    margin-bottom: 28px;
+  }
+
+
+  .monitoring-stat-card {
+    min-height: 120px;
+
+    padding: 21px;
+  }
+
+
+  .monitoring-stat-card > strong {
+    font-size: 27px;
+  }
+
+
+  .monitoring-chart-grid {
+    gap: 20px;
+
+    margin-bottom: 30px;
   }
 
 
@@ -1531,13 +1933,27 @@
 
     flex-direction:
       column;
+
+    gap: 12px;
+
+    margin-top: 18px;
+  }
+
+
+  .monitoring-chart-type {
+    width: 100%;
+  }
+
+
+  .monitoring-chart-type select {
+    flex: 1;
   }
 
 
   .monitoring-line-chart,
   .monitoring-column-chart {
     height:
-      220px;
+      235px;
   }
 
 
@@ -1549,7 +1965,16 @@
 
   .monitoring-chart-labels {
     font-size:
-      7px;
+      8px;
+  }
+
+
+  .monitoring-tooltip,
+  .monitoring-column-tooltip {
+    min-width: 68px;
+
+    padding:
+      7px 8px;
   }
 
 
@@ -1571,11 +1996,16 @@
   }
 
 
+  .comparison-chart-card {
+    padding: 17px;
+  }
+
+
   .comparison-bar-row {
     grid-template-columns:
       62px
-      1fr
-      36px;
+      minmax(0, 1fr)
+      38px;
   }
 
 
@@ -1587,11 +2017,109 @@
 }
 
 
+/* =========================================================
+   RESPONSIVE — 450px
+========================================================= */
+
 @media (max-width: 450px) {
+
+  .monitoring-filters {
+    padding: 16px;
+  }
+
+
+  .monitoring-stat-card {
+    min-height: 112px;
+
+    padding: 19px;
+  }
+
+
+  .monitoring-stat-card > strong {
+    font-size: 25px;
+  }
+
+
+  .monitoring-line-chart,
+  .monitoring-column-chart {
+    height:
+      215px;
+  }
+
+
+  .season-chart {
+    height:
+      250px;
+
+    padding-left:
+      8px;
+
+    padding-right:
+      8px;
+  }
+
+
+  .season-value {
+    font-size:
+      10px;
+  }
+
+
+  .season-label {
+    font-size:
+      9px;
+  }
+
+
+  .comparison-selector {
+    padding:
+      16px;
+  }
+
 
   .comparison-summary-grid {
     grid-template-columns:
       1fr;
+  }
+
+
+  .comparison-summary-card {
+    padding:
+      17px;
+  }
+
+
+  .comparison-summary-card > strong {
+    font-size:
+      25px;
+  }
+
+
+  .comparison-chart-card {
+    padding:
+      15px;
+  }
+
+
+  .comparison-bar-row {
+    grid-template-columns:
+      55px
+      minmax(0, 1fr)
+      35px;
+
+    gap: 7px;
+  }
+
+
+  .comparison-bar-label {
+    font-size:
+      9px;
+  }
+
+
+  .comparison-bar-row strong {
+    font-size:
+      9px;
   }
 
 }

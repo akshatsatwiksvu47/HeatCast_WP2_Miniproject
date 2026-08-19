@@ -1,9 +1,11 @@
 import { NavLink } from "react-router-dom";
+import "./Navbar.css";
 
 function Navbar() {
   return (
     <nav className="navbar">
 
+      {/* BRAND */}
       <NavLink
         to="/"
         className="navbar-brand"
@@ -13,7 +15,7 @@ function Navbar() {
           H
         </div>
 
-        <div>
+        <div className="brand-copy">
           <div className="brand-name">
             HeatCast
           </div>
@@ -25,16 +27,17 @@ function Navbar() {
       </NavLink>
 
 
+      {/* NAVIGATION */}
       <div className="navbar-links">
 
         <NavLink
           to="/"
+          end
           className={({ isActive }) =>
             isActive
               ? "nav-link active"
               : "nav-link"
           }
-          end
         >
           Dashboard
         </NavLink>

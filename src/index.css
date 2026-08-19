@@ -1,66 +1,91 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+/* =========================================================
+   HEATCAST
+   GLOBAL BASE STYLES
+========================================================= */
 
-html {
-  margin: 0;
-  padding: 0;
-  min-height: 100%;
-  background: #0b111b;
-}
-
-body {
-  margin: 0;
-  padding: 0;
-  min-width: 320px;
-  min-height: 100vh;
-
-  background: #0b111b;
-  color: #f4f7fb;
-
+:root {
   font-family:
     Inter,
-    -apple-system,
-    BlinkMacSystemFont,
     "Segoe UI",
     Roboto,
     Helvetica,
     Arial,
     sans-serif;
 
-  font-size: 14px;
-  line-height: 1.5;
+  color: #f5f2ed;
+  background: #121212;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#root {
+
+/* =========================================================
+   RESET
+========================================================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+
+html {
+  min-width: 320px;
+  min-height: 100%;
+
+  background: #121212;
+
+  color-scheme: dark;
+
+  scroll-behavior: smooth;
+}
+
+
+body {
+  margin: 0;
+
+  min-width: 320px;
   min-height: 100vh;
+
+  background: #121212;
+
+  color: #f5f2ed;
+
+  font-family:
+    Inter,
+    "Segoe UI",
+    Roboto,
+    Helvetica,
+    Arial,
+    sans-serif;
+
+  font-size: 15px;
+
+  font-weight: 400;
+
+  line-height: 1.55;
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+#root {
+  min-width: 320px;
+  min-height: 100vh;
+
   width: 100%;
 }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  margin: 0;
-  padding: 0;
-  font-weight: 600;
-}
 
-p {
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
+/* =========================================================
+   ELEMENT DEFAULTS
+========================================================= */
 
 button,
 input,
@@ -69,62 +94,128 @@ textarea {
   font: inherit;
 }
 
+
 button {
-  border: 0;
-  outline: 0;
-  cursor: pointer;
+  margin: 0;
 }
+
+
+a {
+  color: inherit;
+
+  text-decoration: none;
+}
+
 
 img,
 svg {
   display: block;
+
   max-width: 100%;
 }
 
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-top: 0;
 }
 
-ul,
-ol {
-  margin: 0;
-  padding: 0;
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #f5f2ed;
+
+  font-weight: 700;
 }
+
+
+p {
+  color: #b8b3ac;
+}
+
+
+/* =========================================================
+   SELECTION
+========================================================= */
 
 ::selection {
-  background: rgba(255, 138, 26, 0.25);
+  background: rgba(255, 138, 31, 0.25);
+
   color: #ffffff;
 }
 
+
+/* =========================================================
+   FOCUS
+========================================================= */
+
+:focus-visible {
+  outline: 2px solid #ff8a1f;
+
+  outline-offset: 3px;
+}
+
+
+/* =========================================================
+   SCROLLBAR
+========================================================= */
+
 ::-webkit-scrollbar {
   width: 8px;
+
   height: 8px;
 }
 
+
 ::-webkit-scrollbar-track {
-  background: #0b111b;
+  background: #0e0e0e;
 }
+
 
 ::-webkit-scrollbar-thumb {
-  background: #273342;
-  border-radius: 8px;
+  background: #34312e;
+
+  border-radius: 5px;
 }
+
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #354355;
+  background: #4a4540;
 }
 
-button:focus-visible,
-a:focus-visible,
-input:focus-visible,
-select:focus-visible {
-  outline: 2px solid #ff8a1a;
-  outline-offset: 2px;
+
+/* =========================================================
+   FORM ELEMENTS
+========================================================= */
+
+input,
+select,
+textarea {
+  color: #f5f2ed;
+
+  background: #1b1a19;
+
+  border-color: #35322f;
 }
 
-@media (max-width: 768px) {
-  body {
-    font-size: 13px;
-  }
+
+input::placeholder,
+textarea::placeholder {
+  color: #817c75;
+}
+
+
+option {
+  background: #1b1a19;
+
+  color: #f5f2ed;
 }
