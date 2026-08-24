@@ -7,27 +7,66 @@ import Monitoring from "./pages/Monitoring/Monitoring";
 import Forecast from "./pages/Forecast/Forecast";
 import Hotspots from "./pages/Hotspots/Hotspots";
 import Alerts from "./pages/Alerts/Alerts";
-import About from "./pages/About/About";
 import Prediction from "./pages/Prediction/Prediction";
+import About from "./pages/About/About";
 
 import "./App.css";
 
+
 function App() {
+
   return (
+
     <BrowserRouter>
+
       <MainLayout>
+
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/monitoring" element={<Monitoring />} />
-          <Route path="/forecast" element={<Forecast />} />
-          <Route path="/hotspots" element={<Hotspots />} />
-          <Route path="/alerts" element={<Alerts />} />
-          <Route path="/prediction" element={<Prediction />} />
-          <Route path="/about" element={<About />} />
+
+          <Route
+            path="/"
+            element={<Dashboard />}
+          />
+
+          <Route
+            path="/monitoring"
+            element={<Monitoring />}
+          />
+
+          <Route
+            path="/forecast"
+            element={<Forecast />}
+          />
+
+          <Route
+            path="/hotspots"
+            element={<Hotspots />}
+          />
+
+          <Route
+            path="/alerts"
+            element={<Alerts />}
+          />
+
+          <Route
+            path="/prediction"
+            element={<Prediction />}
+          />
+
+          <Route
+            path="/about"
+            element={<About />}
+          />
+
         </Routes>
+
       </MainLayout>
+
     </BrowserRouter>
+
   );
+
 }
+
 
 export default App;
