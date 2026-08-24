@@ -2,39 +2,46 @@
 
 ### Climate Intelligence for Heatwave Monitoring, Prediction, and Early Warning
 
-HeatCast is a climate intelligence platform designed to help monitor heat conditions, understand regional heatwave risk, identify hotspots, and communicate actionable warnings.
+HeatCast is a climate intelligence platform designed to help monitor heat conditions, understand regional heatwave risk, identify hotspots, provide forecasts, and communicate actionable warnings.
 
 The project is being developed as a **Web Programming II (WP2) mini-project** based on the use case:
 
 > **Climate Intelligence for Heatwave Monitoring, Prediction, and Early Warning**
 
-The current implementation focuses on building a polished, responsive **frontend dashboard and user interface**. Backend integration, real datasets, and AI/ML-based prediction are planned for later stages of development.
+The current implementation focuses on building a polished, responsive **React frontend and user interface**. The frontend is structured to support future integration with real climate datasets, backend services, and machine-learning prediction models.
 
 ---
 
-## Current Project Status
+# Current Project Status
 
-### Frontend Phase — Completed
+## Frontend Phase — Completed
 
-The current version provides the complete frontend structure and visual interface for the platform.
+The current version provides the main frontend structure, reusable React components, responsive layouts, navigation, data-service layer, and interactive climate intelligence interfaces.
 
 Implemented areas include:
 
 - Dashboard
 - Regional monitoring
-- Temperature trends
+- Temperature trend visualization
 - Heat risk assessment
 - Heatwave probability
-- Hotspot visualization interface
-- Forecast interface
-- Alerts and advisories
-- Stakeholder-specific advisory interface
+- Risk explanation
+- Regional comparison
+- Heatwave forecast
+- Hotspot visualization
+- Alerts and warnings
+- Stakeholder-specific advisories
+- AI heatwave prediction interface
 - About / project information page
 - Responsive layouts
 - Reusable React components
-- API service structure for future backend integration
+- JSON-based prototype data services
+- Fetch API integration
+- Promise-based asynchronous data retrieval
+- Async/await
+- React state and effect management
 
-The current frontend uses prototype/sample data where real backend or ML output is not yet available.
+The current frontend uses structured prototype data where real backend services and machine-learning outputs are not yet available.
 
 ---
 
@@ -42,31 +49,30 @@ The current frontend uses prototype/sample data where real backend or ML output 
 
 ## 📊 Dashboard
 
-The dashboard provides an overview of current heat conditions and regional risk.
+The Dashboard provides an overview of current heat conditions and regional risk.
 
 It includes:
 
-- Current heat indicators
+- Current climate indicators
 - Regional conditions
 - Temperature trends
 - Heat risk assessment
 - Heatwave probability
-- Risk explanations
+- Explainable risk information
 - Active warnings
 - Stakeholder-specific advisories
 
-The dashboard is designed to provide important information quickly without overwhelming the user.
+The dashboard is designed to present important climate information quickly while maintaining a clear and organized interface.
 
 ---
 
 ## 🌡️ Regional Monitoring
 
-The Monitoring section provides a regional view of heat conditions.
+The Monitoring section provides a structured regional view of heat conditions.
 
 Users can view information such as:
 
 - Region
-- State
 - Current temperature
 - Normal temperature
 - Temperature departure
@@ -74,15 +80,15 @@ Users can view information such as:
 - Severity
 - Current status
 
-Regional information is displayed through a structured data table.
+Regional information is presented using the reusable **RegionalTable** component.
 
 ---
 
 ## 📈 Temperature Trends
 
-HeatCast provides a temperature trend interface for observing recent temperature conditions.
+HeatCast provides an interactive temperature trend interface for observing recent temperature conditions.
 
-The current frontend supports:
+The frontend supports:
 
 - Temperature trend visualization
 - Column chart representation
@@ -90,51 +96,55 @@ The current frontend supports:
 - Recent observation labels
 - Normal temperature reference
 - Interactive chart elements
+- Chart type selection
 
-The chart structure is designed so that real observation data can later be supplied by the backend.
+The temperature chart is implemented as a reusable **TemperatureChart** component.
+
+The current chart uses structured frontend data and is designed to accept real observation data in future backend integration.
 
 ---
 
 ## 🔥 Heat Risk Assessment
 
-The frontend includes a composite **Heat Risk Score** interface.
+HeatCast includes a composite **Heat Risk Score** interface.
 
-The current prototype considers multiple heat indicators including:
+The frontend considers multiple climate indicators, including:
 
-- Current temperature
-- Temperature anomaly
+- Temperature
+- Temperature departure
 - Humidity
-- Heatwave severity
+- Heatwave probability
 - Risk classification
+- Severity
 
-The score is currently calculated on the frontend as a prototype.
+The **HeatRiskCard** component presents the resulting risk information in a visually understandable format.
 
-> The prototype scoring logic is intended to be replaced by validated backend or ML-generated risk output in the future.
+The current scoring and classification are prototype implementations and are intended to be replaced or enhanced with validated backend or ML-generated risk outputs in future development.
 
 ---
 
 ## ⚠️ Heatwave Probability
 
-HeatCast includes an early-warning probability interface that communicates the estimated likelihood of heatwave conditions.
+The **HeatwaveProbability** component provides a visual representation of the estimated likelihood of heatwave conditions.
 
-The current prototype considers:
+The prototype considers information such as:
 
-- Temperature anomaly
 - Temperature conditions
+- Temperature departure
 - Humidity
+- Heatwave risk
 - Severity
-- Risk classification
 - Confidence indicators
 
-The probability calculation is currently a frontend prototype and will eventually be supplied by the prediction system.
+The current probability values are structured prototype data. Future versions can receive prediction results from a trained machine-learning model.
 
 ---
 
 ## 🧠 Explainable Risk
 
-The Risk Explanation component provides a human-readable breakdown of why a region may currently be considered at risk.
+The **RiskExplanation** component provides a human-readable explanation of the factors contributing to a region's heat risk.
 
-It considers factors such as:
+The interface can present factors such as:
 
 - Temperature anomaly
 - Maximum temperature
@@ -143,11 +153,42 @@ It considers factors such as:
 - Heatwave severity
 - Risk classification
 
-This is intended to make the system more understandable instead of presenting users with a risk score without context.
+This helps users understand the reasoning behind a risk classification instead of receiving only a numerical score.
 
 ---
 
-## 🚨 Alerts & Advisories
+## 🔮 Heatwave Forecast
+
+The Forecast section provides an interface for viewing upcoming temperature and heatwave conditions.
+
+It supports:
+
+- Forecast information
+- Predicted temperature conditions
+- Expected heatwave severity
+- Forecast visualization
+- Regional forecast selection
+
+The forecast interface is designed to support future integration with real forecasting services and prediction models.
+
+---
+
+## 🗺️ Heatwave Hotspots
+
+The Hotspots section provides a visual interface for identifying regions experiencing elevated heat conditions.
+
+The frontend includes a hotspot visualization structure designed to represent:
+
+- High-risk regions
+- Regional heat concentration
+- Heat intensity
+- Geographic distribution of heat conditions
+
+The current hotspot information uses prototype data and can later be connected to real geospatial climate datasets.
+
+---
+
+## 🚨 Alerts & Early Warnings
 
 The Alerts section communicates active heatwave warnings and advisory information.
 
@@ -156,80 +197,73 @@ The interface supports:
 - Warning severity
 - Region information
 - Expected temperature
-- Validity information
+- Warning validity
+- Alert information
 - Advisory content
-- Stakeholder-specific guidance
 
-Stakeholder categories currently include:
+Severity information is visually represented using the reusable **SeverityBadge** component.
 
-- Citizen
-- Farmer
-- Health Department
-- Local Authority
+The alert interface is designed to support future real-time warning data.
 
 ---
 
-## 👥 Stakeholder-Specific Guidance
+## 👥 Stakeholder-Specific Advisories
 
-HeatCast is designed for multiple groups that may respond differently to extreme heat.
+HeatCast provides targeted guidance for different stakeholders who may respond differently to extreme heat.
+
+The **StakeholderAdvisory** component supports information for:
 
 ### Citizen
 
-Provides practical information for staying safe during elevated heat conditions.
+Provides practical guidance for staying safe during elevated heat conditions.
 
 ### Farmer
 
-Provides information related to crops, livestock, and field activities.
+Provides information related to crops, livestock, and outdoor agricultural activities.
 
 ### Health Department
 
-Supports healthcare facility readiness and public-health response.
+Supports healthcare preparedness and public-health response during heatwave conditions.
 
 ### Local Authority
 
-Supports coordinated local heat-action measures and communication.
+Supports coordinated heat-action measures, public communication, and local response planning.
 
 ---
 
-# Application Structure
+# 🤖 AI Heatwave Prediction
 
-The application is organized into reusable React components and page-level layouts.
+The AI Prediction page provides the frontend interface for the future machine-learning prediction layer of HeatCast.
+
+Users can select a region and view prediction information including:
+
+- Predicted heatwave probability
+- Prediction likelihood
+- Prediction confidence
+- Prediction time horizon
+- Predicted temperature
+- Expected temperature departure
+- Risk level
+- Severity
+- Prediction factors
+
+The probability indicator changes its visual severity according to the prediction classification:
+
+- **Low** — Green
+- **Moderate** — Yellow
+- **High** — Orange
+- **Severe** — Red
+- **Extreme** — Deep Red
+
+The current implementation uses structured regional climate data to create a **prototype prediction interface**.
+
+The architecture is intentionally designed so that the prototype data can later be replaced with predictions generated by a trained machine-learning model through a backend API.
+
+---
+
+# 🌐 API / Data Service Layer
+
+HeatCast includes a frontend service layer in:
 
 ```text
-HeatCast/
-│
-├── src/
-│   │
-│   ├── components/
-│   │   ├── AlertList/
-│   │   ├── DateSelector/
-│   │   ├── ForecastList/
-│   │   ├── HeatRiskCard/
-│   │   ├── HeatwaveProbability/
-│   │   ├── Navbar/
-│   │   ├── RegionalTable/
-│   │   ├── RiskExplanation/
-│   │   ├── SeverityBadge/
-│   │   ├── StakeholderAdvisory/
-│   │   ├── StatCard/
-│   │   └── TemperatureChart/
-│   │
-│   ├── pages/
-│   │   ├── Dashboard/
-│   │   ├── Monitoring/
-│   │   ├── Forecast/
-│   │   ├── Hotspots/
-│   │   ├── Alerts/
-│   │   └── About/
-│   │
-│   ├── services/
-│   │   └── api.js
-│   │
-│   ├── App.jsx
-│   └── App.css
-│
-├── public/
-│
-├── package.json
-├── package-lock.json
-└── README.md
+src/services/api.js
