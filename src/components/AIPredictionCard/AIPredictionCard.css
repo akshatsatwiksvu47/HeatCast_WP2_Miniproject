@@ -1,0 +1,769 @@
+/* =========================================================
+   HEATCAST — AI PREDICTION CARD
+========================================================= */
+
+
+.ai-prediction-card {
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 28px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 12px;
+
+  background:
+    var(--surface);
+
+  box-shadow:
+    0 10px 30px
+    rgba(0, 0, 0, 0.18);
+
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+
+.ai-prediction-header {
+
+  display: flex;
+
+  align-items: flex-start;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 28px;
+
+}
+
+
+.ai-label {
+
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #ff8a1f;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.3px;
+
+}
+
+
+.ai-prediction-header h2 {
+
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 24px;
+
+  font-weight: 750;
+
+  line-height: 1.3;
+
+}
+
+
+.prediction-status {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 8px 12px;
+
+  border:
+    1px solid
+    rgba(47, 194, 195, 0.35);
+
+  border-radius: 999px;
+
+  background:
+    rgba(47, 194, 195, 0.08);
+
+  color: #2fc2c3;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: 0.8px;
+
+  white-space: nowrap;
+
+}
+
+
+/* =========================================================
+   MAIN PREDICTION
+========================================================= */
+
+
+.prediction-main {
+
+  display: grid;
+
+  grid-template-columns:
+    0.65fr
+    1.35fr;
+
+  gap: 28px;
+
+  padding-bottom: 26px;
+
+  border-bottom:
+    1px solid
+    var(--border);
+
+}
+
+
+/* =========================================================
+   PROBABILITY BOX — BASE
+========================================================= */
+
+
+.prediction-score {
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  padding: 22px;
+
+  border:
+    1px solid;
+
+  border-radius: 10px;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+
+}
+
+
+/* =========================================================
+   LOW — GREEN
+========================================================= */
+
+
+.prediction-score.risk-low {
+
+  background:
+    rgba(39, 174, 96, 0.10);
+
+  border-color:
+    rgba(39, 174, 96, 0.60);
+
+  box-shadow:
+    inset 0 0 25px
+    rgba(39, 174, 96, 0.035);
+
+}
+
+
+.prediction-score.risk-low strong {
+
+  color: #39d98a;
+
+}
+
+
+.prediction-score.risk-low
+.prediction-likelihood {
+
+  color: #39d98a;
+
+}
+
+
+/* =========================================================
+   MODERATE — YELLOW
+========================================================= */
+
+
+.prediction-score.risk-moderate {
+
+  background:
+    rgba(241, 196, 15, 0.10);
+
+  border-color:
+    rgba(241, 196, 15, 0.60);
+
+  box-shadow:
+    inset 0 0 25px
+    rgba(241, 196, 15, 0.035);
+
+}
+
+
+.prediction-score.risk-moderate strong {
+
+  color: #f1c40f;
+
+}
+
+
+.prediction-score.risk-moderate
+.prediction-likelihood {
+
+  color: #f1c40f;
+
+}
+
+
+/* =========================================================
+   HIGH — ORANGE
+========================================================= */
+
+
+.prediction-score.risk-high {
+
+  background:
+    rgba(255, 138, 31, 0.10);
+
+  border-color:
+    rgba(255, 138, 31, 0.65);
+
+  box-shadow:
+    inset 0 0 25px
+    rgba(255, 138, 31, 0.04);
+
+}
+
+
+.prediction-score.risk-high strong {
+
+  color: #ff9b3d;
+
+}
+
+
+.prediction-score.risk-high
+.prediction-likelihood {
+
+  color: #ff9b3d;
+
+}
+
+
+/* =========================================================
+   SEVERE — RED
+========================================================= */
+
+
+.prediction-score.risk-severe {
+
+  background:
+    rgba(231, 76, 60, 0.12);
+
+  border-color:
+    rgba(231, 76, 60, 0.72);
+
+  box-shadow:
+    inset 0 0 28px
+    rgba(231, 76, 60, 0.055);
+
+}
+
+
+.prediction-score.risk-severe strong {
+
+  color: #ff5c5c;
+
+}
+
+
+.prediction-score.risk-severe
+.prediction-likelihood {
+
+  color: #ff5c5c;
+
+}
+
+
+/* =========================================================
+   EXTREME — DEEP RED
+========================================================= */
+
+
+.prediction-score.risk-extreme {
+
+  background:
+    rgba(192, 57, 43, 0.16);
+
+  border-color:
+    rgba(192, 57, 43, 0.85);
+
+  box-shadow:
+    inset 0 0 30px
+    rgba(192, 57, 43, 0.075);
+
+}
+
+
+.prediction-score.risk-extreme strong {
+
+  color: #ff3b30;
+
+}
+
+
+.prediction-score.risk-extreme
+.prediction-likelihood {
+
+  color: #ff3b30;
+
+}
+
+
+/* =========================================================
+   PROBABILITY TEXT
+========================================================= */
+
+
+.prediction-score-label {
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+  font-weight: 750;
+
+  letter-spacing: 0.7px;
+
+  text-transform: uppercase;
+
+}
+
+
+.prediction-score strong {
+
+  margin-top: 8px;
+
+  font-size: 46px;
+
+  font-weight: 800;
+
+  line-height: 1;
+
+}
+
+
+.prediction-likelihood {
+
+  margin-top: 9px;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+}
+
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+
+.prediction-summary {
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+}
+
+
+.prediction-summary p {
+
+  margin: 0 0 22px;
+
+  color: var(--text-secondary);
+
+  font-size: 14px;
+
+  line-height: 1.7;
+
+}
+
+
+/* =========================================================
+   META
+========================================================= */
+
+
+.prediction-meta {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 16px;
+
+}
+
+
+.prediction-meta div {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
+
+}
+
+
+.prediction-meta span {
+
+  color: var(--text-muted);
+
+  font-size: 9px;
+
+  font-weight: 750;
+
+  letter-spacing: 0.8px;
+
+}
+
+
+.prediction-meta strong {
+
+  color: var(--text);
+
+  font-size: 13px;
+
+}
+
+
+/* =========================================================
+   METRICS
+========================================================= */
+
+
+.prediction-metrics {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 14px;
+
+  padding: 24px 0;
+
+  border-bottom:
+    1px solid
+    var(--border);
+
+}
+
+
+.prediction-metric {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 7px;
+
+}
+
+
+.prediction-metric span {
+
+  color: var(--text-muted);
+
+  font-size: 9px;
+
+  font-weight: 750;
+
+  letter-spacing: 0.7px;
+
+  text-transform: uppercase;
+
+}
+
+
+.prediction-metric strong {
+
+  color: var(--text);
+
+  font-size: 17px;
+
+  font-weight: 750;
+
+}
+
+
+/* =========================================================
+   PREDICTION FACTORS
+========================================================= */
+
+
+.prediction-factors {
+
+  padding-top: 24px;
+
+}
+
+
+.prediction-section-title {
+
+  margin-bottom: 18px;
+
+  color: var(--text);
+
+  font-size: 14px;
+
+  font-weight: 750;
+
+}
+
+
+.factor-list {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, minmax(0, 1fr));
+
+  gap: 22px;
+
+}
+
+
+.prediction-factor {
+
+  min-width: 0;
+
+}
+
+
+.factor-top {
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 15px;
+
+  margin-bottom: 8px;
+
+}
+
+
+.factor-top span {
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+
+}
+
+
+.factor-top strong {
+
+  color: var(--text);
+
+  font-size: 12px;
+
+}
+
+
+.factor-bar {
+
+  width: 100%;
+
+  height: 5px;
+
+  overflow: hidden;
+
+  border-radius: 999px;
+
+  background:
+    rgba(120, 145, 175, 0.14);
+
+}
+
+
+.factor-fill {
+
+  height: 100%;
+
+  border-radius: inherit;
+
+  background:
+    linear-gradient(
+      90deg,
+      #ff8a1f,
+      #d95d00
+    );
+
+  transition:
+    width 0.35s ease;
+
+}
+
+
+.prediction-factor small {
+
+  display: block;
+
+  margin-top: 7px;
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+  line-height: 1.5;
+
+}
+
+
+/* =========================================================
+   DISCLAIMER
+========================================================= */
+
+
+.prediction-disclaimer {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 5px;
+
+  margin-top: 24px;
+
+  padding: 14px 16px;
+
+  border-left:
+    3px solid
+    #ff8a1f;
+
+  background:
+    rgba(255, 138, 31, 0.045);
+
+}
+
+
+.prediction-disclaimer strong {
+
+  color: var(--text);
+
+  font-size: 11px;
+
+}
+
+
+.prediction-disclaimer span {
+
+  color: var(--text-muted);
+
+  font-size: 10px;
+
+  line-height: 1.6;
+
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+
+@media (max-width: 900px) {
+
+  .prediction-main {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  .prediction-metrics {
+
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+
+  }
+
+}
+
+
+@media (max-width: 650px) {
+
+  .ai-prediction-card {
+
+    padding: 20px;
+
+  }
+
+
+  .ai-prediction-header {
+
+    flex-direction: column;
+
+  }
+
+
+  .prediction-meta {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  .factor-list {
+
+    grid-template-columns: 1fr;
+
+  }
+
+}
+
+
+@media (max-width: 450px) {
+
+  .prediction-metrics {
+
+    grid-template-columns: 1fr;
+
+  }
+
+
+  .prediction-score strong {
+
+    font-size: 38px;
+
+  }
+
+}

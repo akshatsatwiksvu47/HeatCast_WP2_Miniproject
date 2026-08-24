@@ -242,3 +242,257 @@ export function getLocations() {
 export function getAdvisories() {
   return fetchJSON("/data/advisories.json");
 }
+
+/* =========================================
+   AI PREDICTION
+========================================= */
+
+export async function getAIPrediction(regionName) {
+
+  const regions = await getRegions();
+
+  const region = regions.find(
+    (item) => item.name === regionName
+  );
+
+  if (!region) {
+    throw new Error(
+      `Prediction data not found for ${regionName}`
+    );
+  }
+
+
+  /* =========================================
+     PROTOTYPE PREDICTION LOGIC
+
+     Uses existing regional climate data
+     to prepare the frontend prediction layer.
+  ========================================= */
+
+  const risk = String(
+    region.risk || "Moderate"
+  );
+
+  const severity = String(
+    region.severity || "Moderate"
+  );
+
+  const temperature =
+    Number(region.temperature) || 0;
+
+  const normal =
+    Number(region.normal) || 0;
+
+  const departure =
+    Number(region.departure) || 0;
+
+
+  /* Probability based on current
+     prototype risk classification */
+
+  let probability = 45;
+
+  if (risk.toLowerCase() === "low") {
+    probability = 28;
+  }
+
+  if (risk.toLowerCase() === "moderate") {
+    probability = 48;
+  }
+
+  if (risk.toLowerCase() === "high") {
+    probability = 72;
+  }
+
+  if (risk.toLowerCase() === "severe") {
+    probability = 84;
+  }
+
+  if (risk.toLowerCase() === "extreme") {
+    probability = 94;
+  }
+
+
+  /* Confidence */
+
+  const confidence =
+    Math.min(
+      95,
+      Math.max(
+        70,
+        76 + Math.abs(departure) * 2
+      )
+    );
+
+
+  /* Prototype predicted temperature */
+
+  const predictedTemperature =
+    temperature > 0
+      ? Number(
+          (temperature + 0.8).toFixed(1)
+        )
+      : 0;
+
+
+  /* Factor scores */
+
+  const anomalyScore =
+    Math.min(
+      100,
+      Math.max(
+        15,
+        50 + Math.abs(departure) * 8
+      )
+    );
+
+
+  const temperatureScore =
+    Math.min(
+      100,
+      Math.max(
+        20,
+        temperature > 40
+          ? 90
+          : temperature > 38
+          ? 78
+          : temperature > 35
+          ? 62
+          : 42
+      )
+    );
+
+
+  const normalScore =
+    normal > 0
+      ? Math.min(
+          100,
+          Math.max(
+            20,
+            50 +
+              Math.abs(
+                temperature - normal
+              ) * 8
+          )
+        )
+      : 50;
+
+
+  const departureScore =
+    Math.min(
+      100,
+      Math.max(
+        15,
+        50 + Math.abs(departure) * 8
+      )
+    );
+
+
+  let likelihood = "Moderate Likelihood";
+
+  if (probability >= 80) {
+    likelihood = "Very High Likelihood";
+  } else if (probability >= 65) {
+    likelihood = "High Likelihood";
+  } else if (probability < 40) {
+    likelihood = "Low Likelihood";
+  }
+
+
+  return {
+
+    region: region.name,
+
+    probability,
+
+    likelihood,
+
+    confidence: Math.round(confidence),
+
+    horizon: "Next 24–48 Hours",
+
+    predictedTemperature,
+
+    departure: Number(
+      departure.toFixed(1)
+    ),
+
+    risk,
+
+    severity,
+
+    insight:
+      `${region.name} is currently showing ` +
+      `${risk.toLowerCase()} heat risk with ` +
+      `a temperature departure of ` +
+      `${departure >= 0 ? "+" : ""}${departure.toFixed(1)}°C ` +
+      `from the regional normal.`,
+
+
+    factors: [
+
+      {
+        name: "Temperature Anomaly",
+
+        value:
+          `${departure >= 0 ? "+" : ""}` +
+          `${departure.toFixed(1)}°C`,
+
+        score: Math.round(
+          anomalyScore
+        ),
+
+        description:
+          "Difference between the current temperature and the regional normal."
+      },
+
+
+      {
+        name: "Maximum Temperature",
+
+        value:
+          `${temperature.toFixed(1)}°C`,
+
+        score: Math.round(
+          temperatureScore
+        ),
+
+        description:
+          "Current maximum temperature indicates the intensity of daytime heat."
+      },
+
+
+      {
+        name: "Normal Temperature",
+
+        value:
+          `${normal.toFixed(1)}°C`,
+
+        score: Math.round(
+          normalScore
+        ),
+
+        description:
+          "Regional normal temperature is used as the baseline for comparison."
+      },
+
+
+      {
+        name: "Temperature Departure",
+
+        value:
+          `${departure >= 0 ? "+" : ""}` +
+          `${departure.toFixed(1)}°C`,
+
+        score: Math.round(
+          departureScore
+        ),
+
+        description:
+          "Higher positive departure indicates increased heatwave potential."
+      }
+
+    ]
+
+  };
+}

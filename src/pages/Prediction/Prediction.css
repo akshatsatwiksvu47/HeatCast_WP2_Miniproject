@@ -1,0 +1,257 @@
+/* =========================================================
+   HEATCAST — PREDICTION PAGE
+========================================================= */
+
+.prediction-page {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+
+.prediction-page-header {
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 30px;
+
+  margin-bottom: 28px;
+}
+
+
+.prediction-page-kicker {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #ff8a1f;
+
+  font-size: 10px;
+
+  font-weight: 800;
+
+  letter-spacing: 1.2px;
+}
+
+
+.prediction-page-header h1 {
+  margin: 0;
+
+  color: var(--text);
+
+  font-size: 30px;
+
+  font-weight: 750;
+
+  line-height: 1.2;
+
+  letter-spacing: -0.02em;
+}
+
+
+.prediction-page-header p {
+  max-width: 720px;
+
+  margin: 9px 0 0;
+
+  color: var(--text-secondary);
+
+  font-size: 14px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   REGION SELECTOR
+========================================================= */
+
+.prediction-region-control {
+  flex-shrink: 0;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+.prediction-region-control label {
+  color: var(--text-muted);
+
+  font-size: 11px;
+
+  font-weight: 700;
+}
+
+
+.prediction-region-control select {
+  min-width: 170px;
+
+  padding: 11px 13px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 8px;
+
+  outline: none;
+
+  background:
+    var(--surface);
+
+  color:
+    var(--text);
+
+  font-size: 12px;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+
+.prediction-region-control select:hover {
+  border-color:
+    rgba(47, 194, 195, 0.45);
+}
+
+
+.prediction-region-control select:focus {
+  border-color:
+    #2fc2c3;
+}
+
+
+/* =========================================================
+   LOADING / ERROR
+========================================================= */
+
+.prediction-loading,
+.prediction-error {
+  min-height: 180px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  background:
+    var(--surface);
+
+  color:
+    var(--text-muted);
+
+  font-size: 13px;
+}
+
+
+.prediction-error {
+  color: #e84a5f;
+}
+
+
+/* =========================================================
+   FUTURE AI NOTE
+========================================================= */
+
+.prediction-page-note {
+  margin-top: 24px;
+
+  padding: 18px 20px;
+
+  border:
+    1px solid
+    var(--border);
+
+  border-radius: 10px;
+
+  background:
+    var(--surface);
+}
+
+
+.prediction-page-note strong {
+  color: var(--text);
+
+  font-size: 13px;
+
+  font-weight: 750;
+}
+
+
+.prediction-page-note p {
+  margin: 7px 0 0;
+
+  color: var(--text-secondary);
+
+  font-size: 12px;
+
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 850px) {
+
+  .prediction-page-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 18px;
+  }
+
+
+  .prediction-region-control {
+    width: 100%;
+
+    justify-content: flex-start;
+  }
+
+}
+
+
+@media (max-width: 620px) {
+
+  .prediction-page-header h1 {
+    font-size: 25px;
+  }
+
+
+  .prediction-region-control {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+
+  .prediction-region-control select {
+    width: 100%;
+  }
+
+}

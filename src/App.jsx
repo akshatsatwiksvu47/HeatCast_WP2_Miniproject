@@ -8,6 +8,7 @@ import Forecast from "./pages/Forecast/Forecast";
 import Hotspots from "./pages/Hotspots/Hotspots";
 import Alerts from "./pages/Alerts/Alerts";
 import About from "./pages/About/About";
+import Prediction from "./pages/Prediction/Prediction";
 
 import "./App.css";
 
@@ -21,6 +22,7 @@ function App() {
           <Route path="/forecast" element={<Forecast />} />
           <Route path="/hotspots" element={<Hotspots />} />
           <Route path="/alerts" element={<Alerts />} />
+          <Route path="/prediction" element={<Prediction />} />
           <Route path="/about" element={<About />} />
         </Routes>
       </MainLayout>
