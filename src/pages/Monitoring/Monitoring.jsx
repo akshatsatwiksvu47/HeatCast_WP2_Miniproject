@@ -16,7 +16,7 @@ function Monitoring() {
     useState([]);
 
   const [selectedRegion, setSelectedRegion] =
-    useState("Nagpur");
+    useState("Delhi NCR");
 
   const [season, setSeason] =
     useState("Pre-Monsoon");
@@ -53,35 +53,48 @@ function Monitoring() {
     getRegions()
       .then((data) => {
 
-        setRegions(data);
+        /*
+         * Put Delhi NCR first so it appears first
+         * in the Monitoring region selector and
+         * becomes the default active region.
+         */
+        const orderedRegions = [
+          ...data.filter(
+            (item) => item.name === "Delhi NCR"
+          ),
+          ...data.filter(
+            (item) => item.name !== "Delhi NCR"
+          ),
+        ];
 
-        if (
-          data.length > 0 &&
-          !data.some(
-            (item) =>
-              item.name === selectedRegion
-          )
-        ) {
+        setRegions(orderedRegions);
+
+        const defaultRegion =
+          orderedRegions.find(
+            (item) => item.name === "Delhi NCR"
+          ) || orderedRegions[0];
+
+        if (defaultRegion) {
           setSelectedRegion(
-            data[0].name
+            defaultRegion.name
           );
         }
 
         /*
-         * Start comparison with first
-         * two available regions.
+         * Start comparison with Delhi NCR first,
+         * followed by the next available region.
          */
-        if (data.length > 1) {
+        if (orderedRegions.length > 1) {
 
           setComparisonRegions([
-            data[0].name,
-            data[1].name,
+            orderedRegions[0].name,
+            orderedRegions[1].name,
           ]);
 
-        } else if (data.length === 1) {
+        } else if (orderedRegions.length === 1) {
 
           setComparisonRegions([
-            data[0].name,
+            orderedRegions[0].name,
           ]);
 
         }

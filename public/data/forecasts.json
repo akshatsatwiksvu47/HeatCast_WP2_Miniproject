@@ -372,7 +372,7 @@
     },
     {
       "day": "Day 3",
-      "date": "17 Aug",
+      "date": "25 Aug",
       "max": 42.0,
       "min": 29.0,
       "probability": 76,
@@ -380,7 +380,7 @@
     },
     {
       "day": "Day 4",
-      "date": "18 Aug",
+      "date": "25 Aug",
       "max": 42.7,
       "min": 29.3,
       "probability": 79,
@@ -388,7 +388,7 @@
     },
     {
       "day": "Day 5",
-      "date": "19 Aug",
+      "date": "24 Aug",
       "max": 42.2,
       "min": 29.1,
       "probability": 75,
@@ -404,7 +404,7 @@
     },
     {
       "day": "Day 7",
-      "date": "21 Aug",
+      "date": "22 Aug",
       "max": 40.6,
       "min": 28.5,
       "probability": 62,

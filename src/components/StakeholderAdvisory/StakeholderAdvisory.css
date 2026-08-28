@@ -1,6 +1,20 @@
 /* =========================================================
    STAKEHOLDER ADVISORY
+   Compact dashboard version
 ========================================================= */
+
+/* =========================================================
+   GRID HEIGHT FIX
+========================================================= */
+
+.stakeholder-advisory-card {
+  height: 100% !important;
+
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+
+  box-sizing: border-box;
+}
 
 .stakeholder-advisory-card {
   position: relative;
@@ -12,13 +26,16 @@
 
   box-sizing: border-box;
 
-  padding: 30px;
+  padding: 18px;
 
-  border: 1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
-  border-radius: 11px;
+  border-radius: 10px;
 
-  background: var(--surface);
+  background:
+    var(--surface);
 }
 
 
@@ -35,7 +52,7 @@
   left: 0;
   right: 0;
 
-  height: 3px;
+  height: 2px;
 
   background: #53bfc1;
 }
@@ -48,62 +65,74 @@
 .stakeholder-advisory-card .stakeholder-header {
   display: flex;
 
-  align-items: flex-start;
+  align-items: center;
 
   justify-content: space-between;
 
-  gap: 28px;
+  gap: 18px;
 
-  padding-bottom: 24px;
+  padding-bottom: 14px;
 
-  border-bottom: 1px solid var(--border);
+  border-bottom:
+    1px solid
+    var(--border);
 }
 
 
-.stakeholder-advisory-card .stakeholder-header h3 {
-  margin: 7px 0 9px;
+.stakeholder-advisory-card
+.stakeholder-header h3 {
+  margin:
+    4px 0 6px;
 
   color: var(--text);
 
-  font-size: 27px;
+  font-size: 20px;
 
   font-weight: 750;
 
-  line-height: 1.15;
+  line-height: 1.2;
 
-  letter-spacing: -0.025em;
+  letter-spacing: -0.02em;
 }
 
 
-.stakeholder-advisory-card .stakeholder-header p {
-  max-width: 850px;
+.stakeholder-advisory-card
+.stakeholder-header p {
+  max-width: 750px;
 
   margin: 0;
 
   color: var(--text-muted);
 
-  font-size: 14px;
+  font-size: 11px;
 
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 
-.stakeholder-advisory-card .stakeholder-region {
+/* =========================================================
+   REGION
+========================================================= */
+
+.stakeholder-advisory-card
+.stakeholder-region {
   flex-shrink: 0;
 
-  padding: 10px 14px;
+  padding:
+    7px 10px;
 
-  border: 1px solid
-    rgba(83, 191, 193, 0.35);
+  border:
+    1px solid
+    rgba(83, 191, 193, 0.30);
 
-  border-radius: 7px;
+  border-radius: 6px;
 
   background:
     rgba(83, 191, 193, 0.05);
 
   color: var(--text-soft);
 
-  font-size: 12px;
+  font-size: 9px;
 
   font-weight: 650;
 
@@ -115,19 +144,22 @@
    STAKEHOLDER TABS
 ========================================================= */
 
-.stakeholder-advisory-card .stakeholder-tabs {
+.stakeholder-advisory-card
+.stakeholder-tabs {
   display: grid;
 
   grid-template-columns:
     repeat(4, minmax(0, 1fr));
 
-  gap: 12px;
+  gap: 8px;
 
-  margin-top: 25px;
+  margin-top: 15px;
 
-  padding-bottom: 23px;
+  padding-bottom: 14px;
 
-  border-bottom: 1px solid var(--border);
+  border-bottom:
+    1px solid
+    var(--border);
 }
 
 
@@ -135,12 +167,13 @@
    TAB
 ========================================================= */
 
-.stakeholder-advisory-card .stakeholder-tab {
+.stakeholder-advisory-card
+.stakeholder-tab {
   position: relative;
 
   min-width: 0;
 
-  min-height: 76px;
+  min-height: 54px;
 
   display: flex;
 
@@ -148,15 +181,18 @@
 
   justify-content: flex-start;
 
-  gap: 15px;
+  gap: 10px;
 
-  padding: 16px 18px;
+  padding:
+    9px 11px;
 
   box-sizing: border-box;
 
-  border: 1px solid var(--border);
+  border:
+    1px solid
+    var(--border);
 
-  border-radius: 8px;
+  border-radius: 7px;
 
   background:
     rgba(255, 255, 255, 0.015);
@@ -165,11 +201,11 @@
 
   font-family: inherit;
 
-  font-size: 14px;
+  font-size: 11px;
 
   font-weight: 650;
 
-  line-height: 1.25;
+  line-height: 1.2;
 
   text-align: left;
 
@@ -178,26 +214,25 @@
   transition:
     background 0.18s ease,
     border-color 0.18s ease,
-    color 0.18s ease,
-    transform 0.18s ease;
+    color 0.18s ease;
 }
 
 
-.stakeholder-advisory-card .stakeholder-tab:hover {
-  transform:
-    translateY(-1px);
-
+.stakeholder-advisory-card
+.stakeholder-tab:hover {
   border-color:
     rgba(83, 191, 193, 0.4);
 
   background:
     rgba(83, 191, 193, 0.035);
 
-  color: var(--text);
+  color:
+    var(--text);
 }
 
 
-.stakeholder-advisory-card .stakeholder-tab.active {
+.stakeholder-advisory-card
+.stakeholder-tab.active {
   border-color:
     rgba(83, 191, 193, 0.75);
 
@@ -208,7 +243,7 @@
     #53bfc1;
 
   box-shadow:
-    inset 0 3px 0 #53bfc1;
+    inset 0 2px 0 #53bfc1;
 }
 
 
@@ -216,9 +251,10 @@
    TAB NUMBER
 ========================================================= */
 
-.stakeholder-advisory-card .stakeholder-icon {
-  width: 40px;
-  height: 40px;
+.stakeholder-advisory-card
+.stakeholder-icon {
+  width: 30px;
+  height: 30px;
 
   flex-shrink: 0;
 
@@ -234,7 +270,7 @@
     1px solid
     rgba(83, 191, 193, 0.3);
 
-  border-radius: 7px;
+  border-radius: 6px;
 
   background:
     rgba(83, 191, 193, 0.05);
@@ -278,11 +314,11 @@
 
 .stakeholder-advisory-card
 .stakeholder-icon::after {
-  font-size: 11px;
+  font-size: 9px;
 
   font-weight: 800;
 
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
 }
 
 
@@ -292,7 +328,7 @@
 
 .stakeholder-advisory-card
 .stakeholder-advisory-content {
-  padding-top: 28px;
+  padding-top: 17px;
 }
 
 
@@ -304,11 +340,11 @@
 .stakeholder-advisory-heading {
   display: flex;
 
-  align-items: flex-start;
+  align-items: center;
 
   justify-content: space-between;
 
-  gap: 25px;
+  gap: 18px;
 }
 
 
@@ -318,11 +354,11 @@
 
   align-items: center;
 
-  gap: 8px;
+  gap: 6px;
 
   color: var(--text-muted);
 
-  font-size: 12px;
+  font-size: 10px;
 
   font-weight: 650;
 
@@ -332,17 +368,18 @@
 
 .stakeholder-advisory-card
 .stakeholder-advisory-heading h4 {
-  margin: 8px 0 0;
+  margin:
+    5px 0 0;
 
   color: var(--text);
 
-  font-size: 25px;
+  font-size: 19px;
 
   font-weight: 750;
 
   line-height: 1.2;
 
-  letter-spacing: -0.02em;
+  letter-spacing: -0.015em;
 }
 
 
@@ -350,18 +387,20 @@
    PRIORITY
 ========================================================= */
 
-.stakeholder-advisory-card .advisory-priority {
+.stakeholder-advisory-card
+.advisory-priority {
   flex-shrink: 0;
 
-  padding: 10px 14px;
+  padding:
+    7px 10px;
 
   border-radius: 6px;
 
-  font-size: 11px;
+  font-size: 9px;
 
   font-weight: 800;
 
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
 
   line-height: 1.2;
 }
@@ -412,49 +451,59 @@
 
 .stakeholder-advisory-card
 .stakeholder-summary {
-  max-width: 1000px;
+  max-width: 850px;
 
-  margin: 18px 0 0;
+  margin:
+    11px 0 0;
 
   color: var(--text-soft);
 
-  font-size: 14px;
+  font-size: 11px;
 
-  line-height: 1.7;
+  line-height: 1.55;
 }
 
 
 /* =========================================================
-   ACTIONS
+   ACTIONS CONTAINER
 ========================================================= */
 
 .stakeholder-advisory-card
 .stakeholder-actions {
-  margin-top: 25px;
+  margin-top: 15px;
 
-  padding: 20px 22px;
+  padding:
+    13px 15px;
 
   border:
-    1px solid var(--border);
+    1px solid
+    var(--border);
 
-  border-radius: 9px;
+  border-radius: 8px;
 
   background:
     rgba(255, 255, 255, 0.015);
+
+  box-sizing: border-box;
 }
 
 
+/* =========================================================
+   ACTIONS HEADING
+========================================================= */
+
 .stakeholder-advisory-card
 .actions-heading {
-  margin-bottom: 6px;
+  margin-bottom: 2px;
 
-  color: #53bfc1;
+  color:
+    #53bfc1;
 
-  font-size: 11px;
+  font-size: 9px;
 
   font-weight: 800;
 
-  letter-spacing: 0.13em;
+  letter-spacing: 0.11em;
 }
 
 
@@ -468,20 +517,22 @@
 
   align-items: center;
 
-  gap: 17px;
+  gap: 11px;
 
-  min-height: 58px;
+  min-height: 42px;
 
-  padding: 13px 0;
+  padding:
+    8px 0;
 
   border-bottom:
-    1px solid var(--border);
+    1px solid
+    var(--border);
 }
 
 
 .stakeholder-advisory-card
 .stakeholder-action:last-child {
-  padding-bottom: 4px;
+  padding-bottom: 2px;
 
   border-bottom: none;
 }
@@ -493,8 +544,8 @@
 
 .stakeholder-advisory-card
 .action-number {
-  width: 36px;
-  height: 36px;
+  width: 29px;
+  height: 29px;
 
   flex-shrink: 0;
 
@@ -516,11 +567,15 @@
   color:
     var(--orange);
 
-  font-size: 11px;
+  font-size: 9px;
 
   font-weight: 800;
 }
 
+
+/* =========================================================
+   ACTION TEXT
+========================================================= */
 
 .stakeholder-advisory-card
 .stakeholder-action p {
@@ -528,9 +583,9 @@
 
   color: var(--text-soft);
 
-  font-size: 13px;
+  font-size: 10px;
 
-  line-height: 1.55;
+  line-height: 1.45;
 }
 
 
@@ -545,9 +600,9 @@
   grid-template-columns:
     repeat(3, minmax(0, 1fr));
 
-  gap: 12px;
+  gap: 8px;
 
-  margin-top: 20px;
+  margin-top: 13px;
 }
 
 
@@ -557,16 +612,18 @@
 
   flex-direction: column;
 
-  gap: 8px;
+  gap: 5px;
 
   min-width: 0;
 
-  padding: 16px;
+  padding:
+    10px 12px;
 
   border:
-    1px solid var(--border);
+    1px solid
+    var(--border);
 
-  border-radius: 8px;
+  border-radius: 7px;
 
   background:
     rgba(255, 255, 255, 0.015);
@@ -577,11 +634,11 @@
 .stakeholder-metric span {
   color: var(--text-muted);
 
-  font-size: 10px;
+  font-size: 8px;
 
   font-weight: 750;
 
-  letter-spacing: 0.11em;
+  letter-spacing: 0.09em;
 }
 
 
@@ -589,7 +646,7 @@
 .stakeholder-metric strong {
   color: var(--text);
 
-  font-size: 19px;
+  font-size: 14px;
 
   font-weight: 700;
 }
@@ -601,45 +658,52 @@
 
 .stakeholder-advisory-card
 .stakeholder-note {
-  margin-top: 20px;
+  margin-top: 12px;
 
-  padding-top: 16px;
+  padding-top: 10px;
 
   border-top:
-    1px solid var(--border);
+    1px solid
+    var(--border);
 
   color: var(--text-muted);
 
-  font-size: 10px;
+  font-size: 8px;
 
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
 
 /* =========================================================
-   RESPONSIVE
+   RESPONSIVE — 1000px
 ========================================================= */
 
 @media (max-width: 1000px) {
 
   .stakeholder-advisory-card {
-    padding: 25px;
+    padding: 16px;
   }
+
 
   .stakeholder-advisory-card
   .stakeholder-header h3 {
-    font-size: 24px;
+    font-size: 19px;
   }
+
 
   .stakeholder-advisory-card
   .stakeholder-tab {
-    min-height: 68px;
+    min-height: 50px;
 
-    font-size: 12px;
+    font-size: 10px;
   }
 
 }
 
+
+/* =========================================================
+   RESPONSIVE — 850px
+========================================================= */
 
 @media (max-width: 850px) {
 
@@ -652,71 +716,109 @@
 }
 
 
+/* =========================================================
+   RESPONSIVE — 650px
+========================================================= */
+
 @media (max-width: 650px) {
 
   .stakeholder-advisory-card {
-    padding: 20px;
+    padding: 15px;
   }
+
 
   .stakeholder-advisory-card
   .stakeholder-header {
     flex-direction: column;
+
+    align-items: flex-start;
   }
+
 
   .stakeholder-advisory-card
   .stakeholder-region {
     text-align: left;
   }
 
+
   .stakeholder-advisory-card
   .stakeholder-advisory-heading {
+    align-items: flex-start;
+
     flex-direction: column;
   }
+
 
   .stakeholder-advisory-card
   .advisory-priority {
     align-self: flex-start;
   }
 
+
   .stakeholder-advisory-card
   .stakeholder-metrics {
     grid-template-columns: 1fr;
   }
 
+
   .stakeholder-advisory-card
   .stakeholder-advisory-heading h4 {
-    font-size: 22px;
+    font-size: 18px;
   }
 
 }
 
 
+/* =========================================================
+   RESPONSIVE — 480px
+========================================================= */
+
 @media (max-width: 480px) {
 
   .stakeholder-advisory-card {
-    padding: 18px;
+    padding: 14px;
   }
+
 
   .stakeholder-advisory-card
   .stakeholder-tabs {
     grid-template-columns: 1fr;
+
+    gap: 7px;
   }
+
 
   .stakeholder-advisory-card
   .stakeholder-tab {
-    min-height: 60px;
+    min-height: 48px;
   }
+
 
   .stakeholder-advisory-card
   .stakeholder-header h3 {
-    font-size: 21px;
+    font-size: 18px;
   }
+
 
   .stakeholder-advisory-card
   .stakeholder-header p,
   .stakeholder-advisory-card
   .stakeholder-summary {
-    font-size: 12px;
+    font-size: 10px;
+  }
+
+}
+
+
+/* =========================================================
+   REDUCED MOTION
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  .stakeholder-advisory-card
+  .stakeholder-tab {
+    transition: none;
   }
 
 }

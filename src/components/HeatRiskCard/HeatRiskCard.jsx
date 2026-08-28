@@ -1,8 +1,6 @@
 import "./HeatRiskCard.css";
 
-function HeatRiskCard({
-  region,
-}) {
+function HeatRiskCard({ region }) {
   if (!region) {
     return null;
   }
@@ -12,61 +10,45 @@ function HeatRiskCard({
    * PROTOTYPE COMPOSITE HEAT RISK SCORE
    * =====================================================
    *
-   * This is a frontend prototype score.
-   *
-   * It combines:
-   * - Temperature departure from normal
-   * - Current temperature
+   * Combines:
+   * - Temperature
+   * - Temperature departure
    * - Humidity
-   * - Current severity
-   * - Current risk classification
+   * - Heatwave severity
+   * - Risk classification
    *
-   * Later this can be replaced directly with the
-   * backend / ML model's actual risk score.
+   * This frontend calculation can later be replaced
+   * by a backend / ML-generated risk score.
    */
 
-  const temperature =
-    Number(region.temperature) || 0;
+  const temperature = Number(region.temperature) || 0;
+  const normal = Number(region.normal) || 0;
+  const departure = Number(region.departure) || 0;
+  const humidity = Number(region.humidity) || 0;
 
-  const normal =
-    Number(region.normal) || 0;
+  const temperatureScore = Math.min(
+    30,
+    Math.max(
+      0,
+      ((temperature - 30) / 16) * 30
+    )
+  );
 
-  const departure =
-    Number(region.departure) || 0;
+  const anomalyScore = Math.min(
+    30,
+    Math.max(
+      0,
+      (departure / 8) * 30
+    )
+  );
 
-  const humidity =
-    Number(region.humidity) || 0;
-
-
-  const temperatureScore =
-    Math.min(
-      30,
-      Math.max(
-        0,
-        ((temperature - 30) / 16) * 30
-      )
-    );
-
-
-  const anomalyScore =
-    Math.min(
-      30,
-      Math.max(
-        0,
-        (departure / 8) * 30
-      )
-    );
-
-
-  const humidityScore =
-    Math.min(
-      15,
-      Math.max(
-        0,
-        ((humidity - 40) / 60) * 15
-      )
-    );
-
+  const humidityScore = Math.min(
+    15,
+    Math.max(
+      0,
+      ((humidity - 40) / 60) * 15
+    )
+  );
 
   const severityMap = {
     low: 2,
@@ -76,12 +58,10 @@ function HeatRiskCard({
     extreme: 15,
   };
 
-
   const severityScore =
     severityMap[
       region.severity?.toLowerCase()
     ] || 0;
-
 
   const riskMap = {
     low: 2,
@@ -91,12 +71,10 @@ function HeatRiskCard({
     extreme: 10,
   };
 
-
   const riskScore =
     riskMap[
       region.risk?.toLowerCase()
     ] || 0;
-
 
   const rawScore =
     temperatureScore +
@@ -105,7 +83,6 @@ function HeatRiskCard({
     severityScore +
     riskScore;
 
-
   const score = Math.min(
     100,
     Math.max(
@@ -113,7 +90,6 @@ function HeatRiskCard({
       Math.round(rawScore)
     )
   );
-
 
   let classification = "LOW";
   let tone = "low";
@@ -129,25 +105,20 @@ function HeatRiskCard({
     tone = "moderate";
   }
 
+  const temperatureProgress = Math.min(
+    100,
+    (temperatureScore / 30) * 100
+  );
 
-  const temperatureProgress =
-    Math.min(
-      100,
-      (temperatureScore / 30) * 100
-    );
+  const anomalyProgress = Math.min(
+    100,
+    (anomalyScore / 30) * 100
+  );
 
-  const anomalyProgress =
-    Math.min(
-      100,
-      (anomalyScore / 30) * 100
-    );
-
-  const humidityProgress =
-    Math.min(
-      100,
-      (humidityScore / 15) * 100
-    );
-
+  const humidityProgress = Math.min(
+    100,
+    (humidityScore / 15) * 100
+  );
 
   return (
     <section
@@ -159,7 +130,6 @@ function HeatRiskCard({
       <div className="heat-risk-header">
 
         <div>
-
           <div className="micro-label">
             COMPOSITE RISK
           </div>
@@ -167,7 +137,6 @@ function HeatRiskCard({
           <h3>
             Heat Risk Score
           </h3>
-
         </div>
 
         <span className="heat-risk-region">
@@ -200,7 +169,7 @@ function HeatRiskCard({
       </div>
 
 
-      {/* SCORE SCALE */}
+      {/* SCALE */}
 
       <div className="heat-risk-scale">
 
@@ -256,8 +225,7 @@ function HeatRiskCard({
             <div
               className="factor-fill"
               style={{
-                width:
-                  `${temperatureProgress}%`,
+                width: `${anomalyProgress}%`,
               }}
             />
 
@@ -285,8 +253,7 @@ function HeatRiskCard({
             <div
               className="factor-fill"
               style={{
-                width:
-                  `${(severityScore / 15) * 100}%`,
+                width: `${(severityScore / 15) * 100}%`,
               }}
             />
 
@@ -314,8 +281,7 @@ function HeatRiskCard({
             <div
               className="factor-fill"
               style={{
-                width:
-                  `${humidityProgress}%`,
+                width: `${humidityProgress}%`,
               }}
             />
 
@@ -326,13 +292,11 @@ function HeatRiskCard({
       </div>
 
 
-      {/* FOOTNOTE */}
+      {/* NOTE */}
 
       <div className="heat-risk-note">
-
-        Prototype composite indicator based on
-        current regional heat conditions.
-
+        Prototype composite indicator based on current
+        regional heat conditions.
       </div>
 
     </section>

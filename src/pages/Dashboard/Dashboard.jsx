@@ -16,6 +16,9 @@ import HeatwaveProbability from "../../components/HeatwaveProbability/HeatwavePr
 import RiskExplanation from "../../components/RiskExplanation/RiskExplanation";
 import StakeholderAdvisory from "../../components/StakeholderAdvisory/StakeholderAdvisory";
 
+import "./Dashboard.css";
+
+
 function Dashboard() {
 
   const [dashboard, setDashboard] =
@@ -344,6 +347,8 @@ function Dashboard() {
 
       {/* =====================================================
           HEAT INTELLIGENCE
+          Heat Risk + Heatwave Probability
+          are direct children of the grid.
       ====================================================== */}
 
       <div className="dashboard-intelligence-grid">
@@ -362,30 +367,34 @@ function Dashboard() {
       </div>
 
 
-      {/* =====================================================
-          EXPLAINABLE RISK
-      ====================================================== */}
+{/* =====================================================
+    RISK + STAKEHOLDER INTELLIGENCE
+====================================================== */}
 
-      <div className="dashboard-explanation-row">
+<div className="dashboard-support-grid">
 
-        <RiskExplanation
-          region={region}
-        />
+  {/* LEFT — EXPLAINABLE RISK */}
 
-      </div>
+  <div className="dashboard-support-risk">
+
+    <RiskExplanation
+      region={region}
+    />
+
+  </div>
 
 
-      {/* =====================================================
-          STAKEHOLDER ADVISORY
-      ====================================================== */}
+  {/* RIGHT — STAKEHOLDER ADVISORY */}
 
-      <div className="dashboard-advisory-row">
+  <div className="dashboard-support-advisory">
 
-        <StakeholderAdvisory
-          region={region}
-        />
+    <StakeholderAdvisory
+      region={region}
+    />
 
-      </div>
+  </div>
+
+</div>
 
 
       {/* =====================================================
@@ -399,9 +408,7 @@ function Dashboard() {
 
         <section className="panel">
 
-
           <div className="panel-title-row">
-
 
             <div>
 

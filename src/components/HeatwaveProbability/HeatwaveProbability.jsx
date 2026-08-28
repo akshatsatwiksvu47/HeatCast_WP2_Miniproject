@@ -5,115 +5,119 @@ function HeatwaveProbability({ region }) {
     return null;
   }
 
-  const temperature = Number(region.temperature) || 0;
-  const normal = Number(region.normal) || 0;
-  const departure = Number(region.departure) || 0;
-  const humidity = Number(region.humidity) || 0;
-
-  const severityWeights = {
-    low: 0.15,
-    moderate: 0.40,
-    high: 0.72,
-    severe: 0.90,
-    extreme: 0.96,
-  };
-
-  const riskWeights = {
-    low: 0.15,
-    moderate: 0.40,
-    high: 0.70,
-    severe: 0.90,
-    extreme: 0.96,
-  };
-
-  const severity =
-    severityWeights[
-      region.severity?.toLowerCase()
-    ] ?? 0;
-
-  const risk =
-    riskWeights[
-      region.risk?.toLowerCase()
-    ] ?? 0;
-
-  const anomalyFactor = Math.min(
-    1,
-    Math.max(
-      0,
-      departure / 8
-    )
-  );
-
-  const temperatureFactor = Math.min(
-    1,
-    Math.max(
-      0,
-      (temperature - normal) / 8
-    )
-  );
-
-  const humidityFactor = Math.min(
-    1,
-    Math.max(
-      0,
-      (humidity - 40) / 60
-    )
-  );
-
   /*
-   * Prototype probability model.
+   * =====================================================
+   * PROTOTYPE HEATWAVE PROBABILITY
+   * =====================================================
    *
-   * Later this value can come directly
-   * from the backend / ML model.
+   * Current frontend prototype estimate.
+   *
+   * It uses available regional indicators and can later
+   * be replaced by the output of an ML prediction model.
    */
 
-  const probability = Math.round(
-    (
-      anomalyFactor * 0.30 +
-      temperatureFactor * 0.20 +
-      humidityFactor * 0.10 +
-      severity * 0.20 +
-      risk * 0.20
-    ) * 100
-  );
+  const temperature =
+    Number(region.temperature) || 0;
 
-  const boundedProbability = Math.min(
-    99,
+  const departure =
+    Number(region.departure) || 0;
+
+  const humidity =
+    Number(region.humidity) || 0;
+
+
+  /*
+   * Prototype probability calculation.
+   */
+
+  const temperatureFactor = Math.min(
+    30,
     Math.max(
-      1,
-      probability
+      0,
+      ((temperature - 35) / 12) * 30
     )
   );
 
-  let classification = "LOW LIKELIHOOD";
+
+  const departureFactor = Math.min(
+    30,
+    Math.max(
+      0,
+      (departure / 8) * 30
+    )
+  );
+
+
+  const humidityFactor = Math.min(
+    20,
+    Math.max(
+      0,
+      ((humidity - 30) / 60) * 20
+    )
+  );
+
+
+  const severityMap = {
+    low: 5,
+    moderate: 10,
+    high: 15,
+    severe: 20,
+    extreme: 20,
+  };
+
+
+  const severityFactor =
+    severityMap[
+      region.severity?.toLowerCase()
+    ] || 0;
+
+
+  const probability = Math.min(
+    100,
+    Math.max(
+      0,
+      Math.round(
+        temperatureFactor +
+        departureFactor +
+        humidityFactor +
+        severityFactor
+      )
+    )
+  );
+
+
+  let likelihood = "LOW";
   let tone = "low";
 
-  if (boundedProbability >= 75) {
-    classification = "HIGH LIKELIHOOD";
+
+  if (probability >= 75) {
+    likelihood = "HIGH";
     tone = "high";
-  } else if (boundedProbability >= 50) {
-    classification = "MODERATE LIKELIHOOD";
+  } else if (probability >= 45) {
+    likelihood = "MODERATE";
     tone = "moderate";
   }
 
-  let confidence = "Low";
 
-  if (
-    departure >= 4 &&
-    region.severity?.toLowerCase() !== "low"
-  ) {
+  /*
+   * Prototype confidence.
+   */
+
+  let confidence = "Moderate";
+
+  if (probability >= 70) {
     confidence = "High";
-  } else if (
-    departure >= 2 ||
-    region.severity?.toLowerCase() === "moderate"
-  ) {
-    confidence = "Medium";
+  } else if (probability < 40) {
+    confidence = "Low";
   }
+
 
   return (
     <section
       className={`panel heatwave-probability-card ${tone}`}
     >
+
+      {/* HEADER */}
 
       <div className="probability-header">
 
@@ -136,17 +140,19 @@ function HeatwaveProbability({ region }) {
       </div>
 
 
+      {/* MAIN PROBABILITY */}
+
       <div className="probability-main">
 
         <div className="probability-number">
-          {boundedProbability}
+          {probability}
           <small>%</small>
         </div>
 
         <div className="probability-description">
 
           <strong>
-            {classification}
+            {likelihood} LIKELIHOOD
           </strong>
 
           <span>
@@ -159,6 +165,8 @@ function HeatwaveProbability({ region }) {
       </div>
 
 
+      {/* PROBABILITY BAR */}
+
       <div className="probability-bar">
 
         <div className="probability-track">
@@ -166,40 +174,40 @@ function HeatwaveProbability({ region }) {
           <div
             className="probability-fill"
             style={{
-              width:
-                `${boundedProbability}%`,
+              width: `${probability}%`,
             }}
           />
 
           <div
             className="probability-marker"
             style={{
-              left:
-                `${boundedProbability}%`,
+              left: `${probability}%`,
             }}
           />
+
+        </div>
+
+
+        <div className="probability-scale">
+
+          <span>
+            0%
+          </span>
+
+          <span>
+            50%
+          </span>
+
+          <span>
+            100%
+          </span>
 
         </div>
 
       </div>
 
 
-      <div className="probability-scale">
-
-        <span>
-          0%
-        </span>
-
-        <span>
-          50%
-        </span>
-
-        <span>
-          100%
-        </span>
-
-      </div>
-
+      {/* DETAILS */}
 
       <div className="probability-details">
 
@@ -243,6 +251,8 @@ function HeatwaveProbability({ region }) {
 
       </div>
 
+
+      {/* NOTE */}
 
       <div className="probability-note">
 

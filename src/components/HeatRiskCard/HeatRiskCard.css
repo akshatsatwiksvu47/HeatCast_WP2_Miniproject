@@ -2,27 +2,38 @@
    HEAT RISK CARD
 ========================================================= */
 
+/* =========================================================
+   GRID HEIGHT FIX
+========================================================= */
+
+.heat-risk-card {
+  height: 100% !important;
+
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+
+  box-sizing: border-box;
+}
 .heat-risk-card {
   position: relative;
 
+  width: 100%;
   min-width: 0;
 
   overflow: hidden;
 
-  padding: 24px;
+  box-sizing: border-box;
+
+  padding: 17px;
 
   border:
     1px solid
     var(--border);
 
-  border-radius: 11px;
+  border-radius: 10px;
 
   background:
     rgba(255, 255, 255, 0.025);
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
 
@@ -58,13 +69,13 @@
 .heat-risk-header {
   display: flex;
 
-  align-items: flex-start;
+  align-items: center;
 
   justify-content: space-between;
 
-  gap: 20px;
+  gap: 12px;
 
-  padding-bottom: 18px;
+  padding-bottom: 11px;
 
   border-bottom:
     1px solid
@@ -73,26 +84,26 @@
 
 
 .heat-risk-header h3 {
-  margin:
-    6px 0 0;
+  margin: 3px 0 0;
 
   color: var(--text);
 
-  font-size: 20px;
+  font-size: 17px;
 
   font-weight: 750;
 
-  line-height: 1.2;
+  line-height: 1.15;
 
   letter-spacing: -0.015em;
 }
 
 
 .heat-risk-region {
-  max-width: 190px;
+  flex-shrink: 0;
 
-  padding:
-    7px 10px;
+  max-width: 130px;
+
+  padding: 5px 8px;
 
   border:
     1px solid
@@ -105,13 +116,13 @@
 
   color: var(--text-soft);
 
-  font-size: 10px;
+  font-size: 9px;
 
   font-weight: 650;
 
   line-height: 1.2;
 
-  text-align: right;
+  text-align: center;
 }
 
 
@@ -124,25 +135,22 @@
 
   align-items: center;
 
-  gap: 20px;
+  gap: 14px;
 
-  margin-top: 25px;
+  margin-top: 15px;
 }
 
 
 .heat-risk-score {
   color: var(--text);
 
-  font-size: 58px;
+  font-size: 46px;
 
   font-weight: 850;
 
   line-height: 0.9;
 
   letter-spacing: -0.055em;
-
-  transition:
-    color 0.2s ease;
 }
 
 
@@ -151,9 +159,9 @@
 
   flex-direction: column;
 
-  gap: 7px;
+  gap: 4px;
 
-  padding-left: 18px;
+  padding-left: 13px;
 
   border-left:
     1px solid
@@ -162,20 +170,20 @@
 
 
 .heat-risk-score-info strong {
-  font-size: 13px;
+  font-size: 11px;
 
   font-weight: 800;
 
-  letter-spacing: 0.09em;
+  letter-spacing: 0.07em;
 }
 
 
 .heat-risk-score-info span {
   color: var(--text-muted);
 
-  font-size: 11px;
+  font-size: 9px;
 
-  line-height: 1.4;
+  line-height: 1.35;
 }
 
 
@@ -216,20 +224,20 @@
 
   align-items: center;
 
-  gap: 9px;
+  gap: 7px;
 
-  margin-top: 25px;
+  margin-top: 16px;
 }
 
 
 .heat-risk-scale span {
   flex-shrink: 0;
 
-  font-size: 8px;
+  font-size: 7px;
 
   font-weight: 800;
 
-  letter-spacing: 0.09em;
+  letter-spacing: 0.08em;
 }
 
 
@@ -248,7 +256,7 @@
 
   flex: 1;
 
-  height: 7px;
+  height: 5px;
 
   overflow: visible;
 
@@ -278,9 +286,6 @@
       #ff8a2a,
       #ff4f6d
     );
-
-  transition:
-    width 0.5s ease;
 }
 
 
@@ -289,8 +294,8 @@
 
   top: 50%;
 
-  width: 12px;
-  height: 12px;
+  width: 9px;
+  height: 9px;
 
   transform:
     translate(-50%, -50%);
@@ -304,18 +309,13 @@
   background: #f7f7f4;
 
   box-shadow:
-    0 0 0 2px
-      rgba(255, 255, 255, 0.12),
-    0 0 10px
-      rgba(255, 255, 255, 0.35);
-
-  transition:
-    left 0.5s ease;
+    0 0 0 1px
+      rgba(255, 255, 255, 0.12);
 }
 
 
 /* =========================================================
-   CONTRIBUTING FACTORS
+   FACTORS
 ========================================================= */
 
 .heat-risk-factors {
@@ -323,11 +323,11 @@
 
   flex-direction: column;
 
-  gap: 17px;
+  gap: 11px;
 
-  margin-top: 25px;
+  margin-top: 16px;
 
-  padding-top: 21px;
+  padding-top: 13px;
 
   border-top:
     1px solid
@@ -340,7 +340,7 @@
 
   flex-direction: column;
 
-  gap: 8px;
+  gap: 5px;
 }
 
 
@@ -351,14 +351,14 @@
 
   justify-content: space-between;
 
-  gap: 15px;
+  gap: 10px;
 }
 
 
 .factor-heading span {
   color: var(--text-muted);
 
-  font-size: 11px;
+  font-size: 9px;
 
   font-weight: 550;
 }
@@ -367,7 +367,7 @@
 .factor-heading strong {
   color: var(--text-soft);
 
-  font-size: 11px;
+  font-size: 9px;
 
   font-weight: 700;
 
@@ -378,7 +378,7 @@
 .factor-track {
   width: 100%;
 
-  height: 5px;
+  height: 4px;
 
   overflow: hidden;
 
@@ -400,9 +400,6 @@
       #53bfc1,
       #ff8a2a
     );
-
-  transition:
-    width 0.4s ease;
 }
 
 
@@ -411,9 +408,9 @@
 ========================================================= */
 
 .heat-risk-note {
-  margin-top: 21px;
+  margin-top: 12px;
 
-  padding-top: 14px;
+  padding-top: 9px;
 
   border-top:
     1px solid
@@ -421,92 +418,66 @@
 
   color: var(--text-muted);
 
-  font-size: 9px;
+  font-size: 8px;
 
-  line-height: 1.6;
+  line-height: 1.4;
 
   opacity: 0.8;
 }
 
 
 /* =========================================================
-   RESPONSIVE
+   TABLET
 ========================================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 850px) {
 
   .heat-risk-card {
-    padding: 20px;
-  }
-
-
-  .heat-risk-header {
-    gap: 12px;
-  }
-
-
-  .heat-risk-header h3 {
-    font-size: 18px;
-  }
-
-
-  .heat-risk-region {
-    max-width: 130px;
-
-    font-size: 9px;
-  }
-
-
-  .heat-risk-score {
-    font-size: 50px;
-  }
-
-
-  .heat-risk-score-info {
-    padding-left: 14px;
+    padding: 16px;
   }
 
 }
 
 
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 480px) {
 
   .heat-risk-card {
-    padding: 18px;
+    padding: 15px;
   }
 
 
   .heat-risk-header {
+    align-items: flex-start;
+
     flex-direction: column;
+
+    gap: 8px;
   }
 
 
   .heat-risk-region {
     max-width: none;
-
-    text-align: left;
-  }
-
-
-  .heat-risk-score-area {
-    gap: 16px;
-
-    margin-top: 21px;
   }
 
 
   .heat-risk-score {
-    font-size: 46px;
+    font-size: 43px;
   }
 
 
-  .heat-risk-score-info strong {
-    font-size: 11px;
+  .heat-risk-score-area {
+    gap: 12px;
+
+    margin-top: 14px;
   }
 
 
-  .heat-risk-score-info span {
-    font-size: 10px;
+  .heat-risk-score-info {
+    padding-left: 11px;
   }
 
 }
@@ -525,4 +496,18 @@
     transition: none;
   }
 
+}
+
+/* =========================================================
+   DASHBOARD GRID ALIGNMENT
+========================================================= */
+
+.heat-risk-card {
+  margin-top: 0 !important;
+
+  margin-bottom: 0 !important;
+
+  align-self: start;
+
+  box-sizing: border-box;
 }

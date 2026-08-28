@@ -1,28 +1,41 @@
 /* =========================================================
    HEATWAVE PROBABILITY
+   Compact dashboard version
 ========================================================= */
+
+/* =========================================================
+   GRID HEIGHT FIX
+========================================================= */
+
+.heatwave-probability-card {
+  height: 100% !important;
+
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+
+  box-sizing: border-box;
+}
 
 .heatwave-probability-card {
   position: relative;
 
+  width: 100%;
   min-width: 0;
 
   overflow: hidden;
 
-  padding: 24px;
+  box-sizing: border-box;
+
+  padding: 17px;
 
   border:
     1px solid
     var(--border);
 
-  border-radius: 11px;
+  border-radius: 10px;
 
   background:
     rgba(255, 255, 255, 0.025);
-
-  transition:
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
 }
 
 
@@ -58,13 +71,13 @@
 .probability-header {
   display: flex;
 
-  align-items: flex-start;
+  align-items: center;
 
   justify-content: space-between;
 
-  gap: 20px;
+  gap: 12px;
 
-  padding-bottom: 18px;
+  padding-bottom: 11px;
 
   border-bottom:
     1px solid
@@ -73,26 +86,26 @@
 
 
 .probability-header h3 {
-  margin:
-    6px 0 0;
+  margin: 3px 0 0;
 
   color: var(--text);
 
-  font-size: 20px;
+  font-size: 17px;
 
   font-weight: 750;
 
-  line-height: 1.2;
+  line-height: 1.15;
 
   letter-spacing: -0.015em;
 }
 
 
 .probability-region {
-  max-width: 190px;
+  flex-shrink: 0;
 
-  padding:
-    7px 10px;
+  max-width: 130px;
+
+  padding: 5px 8px;
 
   border:
     1px solid
@@ -105,13 +118,13 @@
 
   color: var(--text-soft);
 
-  font-size: 10px;
+  font-size: 9px;
 
   font-weight: 650;
 
   line-height: 1.2;
 
-  text-align: right;
+  text-align: center;
 }
 
 
@@ -124,16 +137,16 @@
 
   align-items: center;
 
-  gap: 21px;
+  gap: 14px;
 
-  margin-top: 25px;
+  margin-top: 15px;
 }
 
 
 .probability-number {
   color: var(--orange);
 
-  font-size: 60px;
+  font-size: 48px;
 
   font-weight: 850;
 
@@ -146,11 +159,11 @@
 
 
 .probability-number small {
-  margin-left: 3px;
+  margin-left: 2px;
 
   color: var(--text-muted);
 
-  font-size: 23px;
+  font-size: 18px;
 
   font-weight: 650;
 
@@ -163,9 +176,9 @@
 
   flex-direction: column;
 
-  gap: 7px;
+  gap: 4px;
 
-  padding-left: 19px;
+  padding-left: 13px;
 
   border-left:
     1px solid
@@ -176,27 +189,27 @@
 .probability-description strong {
   color: var(--text);
 
-  font-size: 13px;
+  font-size: 11px;
 
   font-weight: 800;
 
-  letter-spacing: 0.075em;
+  letter-spacing: 0.065em;
 }
 
 
 .probability-description span {
-  max-width: 220px;
+  max-width: 190px;
 
   color: var(--text-muted);
 
-  font-size: 11px;
+  font-size: 9px;
 
-  line-height: 1.55;
+  line-height: 1.4;
 }
 
 
 /* =========================================================
-   PROBABILITY TONES
+   TONES
 ========================================================= */
 
 .heatwave-probability-card.low
@@ -222,7 +235,7 @@
 ========================================================= */
 
 .probability-bar {
-  margin-top: 27px;
+  margin-top: 16px;
 }
 
 
@@ -231,7 +244,7 @@
 
   width: 100%;
 
-  height: 8px;
+  height: 5px;
 
   overflow: visible;
 
@@ -261,9 +274,6 @@
       #ff8a2a,
       #ff4f6d
     );
-
-  transition:
-    width 0.5s ease;
 }
 
 
@@ -272,8 +282,8 @@
 
   top: 50%;
 
-  width: 13px;
-  height: 13px;
+  width: 9px;
+  height: 9px;
 
   transform:
     translate(-50%, -50%);
@@ -287,13 +297,8 @@
   background: #f7f7f4;
 
   box-shadow:
-    0 0 0 2px
-      rgba(255, 255, 255, 0.10),
-    0 0 10px
-      rgba(255, 255, 255, 0.35);
-
-  transition:
-    left 0.5s ease;
+    0 0 0 1px
+      rgba(255, 255, 255, 0.10);
 }
 
 
@@ -306,11 +311,11 @@
 
   justify-content: space-between;
 
-  margin-top: 9px;
+  margin-top: 6px;
 
   color: var(--text-muted);
 
-  font-size: 9px;
+  font-size: 8px;
 
   font-weight: 600;
 }
@@ -328,9 +333,9 @@
 
   gap: 0;
 
-  margin-top: 24px;
+  margin-top: 16px;
 
-  padding-top: 20px;
+  padding-top: 13px;
 
   border-top:
     1px solid
@@ -343,12 +348,12 @@
 
   flex-direction: column;
 
-  gap: 7px;
+  gap: 4px;
 
   min-width: 0;
 
   padding:
-    0 15px;
+    0 11px;
 
   border-right:
     1px solid
@@ -371,18 +376,18 @@
 .probability-details span {
   color: var(--text-muted);
 
-  font-size: 8px;
+  font-size: 7px;
 
   font-weight: 750;
 
-  letter-spacing: 0.10em;
+  letter-spacing: 0.09em;
 }
 
 
 .probability-details strong {
   color: var(--text-soft);
 
-  font-size: 13px;
+  font-size: 11px;
 
   font-weight: 700;
 }
@@ -393,9 +398,9 @@
 ========================================================= */
 
 .probability-note {
-  margin-top: 21px;
+  margin-top: 12px;
 
-  padding-top: 14px;
+  padding-top: 9px;
 
   border-top:
     1px solid
@@ -403,99 +408,78 @@
 
   color: var(--text-muted);
 
-  font-size: 9px;
+  font-size: 8px;
 
-  line-height: 1.6;
+  line-height: 1.4;
 
   opacity: 0.8;
 }
 
 
 /* =========================================================
-   RESPONSIVE
+   TABLET
 ========================================================= */
 
-@media (max-width: 700px) {
+@media (max-width: 850px) {
 
   .heatwave-probability-card {
-    padding: 20px;
-  }
-
-
-  .probability-header {
-    gap: 12px;
-  }
-
-
-  .probability-header h3 {
-    font-size: 18px;
-  }
-
-
-  .probability-region {
-    max-width: 130px;
-
-    font-size: 9px;
-  }
-
-
-  .probability-number {
-    font-size: 52px;
-  }
-
-
-  .probability-description {
-    padding-left: 15px;
+    padding: 16px;
   }
 
 }
 
 
+/* =========================================================
+   MOBILE
+========================================================= */
+
 @media (max-width: 520px) {
 
+  .heatwave-probability-card {
+    padding: 15px;
+  }
+
+
   .probability-header {
+    align-items: flex-start;
+
     flex-direction: column;
+
+    gap: 8px;
   }
 
 
   .probability-region {
     max-width: none;
-
-    text-align: left;
   }
 
 
   .probability-main {
-    align-items: flex-start;
+    gap: 12px;
 
-    gap: 16px;
+    margin-top: 14px;
   }
 
 
   .probability-number {
-    font-size: 46px;
+    font-size: 43px;
   }
 
 
   .probability-number small {
-    font-size: 18px;
+    font-size: 17px;
   }
 
 
-  .probability-description strong {
-    font-size: 11px;
-  }
-
-
-  .probability-description span {
-    font-size: 10px;
+  .probability-description {
+    padding-left: 11px;
   }
 
 
   .probability-details {
     grid-template-columns: 1fr;
 
-    gap: 14px;
+    gap: 10px;
   }
 
 
@@ -503,7 +487,7 @@
   .probability-details div:first-child,
   .probability-details div:last-child {
     padding:
-      0 0 14px;
+      0 0 10px;
 
     border-right: 0;
 
@@ -533,4 +517,18 @@
     transition: none;
   }
 
+}
+
+/* =========================================================
+   DASHBOARD GRID ALIGNMENT
+========================================================= */
+
+.heatwave-probability-card {
+  margin-top: 0 !important;
+
+  margin-bottom: 0 !important;
+
+  align-self: start;
+
+  box-sizing: border-box;
 }

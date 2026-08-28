@@ -1794,6 +1794,22 @@
   }
 
 
+  .monitoring-chart-grid > * {
+    height: auto;
+  }
+
+
+  .monitoring-chart-grid > .panel:nth-child(2) {
+    display: block;
+  }
+
+
+  .monitoring-chart-grid > .panel:nth-child(2) .season-chart {
+    min-height: 0;
+    flex: none;
+  }
+
+
   .comparison-chart-grid {
     grid-template-columns:
       1fr;
@@ -1838,7 +1854,7 @@
 
 
   .season-chart {
-    height: 290px;
+    height: 280px;
   }
 
 
@@ -1957,6 +1973,12 @@
   }
 
 
+  .season-chart {
+    height:
+      235px;
+  }
+
+
   .monitoring-temperature-column {
     max-width:
       30px;
@@ -2049,7 +2071,7 @@
 
   .season-chart {
     height:
-      250px;
+      215px;
 
     padding-left:
       8px;
