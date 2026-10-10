@@ -3,9 +3,11 @@ import { useEffect, useMemo, useState } from "react";
 import {
   getRegions,
   getTemperatureData,
+  getLiveWeatherData,
 } from "../../services/api";
 
 import SeverityBadge from "../../components/SeverityBadge/SeverityBadge";
+import { findLiveRegion, getHeatMetrics } from "../../utils/heatRisk";
 
 import "./Monitoring.css";
 
@@ -13,6 +15,9 @@ import "./Monitoring.css";
 function Monitoring() {
 
   const [regions, setRegions] =
+    useState([]);
+
+  const [liveWeather, setLiveWeather] =
     useState([]);
 
   const [selectedRegion, setSelectedRegion] =
@@ -113,6 +118,36 @@ function Monitoring() {
 
 
   /* =====================================================
+     LOAD LIVE WEATHER FROM MONGODB
+  ===================================================== */
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadLiveWeather() {
+      try {
+        const data = await getLiveWeatherData();
+
+        if (!cancelled) {
+          setLiveWeather(Array.isArray(data) ? data : []);
+        }
+      } catch (error) {
+        console.error("Monitoring live weather error:", error);
+      }
+    }
+
+    loadLiveWeather();
+
+    const refreshInterval = setInterval(loadLiveWeather, 5 * 60 * 1000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(refreshInterval);
+    };
+  }, []);
+
+
+  /* =====================================================
      LOAD TEMPERATURE DATA
   ===================================================== */
 
@@ -148,19 +183,21 @@ function Monitoring() {
      SELECTED REGION
   ===================================================== */
 
-  const region = useMemo(() => {
-
+  const baseRegion = useMemo(() => {
     return (
-      regions.find(
-        (item) =>
-          item.name === selectedRegion
-      ) || regions[0]
+      regions.find((item) => item.name === selectedRegion) || regions[0]
     );
+  }, [regions, selectedRegion]);
 
-  }, [
-    regions,
-    selectedRegion,
-  ]);
+  const liveRegion = findLiveRegion(liveWeather, baseRegion?.name);
+  const liveMetrics = getHeatMetrics(baseRegion || {}, liveRegion);
+  const region = { ...(baseRegion || {}), ...liveMetrics };
+
+  const liveTemperature = liveMetrics.temperature;
+  const liveHumidity = liveMetrics.humidity;
+  const liveMinimum = liveMetrics.minTemp;
+  const liveNormal = Number(liveMetrics.normal ?? 0);
+  const liveDeparture = liveMetrics.departure;
 
 
   /* =====================================================
@@ -388,13 +425,44 @@ function Monitoring() {
 
   const comparisonData =
     comparisonRegions
-      .map(
-        (name) =>
-          regions.find(
-            (item) =>
-              item.name === name
-          )
-      )
+      .map((name) => {
+        const item = regions.find(
+          (regionItem) => regionItem.name === name
+        );
+
+        if (!item) return null;
+
+        const live = liveWeather.find(
+          (weather) =>
+            weather.region?.trim().toLowerCase() ===
+            item.name?.trim().toLowerCase()
+        );
+
+        const temperature =
+          live?.current?.temperature ?? item.temperature;
+
+        const humidity =
+          live?.current?.humidity ?? item.humidity;
+
+        const minTemp =
+          live?.forecast?.[0]?.min ?? item.minTemp;
+
+        const normal = Number(item.normal ?? 0);
+
+        const departure =
+          temperature != null
+            ? Number((Number(temperature) - normal).toFixed(1))
+            : item.departure;
+
+        return {
+          ...item,
+          temperature,
+          humidity,
+          minTemp,
+          departure,
+          liveWeather: live || null,
+        };
+      })
       .filter(Boolean);
 
 
@@ -582,6 +650,15 @@ function Monitoring() {
             humidity, heatwave status and
             risk across regions.
           </p>
+          <p className="monitoring-live-note">
+            {liveRegion?.refreshedAt
+              ? `Live weather updated: ${new Intl.DateTimeFormat("en-IN", {
+                  dateStyle: "medium",
+                  timeStyle: "short",
+                  timeZone: "Asia/Kolkata",
+                }).format(new Date(liveRegion.refreshedAt))} IST`
+              : "Loading latest live weather data..."}
+          </p>
 
         </div>
 
@@ -743,19 +820,19 @@ function Monitoring() {
         <div className="monitoring-stat-card">
 
           <span>
-            MAXIMUM TEMPERATURE
+            CURRENT TEMPERATURE
           </span>
 
           <strong>
-            {region.temperature}°C
+            {liveTemperature}°C
           </strong>
 
           <small>
             Departure{" "}
-            {region.departure >= 0
+            {liveDeparture >= 0
               ? "+"
               : ""}
-            {region.departure}°C
+            {liveDeparture}°C
           </small>
 
         </div>
@@ -772,7 +849,7 @@ function Monitoring() {
           </strong>
 
           <small>
-            {region.severity}
+            {region.severity}{liveMetrics.hasLiveWeather ? " · Live-derived" : " · Reference data"}
           </small>
 
         </div>
@@ -785,7 +862,7 @@ function Monitoring() {
           </span>
 
           <strong>
-            {region.minTemp}°C
+            {liveMinimum}°C
           </strong>
 
           <small>
@@ -802,7 +879,7 @@ function Monitoring() {
           </span>
 
           <strong>
-            {region.humidity}%
+            {liveHumidity}%
           </strong>
 
           <small>
@@ -1557,7 +1634,7 @@ function Monitoring() {
                     </h4>
 
                     <p>
-                      Current observed maximum
+                      Current observed temperature
                     </p>
 
                   </div>

@@ -1,341 +1,182 @@
+
 import "./AIPredictionCard.css";
 
-
 function getSeverityClass(severity) {
+  const value = String(severity || "moderate").toLowerCase();
 
-  const value = String(severity).toLowerCase();
-
-
-  if (value === "low") {
-    return "risk-low";
-  }
-
-
-  if (value === "moderate") {
-    return "risk-moderate";
-  }
-
-
-  if (value === "high") {
-    return "risk-high";
-  }
-
-
-  if (value === "severe") {
-    return "risk-severe";
-  }
-
-
-  if (value === "extreme") {
-    return "risk-extreme";
-  }
-
+  if (value === "low") return "risk-low";
+  if (value === "moderate") return "risk-moderate";
+  if (value === "elevated") return "risk-high";
+  if (value === "high") return "risk-high";
+  if (value === "severe") return "risk-severe";
+  if (value === "extreme") return "risk-extreme";
 
   return "risk-moderate";
 }
 
-
 function AIPredictionCard({ prediction }) {
-
   if (!prediction) {
-
     return (
       <div className="ai-prediction-card">
-
-        <p>
-          Loading AI prediction...
-        </p>
-
+        <p>Loading prediction...</p>
       </div>
     );
-
   }
 
-
-  const severityClass =
-    getSeverityClass(prediction.severity);
-
+  const severityClass = getSeverityClass(prediction.severity);
+  const factors = Array.isArray(prediction.factors)
+    ? prediction.factors
+    : [];
 
   return (
     <div className="ai-prediction-card">
-
-
-      {/* =========================================
-          HEADER
-      ========================================= */}
+      {/* HEADER */}
 
       <div className="ai-prediction-header">
-
         <div>
-
           <span className="ai-label">
-            AI PREDICTION
+            CLIMATE INTELLIGENCE
           </span>
 
-          <h2>
-            Heatwave Prediction
-          </h2>
-
+          <h2>Heatwave Prediction</h2>
         </div>
 
-
         <span className="prediction-status">
-          MODEL READY
+          RULE-BASED
         </span>
-
       </div>
 
-
-
-      {/* =========================================
-          MAIN PREDICTION
-      ========================================= */}
+      {/* MAIN PREDICTION */}
 
       <div className="prediction-main">
-
-
-        {/* PROBABILITY */}
-
-        <div
-          className={
-            `prediction-score ${severityClass}`
-          }
-        >
-
+        <div className={`prediction-score ${severityClass}`}>
           <span className="prediction-score-label">
-            Predicted Probability
+            Heat Risk Score
           </span>
 
-
           <strong>
-            {prediction.probability}%
+            {prediction.probability}/100
           </strong>
-
 
           <span className="prediction-likelihood">
             {prediction.likelihood}
           </span>
-
         </div>
-
-
-
-        {/* SUMMARY */}
 
         <div className="prediction-summary">
-
-          <p>
-            {prediction.insight}
-          </p>
-
+          <p>{prediction.insight}</p>
 
           <div className="prediction-meta">
-
-
             <div>
-
-              <span>
-                REGION
-              </span>
-
-              <strong>
-                {prediction.region}
-              </strong>
-
+              <span>REGION</span>
+              <strong>{prediction.region}</strong>
             </div>
 
-
             <div>
-
-              <span>
-                HORIZON
-              </span>
-
-              <strong>
-                {prediction.horizon}
-              </strong>
-
+              <span>FORECAST HORIZON</span>
+              <strong>{prediction.horizon}</strong>
             </div>
 
-
             <div>
-
-              <span>
-                CONFIDENCE
-              </span>
-
-              <strong>
-                {prediction.confidence}%
-              </strong>
-
+              <span>DATA COVERAGE</span>
+              <strong>{prediction.dataCoverage ?? prediction.confidence}%</strong>
             </div>
-
-
           </div>
-
         </div>
-
       </div>
 
-
-
-      {/* =========================================
-          METRICS
-      ========================================= */}
+      {/* METRICS */}
 
       <div className="prediction-metrics">
-
-
         <div className="prediction-metric">
-
-          <span>
-            Predicted Temperature
-          </span>
-
-          <strong>
-            {prediction.predictedTemperature}°C
-          </strong>
-
+          <span>Expected Maximum Temperature</span>
+          <strong>{prediction.predictedTemperature}°C</strong>
         </div>
 
-
-
         <div className="prediction-metric">
-
-          <span>
-            Expected Departure
-          </span>
-
+          <span>Expected Departure</span>
           <strong>
             {prediction.departure >= 0
               ? `+${prediction.departure}°C`
               : `${prediction.departure}°C`}
           </strong>
-
         </div>
-
-
 
         <div className="prediction-metric">
-
-          <span>
-            Risk Level
-          </span>
-
-          <strong>
-            {prediction.risk}
-          </strong>
-
+          <span>Risk Level</span>
+          <strong>{prediction.risk}</strong>
         </div>
-
-
 
         <div className="prediction-metric">
-
-          <span>
-            Severity
-          </span>
-
-          <strong>
-            {prediction.severity}
-          </strong>
-
+          <span>Severity</span>
+          <strong>{prediction.severity}</strong>
         </div>
-
-
       </div>
 
-
-
-      {/* =========================================
-          PREDICTION FACTORS
-      ========================================= */}
+      {/* PREDICTION FACTORS */}
 
       <div className="prediction-factors">
-
-
         <div className="prediction-section-title">
-          Prediction Factors
+          Factors Influencing Heat Risk
         </div>
-
 
         <div className="factor-list">
+          {factors.map((factor) => {
+            const score = Math.min(
+              100,
+              Math.max(0, Number(factor.score) || 0)
+            );
 
-
-          {prediction.factors.map((factor) => (
-
-            <div
-              className="prediction-factor"
-              key={factor.name}
-            >
-
-
-              <div className="factor-top">
-
-                <span>
-                  {factor.name}
-                </span>
-
-                <strong>
-                  {factor.value}
-                </strong>
-
-              </div>
-
-
-
-              <div className="factor-bar">
+            return (
+              <div
+                className="prediction-factor"
+                key={factor.name}
+              >
+                <div className="factor-top">
+                  <span>{factor.name}</span>
+                  <strong>{factor.value}</strong>
+                </div>
 
                 <div
-                  className="factor-fill"
-                  style={{
-                    width: `${factor.score}%`
-                  }}
-                />
+                  className="factor-bar"
+                  role="progressbar"
+                  aria-label={`${factor.name} indicator`}
+                  aria-valuemin={0}
+                  aria-valuemax={100}
+                  aria-valuenow={score}
+                >
+                  <div
+                    className="factor-fill"
+                    style={{ width: `${score}%` }}
+                  />
+                </div>
 
+                <small>{factor.description}</small>
               </div>
-
-
-
-              <small>
-                {factor.description}
-              </small>
-
-
-            </div>
-
-          ))}
-
-
+            );
+          })}
         </div>
-
       </div>
 
-
-
-      {/* =========================================
-          DISCLAIMER
-      ========================================= */}
+      {/* DATA SOURCE */}
 
       <div className="prediction-disclaimer">
-
         <strong>
-          Prototype Prediction Layer
+          Rule-Based Prediction Prototype
         </strong>
 
         <span>
-          This interface is prepared for future ML
-          model integration. Current values are
-          structured prediction data used by the
-          frontend.
+          {prediction.source
+            ? `Data source: ${prediction.source}. `
+            : ""}
+          The heat-risk score is calculated using available weather
+          data and predefined JavaScript rules. It is not a calibrated
+          probability, a trained machine-learning prediction, or an
+          official heatwave warning.
         </span>
-
       </div>
-
-
     </div>
   );
 }
-
 
 export default AIPredictionCard;

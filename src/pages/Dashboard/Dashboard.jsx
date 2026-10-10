@@ -5,6 +5,12 @@ import {
   getDashboard,
   getRegions,
 } from "../../services/api";
+import { findLiveRegion, getHeatMetrics } from "../../utils/heatRisk";
+
+import {
+  getLiveWeather,
+  getWeatherStatus,
+} from "../../services/weatherApi";
 
 import StatCard from "../../components/StatCard/StatCard";
 import SeverityBadge from "../../components/SeverityBadge/SeverityBadge";
@@ -30,6 +36,9 @@ function Dashboard() {
   const [selectedRegion, setSelectedRegion] =
     useState("Delhi NCR");
 
+  const [liveWeather, setLiveWeather] = useState([]);
+  const [lastUpdated, setLastUpdated] = useState(null);
+
 
   useEffect(() => {
 
@@ -52,12 +61,27 @@ function Dashboard() {
         setRegions(data)
       )
       .catch((error) => {
+        console.error("Regions data error:", error);
+      });
 
-        console.error(
-          "Regions data error:",
-          error
-        );
+    getLiveWeather()
+      .then((data) => setLiveWeather(data))
+      .catch((error) => {
+        console.error("Live weather data error:", error);
+      });
 
+    getWeatherStatus()
+      .then((data) => {
+        const latest = data
+          .map((item) => item.refreshedAt)
+          .filter(Boolean)
+          .sort()
+          .at(-1);
+
+        if (latest) setLastUpdated(latest);
+      })
+      .catch((error) => {
+        console.error("Weather status error:", error);
       });
 
   }, []);
@@ -87,12 +111,38 @@ function Dashboard() {
   }
 
 
-  const region =
+  const baseRegion =
     regions.find(
-      (item) =>
-        item.name ===
-        selectedRegion
+      (item) => item.name === selectedRegion
     ) || regions[0];
+
+  const liveRegion = findLiveRegion(liveWeather, baseRegion?.name);
+  const metrics = getHeatMetrics(baseRegion, liveRegion);
+  const region = { ...baseRegion, ...metrics };
+
+  const dynamicRegions = regions.map((item) => ({
+    ...item,
+    ...getHeatMetrics(item, findLiveRegion(liveWeather, item.name)),
+  }));
+
+  const hottestRegion = dynamicRegions
+    .filter((item) => Number.isFinite(Number(item.temperature)))
+    .sort((a, b) => Number(b.temperature) - Number(a.temperature))[0];
+
+  const highestRiskRegion = dynamicRegions
+    .filter((item) => item.severity !== "Unavailable")
+    .sort((a, b) => {
+      const rank = { Low: 0, Moderate: 1, High: 2, Severe: 3, Extreme: 4 };
+      return (rank[b.severity] ?? -1) - (rank[a.severity] ?? -1);
+    })[0];
+
+  const updatedLabel = lastUpdated
+    ? new Intl.DateTimeFormat("en-IN", {
+        dateStyle: "medium",
+        timeStyle: "short",
+        timeZone: "Asia/Kolkata"
+      }).format(new Date(lastUpdated)) + " IST"
+    : dashboard.updated;
 
 
   return (
@@ -172,7 +222,7 @@ function Dashboard() {
           <div className="micro-label">
 
             SELECTED REGION •{" "}
-            {dashboard.updated}
+            {updatedLabel}
 
           </div>
 
@@ -185,6 +235,12 @@ function Dashboard() {
           <span className="location-text">
             {region.state}
           </span>
+
+          <p className="live-weather-note">
+            {metrics.hasLiveWeather
+              ? `Live weather connected${metrics.refreshedAt ? ` · Updated ${new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(metrics.refreshedAt))} IST` : ""}`
+              : "Live weather unavailable — showing regional reference data."}
+          </p>
 
 
           <div className="hero-temp">
@@ -268,7 +324,7 @@ function Dashboard() {
             </span>
 
             <strong>
-              {region.humidity}%
+              {region.humidity ?? "—"}%
             </strong>
 
           </div>
@@ -289,11 +345,11 @@ function Dashboard() {
         <StatCard
           label="MAX TEMPERATURE"
           value={
-            dashboard.maxTemperature
+            (hottestRegion?.temperature ?? dashboard.maxTemperature)
           }
           unit="°C"
           subtext={
-            `Normal ${dashboard.normalMax}°C`
+            `Normal ${(hottestRegion?.normal ?? dashboard.normalMax)}°C`
           }
         />
 
@@ -301,10 +357,10 @@ function Dashboard() {
         <StatCard
           label="HEATWAVE RISK"
           value={
-            dashboard.heatwaveRisk
+            (highestRiskRegion?.severity ?? dashboard.heatwaveRisk)
           }
           subtext={
-            dashboard.heatwaveStatus
+            (highestRiskRegion?.status ?? dashboard.heatwaveStatus)
           }
           tone="red"
         />
@@ -313,7 +369,7 @@ function Dashboard() {
         <StatCard
           label="SEVERITY"
           value={
-            dashboard.severity
+            (highestRiskRegion?.severity ?? dashboard.severity)
           }
           subtext="Current classification"
           tone="orange"
@@ -490,7 +546,7 @@ function Dashboard() {
               {region.name ===
               dashboard.activeWarning.region
                 ? dashboard.activeWarning.description
-                : `Current conditions in ${region.name} are being monitored for heatwave risk.`}
+                : `${region.status}. Current heat indicator: ${region.heatIndicator ?? "—"}°C.`}
 
             </p>
 

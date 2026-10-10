@@ -1,38 +1,62 @@
 import { useEffect, useState } from "react";
 
 import {
+
   getAlerts,
+
   getAdvisories,
+
+  getLiveWeatherData,
+
 } from "../../services/api";
 
 import SeverityBadge from "../../components/SeverityBadge/SeverityBadge";
 
 import "./Alerts.css";
 
-
 const stakeholders = [
-  {
-    id: "citizen",
-    name: "Citizen",
-    description: "General public safety guidance",
-  },
-  {
-    id: "farmer",
-    name: "Farmer",
-    description: "Crop, livestock, and field-work guidance",
-  },
-  {
-    id: "health",
-    name: "Health Department",
-    description: "Facility and clinical readiness",
-  },
-  {
-    id: "authority",
-    name: "Local Authority",
-    description: "Municipal heat action response",
-  },
-];
 
+  {
+
+    id: "citizen",
+
+    name: "Citizen",
+
+    description: "General public safety guidance",
+
+  },
+
+  {
+
+    id: "farmer",
+
+    name: "Farmer",
+
+    description: "Crop, livestock, and field-work guidance",
+
+  },
+
+  {
+
+    id: "health",
+
+    name: "Health Department",
+
+    description: "Facility and clinical readiness",
+
+  },
+
+  {
+
+    id: "authority",
+
+    name: "Local Authority",
+
+    description: "Municipal heat action response",
+
+  },
+
+];
 
 function Alerts() {
 
@@ -40,30 +64,46 @@ function Alerts() {
 
   const [advisories, setAdvisories] = useState([]);
 
+  const [liveWeather, setLiveWeather] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
+  const [loadError, setLoadError] = useState("");
+
   const [selectedAlert, setSelectedAlert] =
+
     useState(null);
 
   const [selectedStakeholder, setSelectedStakeholder] =
-    useState("citizen");
 
+    useState("citizen");
 
   useEffect(() => {
 
     Promise.all([
+
       getAlerts(),
+
       getAdvisories(),
+
     ])
 
       .then(([alertsData, advisoriesData]) => {
 
         const loadedAlerts =
+
           Array.isArray(alertsData)
+
             ? alertsData
+
             : alertsData?.alerts || [];
 
         const loadedAdvisories =
+
           Array.isArray(advisoriesData)
+
             ? advisoriesData
+
             : advisoriesData?.advisories || [];
 
         setAlerts(loadedAlerts);
@@ -71,200 +111,408 @@ function Alerts() {
         setAdvisories(loadedAdvisories);
 
         if (loadedAlerts.length > 0) {
+
           setSelectedAlert(loadedAlerts[0]);
+
         }
 
       })
 
       .catch((error) => {
 
-        console.error(
-          "Alerts data error:",
-          error
-        );
+        console.error("Alerts data error:", error);
+
+        setLoadError("Unable to load alert data. Please check the frontend data files.");
+
+      })
+
+      .finally(() => {
+
+        setLoading(false);
 
       });
 
   }, []);
 
+  useEffect(() => {
 
-  if (!selectedAlert) {
+    let cancelled = false;
+
+    async function loadLiveWeather() {
+
+      try {
+
+        const data = await getLiveWeatherData();
+
+        if (!cancelled) {
+
+          setLiveWeather(Array.isArray(data) ? data : []);
+
+        }
+
+      } catch (error) {
+
+        console.error("Alerts live weather error:", error);
+
+      }
+
+    }
+
+    loadLiveWeather();
+
+    const refreshInterval = setInterval(loadLiveWeather, 5 * 60 * 1000);
+
+    return () => {
+
+      cancelled = true;
+
+      clearInterval(refreshInterval);
+
+    };
+
+  }, []);
+
+  if (loading) {
 
     return (
+
       <div className="page">
 
         <div className="page-placeholder">
 
-          <h2>
-            Loading alerts...
-          </h2>
+          <h2>Loading alerts...</h2>
 
         </div>
 
       </div>
+
     );
 
   }
 
+  if (!selectedAlert) {
+
+    return (
+
+      <div className="page alerts-page">
+
+        <div className="page-placeholder">
+
+          <h2>{loadError ? "Alerts unavailable" : "No active alerts"}</h2>
+
+          <p>
+
+            {loadError ||
+
+              "There are no alert records in the current alerts data. Live weather is still available through the backend."}
+
+          </p>
+
+          {liveWeather.length > 0 && (
+
+            <p>
+
+              Live weather is connected for {liveWeather.length} regions.
+
+            </p>
+
+          )}
+
+        </div>
+
+      </div>
+
+    );
+
+  }
 
   /*
-   * Helper so the page remains compatible
-   * with the mock JSON even if some fields
-   * are named slightly differently.
+
+   \* Helper so the page remains compatible
+
+   \* with the mock JSON even if some fields
+
+   \* are named slightly differently.
+
    */
 
   const getValue = (
+
     object,
+
     ...keys
+
   ) => {
 
     for (const key of keys) {
 
       if (
+
         object &&
+
         object[key] !== undefined &&
+
         object[key] !== null
+
       ) {
+
         return object[key];
+
       }
 
     }
 
     return "—";
+
   };
 
-
   const selectedAlertId =
-    getValue(
-      selectedAlert,
-      "id",
-      "alertId",
-      "code"
-    );
 
+    getValue(
+
+      selectedAlert,
+
+      "id",
+
+      "alertId",
+
+      "code"
+
+    );
 
   const selectedRegion =
+
     getValue(
+
       selectedAlert,
+
       "region",
+
       "location"
+
     );
 
+  const selectedLiveWeather = liveWeather.find(
+
+    (item) =>
+
+      item.region?.toString().trim().toLowerCase() ===
+
+      selectedRegion?.toString().trim().toLowerCase()
+
+  );
+
+  const liveCurrentTemperature =
+
+    selectedLiveWeather?.current?.temperature_2m ??
+
+    selectedLiveWeather?.current?.temperature;
+
+  const liveCurrentHumidity =
+
+    selectedLiveWeather?.current?.relative_humidity_2m ??
+
+    selectedLiveWeather?.current?.relative_humidity ??
+
+    selectedLiveWeather?.current?.humidity;
+
+  const liveFeelsLike =
+
+    selectedLiveWeather?.current?.apparent_temperature ??
+
+    selectedLiveWeather?.current?.apparentTemperature;
+
+  const liveWeatherUpdatedAt =
+
+    selectedLiveWeather?.refreshedAt ||
+
+    selectedLiveWeather?.updatedAt;
+
+  const formattedLiveUpdate = liveWeatherUpdatedAt
+
+    ? new Intl.DateTimeFormat("en-IN", {
+
+        dateStyle: "medium",
+
+        timeStyle: "short",
+
+        timeZone: "Asia/Kolkata",
+
+      }).format(new Date(liveWeatherUpdatedAt))
+
+    : null;
 
   /*
-   * Find advisory for the currently
-   * selected alert + stakeholder.
+
+   \* Find advisory for the currently
+
+   \* selected alert + stakeholder.
+
    */
 
-  const matchingAdvisory =
-    advisories.find((item) => {
 
-      const advisoryAlert =
-        getValue(
-          item,
-          "alertId",
-          "alert_id",
-          "warningId"
-        );
+  // Generate advisory content from the selected region's current weather.
+  // Existing JSON advisories are used only as supplementary fallback content.
+  const currentTemperature = Number(liveCurrentTemperature);
+  const feelsLikeTemperature = Number(liveFeelsLike);
+  const currentHumidity = Number(liveCurrentHumidity);
 
-      const advisoryStakeholder =
-        getValue(
-          item,
-          "stakeholder",
-          "audience",
-          "type"
-        )
-          ?.toString()
-          .toLowerCase();
+  const hasTemperature =
+    liveCurrentTemperature !== null &&
+    liveCurrentTemperature !== undefined &&
+    Number.isFinite(currentTemperature);
 
+  const hasFeelsLike =
+    liveFeelsLike !== null &&
+    liveFeelsLike !== undefined &&
+    Number.isFinite(feelsLikeTemperature);
 
-      const stakeholderMatches =
-        advisoryStakeholder ===
-          selectedStakeholder ||
-        advisoryStakeholder ===
-          stakeholders.find(
-            (s) =>
-              s.id === selectedStakeholder
-          )?.name.toLowerCase();
+  const hasHumidity =
+    liveCurrentHumidity !== null &&
+    liveCurrentHumidity !== undefined &&
+    Number.isFinite(currentHumidity);
 
+  const heatIndicator = Math.max(
+    hasTemperature ? currentTemperature : -Infinity,
+    hasFeelsLike ? feelsLikeTemperature : -Infinity
+  );
 
-      const alertMatches =
-        advisoryAlert ===
-        selectedAlertId;
+  let heatLevel = "moderate";
 
+  if (heatIndicator >= 42) {
+    heatLevel = "extreme";
+  } else if (heatIndicator >= 38) {
+    heatLevel = "high";
+  } else if (heatIndicator >= 34) {
+    heatLevel = "elevated";
+  } else if (heatIndicator >= 0 && heatIndicator < 34) {
+    heatLevel = "moderate";
+  }
 
-      return (
-        alertMatches &&
-        stakeholderMatches
-      );
+  const levelLabel = {
+    moderate: "Heat Safety Guidance",
+    elevated: "Elevated Heat Precautions",
+    high: "High Heat Advisory",
+    extreme: "Extreme Heat Precautions"
+  }[heatLevel];
 
-    });
+  const weatherSummary = hasTemperature
+    ? `Current temperature in ${selectedRegion} is ${currentTemperature.toFixed(1)}°C` +
+      (hasFeelsLike
+        ? `, with a feels-like temperature of ${feelsLikeTemperature.toFixed(1)}°C`
+        : "") +
+      (hasHumidity ? ` and relative humidity of ${Math.round(currentHumidity)}%` : "") +
+      "."
+    : `Live weather is currently unavailable for ${selectedRegion}. Use the precautionary guidance below and check official local updates.`;
 
+  const stakeholderGuidance = {
+    citizen: {
+      moderate: [
+        "Drink water regularly and take breaks in a cool or shaded place.",
+        "Limit strenuous outdoor activity if you begin to feel overheated.",
+        "Check on children, older adults, and people who may be more vulnerable to heat."
+      ],
+      elevated: [
+        "Drink water regularly and reduce prolonged exposure to direct sunlight.",
+        "Prefer shaded or cool places and schedule strenuous outdoor activity for cooler hours.",
+        "Check on children, older adults, and people with existing health vulnerabilities."
+      ],
+      high: [
+        "Avoid strenuous outdoor activity during the hottest part of the day.",
+        "Stay in a cool or shaded environment, drink water regularly, and wear lightweight clothing.",
+        "Seek medical help for confusion, fainting, or other signs of serious heat illness."
+      ],
+      extreme: [
+        "Minimize outdoor activity and remain in a cool indoor place where possible.",
+        "Drink water regularly unless a healthcare professional has advised fluid restriction.",
+        "Confusion, collapse, or altered consciousness can be an emergency; seek urgent medical help."
+      ]
+    },
+    farmer: {
+      moderate: [
+        "Plan demanding field work for cooler morning or evening hours when practical.",
+        "Provide reliable drinking water and shaded rest breaks for workers.",
+        "Ensure livestock have access to shade and clean drinking water."
+      ],
+      elevated: [
+        "Shift strenuous field work away from the hottest hours where practical.",
+        "Increase shaded rest breaks and ensure workers have access to drinking water.",
+        "Check livestock for heat stress and provide shade and adequate water."
+      ],
+      high: [
+        "Avoid strenuous field work during peak afternoon heat where possible.",
+        "Provide frequent rest in shade, drinking water, and a buddy check for workers.",
+        "Monitor livestock closely and ensure shaded areas and water are readily available."
+      ],
+      extreme: [
+        "Suspend or reschedule strenuous outdoor work during the hottest period where feasible.",
+        "Keep workers in shaded or cool rest areas and watch for heat-illness symptoms.",
+        "Move livestock to shade where possible and ensure continuous access to clean water."
+      ]
+    },
+    health: {
+      moderate: [
+        "Reinforce routine screening for heat-related symptoms in at-risk patients.",
+        "Remind staff to maintain hydration and reduce avoidable heat exposure.",
+        "Review local heat-health guidance and escalation procedures."
+      ],
+      elevated: [
+        "Remind clinical teams to assess heat exposure in symptomatic and vulnerable patients.",
+        "Check availability of drinking water, cooling, and basic heat-illness supplies.",
+        "Share prevention advice with older adults and people with chronic conditions."
+      ],
+      high: [
+        "Review readiness to triage and manage heat exhaustion and heatstroke.",
+        "Check cooling, hydration, staffing, and escalation arrangements for increased demand.",
+        "Use current local health-department protocols for suspected heat-related illness."
+      ],
+      extreme: [
+        "Activate applicable local heat-health readiness procedures.",
+        "Confirm triage, cooling, emergency escalation, and staffing arrangements.",
+        "Follow official health-department instructions and report unusual increases in heat-related cases."
+      ]
+    },
+    authority: {
+      moderate: [
+        "Share routine heat-safety messaging through local communication channels.",
+        "Check public drinking-water access and shaded public spaces.",
+        "Monitor official forecasts and local warnings for changing conditions."
+      ],
+      elevated: [
+        "Increase public reminders about hydration and avoiding peak heat.",
+        "Check drinking-water points, shaded areas, and access to cooling facilities.",
+        "Coordinate updates with local health and emergency teams."
+      ],
+      high: [
+        "Disseminate timely heat-safety guidance through trusted local channels.",
+        "Check readiness of water points, cooling shelters, and assistance for vulnerable residents.",
+        "Coordinate with health and emergency services and follow official warning protocols."
+      ],
+      extreme: [
+        "Issue or relay official local heat warnings according to established procedures.",
+        "Prioritize access to cooling, drinking water, and assistance for vulnerable residents.",
+        "Coordinate response services and follow instructions from the responsible authorities."
+      ]
+    }
+  };
 
-  /*
-   * Fallback advisory if the JSON does not
-   * contain stakeholder-specific data yet.
-   */
+  const selectedGuidance =
+    stakeholderGuidance[selectedStakeholder] ||
+    stakeholderGuidance.citizen;
 
-  const advisory =
-    matchingAdvisory ||
-    advisories.find((item) => {
+  const generatedActions = selectedGuidance[heatLevel];
 
-      const region =
-        getValue(
-          item,
-          "region",
-          "location"
-        );
+  const advisoryTitle = hasTemperature
+    ? levelLabel
+    : "Heat Safety Guidance — Live Data Unavailable";
 
-      return (
-        region === selectedRegion
-      );
+  const advisoryDescription = weatherSummary;
 
-    }) ||
-    advisories[0] ||
-    null;
+  const actionList = generatedActions;
 
-
-  const advisoryTitle =
-    advisory
-      ? getValue(
-          advisory,
-          "title",
-          "heading",
-          "message"
-        )
-      : "Advisory unavailable";
-
-
-  const advisoryDescription =
-    advisory
-      ? getValue(
-          advisory,
-          "description",
-          "text",
-          "content"
-        )
-      : "No advisory information is available.";
-
-
-  const advisoryActions =
-    advisory
-      ? getValue(
-          advisory,
-          "actions",
-          "recommendations",
-          "guidance"
-        )
-      : [];
-
-
-  const actionList =
-    Array.isArray(advisoryActions)
-      ? advisoryActions
-      : advisoryActions
-        ? [advisoryActions]
-        : [];
+  const advisorySourceLabel = hasTemperature
+    ? `Guidance adjusted using current weather conditions for ${selectedRegion}.`
+    : "Precautionary guidance only; live weather could not be matched to this region.";
 
 
   return (
@@ -272,7 +520,9 @@ function Alerts() {
     <div className="page alerts-page">
 
       {/* =====================================================
+
           PAGE HEADER
+
       ===================================================== */}
 
       <div className="page-heading">
@@ -280,33 +530,43 @@ function Alerts() {
         <div>
 
           <div className="eyebrow">
+
             EARLY WARNING
+
           </div>
 
           <h1>
+
             Alerts & Advisories
+
           </h1>
 
           <p>
+
             Active warnings translated into actions.
+
             Select a warning, then choose the stakeholder
+
             to see the advisory written for that audience.
+
           </p>
 
         </div>
 
       </div>
 
-
       {/* =====================================================
+
           MAIN ALERT + ADVISORY AREA
+
       ===================================================== */}
 
       <div className="alerts-layout">
 
-
         {/* ===================================================
+
             LEFT — ACTIVE WARNINGS
+
         =================================================== */}
 
         <section className="alerts-column">
@@ -314,98 +574,159 @@ function Alerts() {
           <div className="alerts-section-heading">
 
             <h3>
+
               Active warnings
+
             </h3>
 
             <span>
+
               {alerts.length} in force
+
+            </span>
+
+            <span className="alerts-live-count">
+
+              {liveWeather.length} live regions
+
             </span>
 
           </div>
-
 
           <div className="alerts-list">
 
             {alerts.map((alert, index) => {
 
               const alertId =
-                getValue(
-                  alert,
-                  "id",
-                  "alertId",
-                  "code"
-                );
 
+                getValue(
+
+                  alert,
+
+                  "id",
+
+                  "alertId",
+
+                  "code"
+
+                );
 
               const title =
-                getValue(
-                  alert,
-                  "title",
-                  "name",
-                  "type"
-                );
 
+                getValue(
+
+                  alert,
+
+                  "title",
+
+                  "name",
+
+                  "type"
+
+                );
 
               const severity =
-                getValue(
-                  alert,
-                  "severity",
-                  "level"
-                );
 
+                getValue(
+
+                  alert,
+
+                  "severity",
+
+                  "level"
+
+                );
 
               const description =
-                getValue(
-                  alert,
-                  "description",
-                  "message",
-                  "text"
-                );
 
+                getValue(
+
+                  alert,
+
+                  "description",
+
+                  "message",
+
+                  "text"
+
+                );
 
               const region =
+
                 getValue(
+
                   alert,
+
                   "region",
+
                   "location"
+
                 );
 
+              const alertLiveWeather = liveWeather.find(
+
+                (item) =>
+
+                  item.region?.toString().trim().toLowerCase() ===
+
+                  region?.toString().trim().toLowerCase()
+
+              );
 
               const expectedMax =
-                getValue(
-                  alert,
-                  "expectedMax",
-                  "expected_max",
-                  "maxTemperature"
-                );
 
+                getValue(
+
+                  alert,
+
+                  "expectedMax",
+
+                  "expected_max",
+
+                  "maxTemperature"
+
+                );
 
               const validUntil =
+
                 getValue(
+
                   alert,
+
                   "validUntil",
+
                   "valid_until",
+
                   "expires"
+
                 );
 
-
               const isSelected =
-                selectedAlert === alert;
 
+                selectedAlert === alert;
 
               return (
 
                 <button
+
                   key={
+
                     alertId !== "—"
+
                       ? alertId
+
                       : `${region}-${index}`
+
                   }
 
                   className={
+
                     isSelected
+
                       ? "alert-list-card selected"
+
                       : "alert-list-card"
+
                   }
 
                   onClick={() => {
@@ -413,7 +734,9 @@ function Alerts() {
                     setSelectedAlert(alert);
 
                     setSelectedStakeholder(
+
                       "citizen"
+
                     );
 
                   }}
@@ -425,75 +748,107 @@ function Alerts() {
                     <div>
 
                       <div className="alert-title">
+
                         {title}
+
                       </div>
 
                       <div className="alert-id">
+
                         {alertId}
+
                       </div>
 
                     </div>
 
-
                     <SeverityBadge>
+
                       {severity}
+
                     </SeverityBadge>
 
                   </div>
 
-
                   <p className="alert-description">
-                    {description}
-                  </p>
 
+                    {description}
+
+                  </p>
 
                   <div className="alert-meta">
 
                     <span>
 
                       <small>
+
                         Region
+
                       </small>
 
                       <strong>
+
                         {region}
+
                       </strong>
 
                     </span>
 
-
                     <span>
 
                       <small>
+
                         Expected max
+
                       </small>
 
                       <strong>
+
                         {expectedMax}
+
                       </strong>
 
                     </span>
 
-
                     <span>
 
                       <small>
+
                         Valid until
+
                       </small>
 
                       <strong>
+
                         {validUntil}
+
+                      </strong>
+
+                    </span>
+
+                    <span>
+
+                      <small>Live temperature</small>
+
+                      <strong>
+
+                        {(alertLiveWeather?.current?.temperature_2m ?? alertLiveWeather?.current?.temperature) != null
+
+                          ? `${alertLiveWeather.current.temperature_2m ?? alertLiveWeather.current.temperature}°C`
+
+                          : "Unavailable"}
+
                       </strong>
 
                     </span>
 
                   </div>
 
-
                   <div className="alert-card-action">
 
                     {isSelected
+
                       ? "Showing advisory"
+
                       : "View advisory"}
 
                   </div>
@@ -508,29 +863,29 @@ function Alerts() {
 
         </section>
 
-
         {/* ===================================================
+
             RIGHT — ADVISORY
+
         =================================================== */}
 
         <section className="advisory-section">
-
 
           <div className="advisory-section-heading">
 
             <div>
 
               <h3>
+
                 Advisory
+
               </h3>
 
             </div>
 
           </div>
 
-
           <div className="advisory-panel">
-
 
             {/* Advisory header */}
 
@@ -539,103 +894,186 @@ function Alerts() {
               <div>
 
                 <div className="advisory-id">
+
                   {selectedAlertId}
+
                 </div>
 
                 <h2>
+
                   {selectedRegion}
+
                 </h2>
 
                 <p>
+
                   Active warning • valid until{" "}
+
                   {getValue(
+
                     selectedAlert,
+
                     "validUntil",
+
                     "valid_until",
+
                     "expires"
+
                   )}
+
+                </p>
+
+                <p className="alerts-live-status">
+
+                  {selectedLiveWeather
+
+                    ? `Live weather: ${liveCurrentTemperature ?? "—"}°C · Humidity: ${liveCurrentHumidity ?? "—"}%${liveFeelsLike != null ? ` · Feels like: ${liveFeelsLike}°C` : ""}`
+
+                    : "Live weather is not available for this region."}
+
+                  {formattedLiveUpdate
+
+                    ? ` · Updated ${formattedLiveUpdate} IST`
+
+                    : ""}
+
                 </p>
 
               </div>
 
-
               <SeverityBadge>
+
                 {getValue(
+
                   selectedAlert,
+
                   "severity",
+
                   "level"
+
                 )}
+
               </SeverityBadge>
 
             </div>
-
 
             {/* Warning facts */}
 
             <ul className="warning-facts">
 
               <li>
+
                 Peak maximum temperature{" "}
+
                 {getValue(
+
                   selectedAlert,
+
                   "expectedMax",
+
                   "expected_max",
+
                   "maxTemperature"
+
                 )}
+
               </li>
 
               <li>
+
                 Current region:{" "}
+
                 {selectedRegion}
+
               </li>
 
               <li>
+
+                Live temperature:{" "}
+
+                {liveCurrentTemperature != null
+
+                  ? `${liveCurrentTemperature}°C`
+
+                  : "Unavailable"}
+
+              </li>
+
+              <li>
+
+                Live relative humidity:{" "}
+
+                {liveCurrentHumidity != null
+
+                  ? `${liveCurrentHumidity}%`
+
+                  : "Unavailable"}
+
+              </li>
+
+              <li>
+
                 Heatwave warning remains in force.
+
               </li>
 
             </ul>
-
 
             {/* Stakeholders */}
 
             <div className="stakeholder-tabs">
 
               {stakeholders.map(
+
                 (stakeholder) => (
 
                   <button
+
                     key={stakeholder.id}
 
                     className={
+
                       selectedStakeholder ===
+
                       stakeholder.id
+
                         ? "stakeholder-tab active"
+
                         : "stakeholder-tab"
+
                     }
 
                     onClick={() =>
+
                       setSelectedStakeholder(
+
                         stakeholder.id
+
                       )
+
                     }
 
                   >
 
                     <strong>
+
                       {stakeholder.name}
+
                     </strong>
 
                     <span>
+
                       {stakeholder.description}
+
                     </span>
 
                   </button>
 
                 )
+
               )}
 
             </div>
-
 
             {/* Advisory content */}
 
@@ -644,85 +1082,101 @@ function Alerts() {
               <div className="advisory-label">
 
                 <span>
+
                   ●
+
                 </span>
 
                 ADVISORY —{" "}
+
                 {
+
                   stakeholders.find(
+
                     (item) =>
+
                       item.id ===
+
                       selectedStakeholder
+
                   )?.name
+
                 }
 
               </div>
 
-
               <h3>
-                {advisoryTitle}
-              </h3>
 
+                {advisoryTitle}
+
+              </h3>
 
               {advisoryDescription !== "—" && (
 
                 <p className="advisory-description">
+
                   {advisoryDescription}
+
                 </p>
 
               )}
-
 
               {actionList.length > 0 && (
 
                 <ul>
 
                   {actionList.map(
+
                     (action, index) => (
 
                       <li key={index}>
+
                         {action}
+
                       </li>
 
                     )
+
                   )}
 
                 </ul>
 
               )}
 
-
               {actionList.length === 0 && (
 
                 <ul>
 
                   <li>
+
                     Follow the heatwave guidance
+
                     issued for {selectedRegion}.
+
                   </li>
 
                   <li>
+
                     Avoid unnecessary exposure during
+
                     peak afternoon temperatures.
+
                   </li>
 
                   <li>
+
                     Follow official local warnings and
+
                     emergency instructions.
+
                   </li>
 
                 </ul>
 
               )}
 
-
               <div className="advisory-placeholder">
-
-                In the final system, this text will
-                be generated per stakeholder by the
-                AI/ML layer using validated forecast
-                output.
-
+                {advisorySourceLabel} These recommendations are general precautions, not an official warning. Follow official local alerts and medical guidance.
               </div>
 
             </div>
@@ -738,6 +1192,5 @@ function Alerts() {
   );
 
 }
-
 
 export default Alerts;

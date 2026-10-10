@@ -1,9 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 
 import {
-  getForecasts,
   getRegions,
 } from "../../services/api";
+
+import {
+  getLiveWeather,
+} from "../../services/weatherApi";
 
 import SeverityBadge from "../../components/SeverityBadge/SeverityBadge";
 
@@ -60,87 +63,81 @@ function Forecast() {
 
 
   /* =========================================
-     LOAD REGION-SPECIFIC FORECAST
+     LOAD LIVE REGION-SPECIFIC FORECAST
   ========================================= */
 
   useEffect(() => {
+    let cancelled = false;
+
     setLoading(true);
     setError(null);
 
-    getForecasts(selectedRegion)
-      .then((data) => {
+    getLiveWeather()
+      .then((weatherData) => {
+        if (cancelled) return;
 
-        let result = [];
-
-        /*
-          Current mock-data structure:
-
-          {
-            "Delhi NCR": [...],
-            "Jaipur": [...],
-            ...
-          }
-        */
-
-        if (
-          data &&
-          !Array.isArray(data) &&
-          Array.isArray(data[selectedRegion])
-        ) {
-          result = data[selectedRegion];
-        }
-
-        /*
-          Future backend structure:
-
-          {
-            "region": "Delhi NCR",
-            "forecasts": [...]
-          }
-        */
-
-        else if (
-          data &&
-          Array.isArray(data.forecasts)
-        ) {
-          result = data.forecasts;
-        }
-
-        /*
-          Backwards compatibility
-        */
-
-        else if (Array.isArray(data)) {
-          result = data;
-        }
-
-        setForecastData(result);
-
-        setSelectedDay(
-          Math.min(
-            3,
-            Math.max(result.length - 1, 0)
-          )
+        const liveRegion = weatherData.find(
+          (item) => item.region === selectedRegion
         );
 
+        if (!liveRegion || !Array.isArray(liveRegion.forecast)) {
+          throw new Error(`No live forecast found for ${selectedRegion}.`);
+        }
+
+        const regionInfo = regions.find(
+          (item) => item.name === selectedRegion
+        );
+
+        const normal = Number(regionInfo?.normal ?? 0);
+
+        const result = liveRegion.forecast.map((item) => {
+          const date = new Date(`${item.date}T12:00:00+05:30`);
+          const day = new Intl.DateTimeFormat("en-IN", {
+            weekday: "short",
+            timeZone: "Asia/Kolkata"
+          }).format(date);
+          const formattedDate = new Intl.DateTimeFormat("en-IN", {
+            day: "numeric",
+            month: "short",
+            timeZone: "Asia/Kolkata"
+          }).format(date);
+
+          const departure = normal ? Number(item.max) - normal : 0;
+          const maxTemperature = Number(item.max);
+          const severity =
+            maxTemperature >= 42 || departure >= 5 ? "Extreme" :
+            maxTemperature >= 39 || departure >= 4 ? "Severe" :
+            maxTemperature >= 36 || departure >= 3 ? "High" :
+            maxTemperature >= 33 || departure >= 2 ? "Moderate" : "Low";
+
+          return {
+            date: formattedDate,
+            day,
+            max: item.max,
+            min: item.min,
+            probability: item.precipitationProbability ?? 0,
+            severity,
+            weatherCode: item.weatherCode,
+            isoDate: item.date
+          };
+        });
+
+        setForecastData(result);
+        setSelectedDay(Math.min(3, Math.max(result.length - 1, 0)));
         setLoading(false);
       })
       .catch((err) => {
-        console.error(
-          "Forecast data error:",
-          err
-        );
-
+        if (cancelled) return;
+        console.error("Live forecast data error:", err);
         setForecastData([]);
-
-        setError(
-          "Unable to load forecast data."
-        );
-
+        setError("Unable to load live forecast data. Check that the backend and weather API are running.");
         setLoading(false);
       });
-  }, [selectedRegion]);
 
+    return () => {
+      cancelled = true;
+    };
+  }, [selectedRegion, regions]);
 
   /* =========================================
      SELECTED REGION
@@ -194,8 +191,7 @@ function Forecast() {
 
   const classification =
     peakForecast?.severity ||
-    region?.severity ||
-    "Moderate";
+    "Unavailable";
 
 
   /* =========================================
@@ -203,14 +199,15 @@ function Forecast() {
   ========================================= */
 
   const heatwaveStatus =
-    region?.status ||
-    (
-      classification === "Severe"
-        ? "HEATWAVE ONGOING"
-        : classification === "High"
-        ? "HEATWAVE LIKELY"
-        : "HEATWAVE WATCH"
-    );
+    classification === "Extreme" || classification === "Severe"
+      ? "HIGH HEAT RISK"
+      : classification === "High"
+      ? "ELEVATED HEAT RISK"
+      : classification === "Moderate"
+      ? "HEAT RISK WATCH"
+      : classification === "Low"
+      ? "NO ELEVATED HEAT RISK"
+      : "FORECAST UNAVAILABLE";
 
 
   /* =========================================
@@ -287,11 +284,8 @@ function Forecast() {
           </h1>
 
           <p>
-            Maximum-temperature forecasting,
-            heatwave prediction, and severity
-            classification. This screen is the
-            placeholder for the future AI/ML model
-            output.
+            Live seven-day temperature forecasts with actual calendar dates
+            and precipitation probabilities for monitored regions.
           </p>
 
         </div>
@@ -300,24 +294,17 @@ function Forecast() {
 
 
       {/* =====================================
-          MOCK DATA INFORMATION
+          LIVE DATA INFORMATION
       ===================================== */}
 
       <div className="mock-info">
-
-        <strong>
-          ⓘ Mock prediction output.
-        </strong>
-
+        <strong>Live weather forecast.</strong>
         <span>
-          No model is connected yet. Values shown
-          are hand-authored placeholders that
-          demonstrate how real forecast,
-          probability, and severity responses
-          will be rendered once the dataset and
-          AI/ML service are connected.
+          Temperatures and dates are fetched from the backend weather service.
+          The probability shown on each day is precipitation probability,
+          not AI-generated heatwave probability. Heatwave risk classification
+          is a basic temperature-departure estimate, not an operational warning.
         </span>
-
       </div>
 
 
@@ -462,7 +449,7 @@ function Forecast() {
         <div className="confidence-box">
 
           <span>
-            PREDICTION CONFIDENCE
+            RAIN PROBABILITY
           </span>
 
           <strong>
@@ -481,8 +468,7 @@ function Forecast() {
           </div>
 
           <small>
-            Mock value — will come from the
-            model/API.
+            Precipitation probability for the selected peak day.
           </small>
 
         </div>
@@ -587,7 +573,7 @@ function Forecast() {
                   <div className="forecast-probability">
 
                     <span>
-                      Probability
+                      Rain chance
                     </span>
 
                     <strong>
@@ -695,10 +681,9 @@ function Forecast() {
           </h3>
 
           <p>
-            This panel will display the
-            observations and features actually
-            used by the AI/ML model once the
-            backend model is connected.
+            These forecasts come from Open-Meteo. The displayed severity is
+            a simple temperature-departure estimate and is not an official
+            heatwave warning or an AI/ML model prediction.
           </p>
 
         </div>
