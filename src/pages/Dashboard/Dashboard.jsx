@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
@@ -5,7 +6,11 @@ import {
   getDashboard,
   getRegions,
 } from "../../services/api";
-import { findLiveRegion, getHeatMetrics } from "../../utils/heatRisk";
+
+import {
+  findLiveRegion,
+  getHeatMetrics,
+} from "../../utils/heatRisk";
 
 import {
   getLiveWeather,
@@ -16,7 +21,6 @@ import StatCard from "../../components/StatCard/StatCard";
 import SeverityBadge from "../../components/SeverityBadge/SeverityBadge";
 import TemperatureChart from "../../components/TemperatureChart/TemperatureChart";
 import RegionalTable from "../../components/RegionalTable/RegionalTable";
-
 import HeatRiskCard from "../../components/HeatRiskCard/HeatRiskCard";
 import HeatwaveProbability from "../../components/HeatwaveProbability/HeatwaveProbability";
 import RiskExplanation from "../../components/RiskExplanation/RiskExplanation";
@@ -24,646 +28,492 @@ import StakeholderAdvisory from "../../components/StakeholderAdvisory/Stakeholde
 
 import "./Dashboard.css";
 
+const REFRESH_INTERVAL = 5 * 60 * 1000;
+
+function validNumber(value) {
+  if (value === null || value === undefined || value === "") {
+    return null;
+  }
+
+  const number = Number(value);
+  return Number.isFinite(number) ? number : null;
+}
+
+function formatTemperature(value) {
+  const number = validNumber(value);
+  return number === null ? "—" : `${number.toFixed(1)}°C`;
+}
+
+function formatDeparture(value) {
+  const number = validNumber(value);
+
+  if (number === null) return "—";
+
+  return `${number > 0 ? "+" : ""}${number.toFixed(1)}°C`;
+}
+
+function formatUpdatedAt(value) {
+  if (!value) return null;
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return null;
+
+  return (
+    new Intl.DateTimeFormat("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short",
+      timeZone: "Asia/Kolkata",
+    }).format(date) + " IST"
+  );
+}
+
+function getRiskTitle(severity) {
+  switch (severity) {
+    case "Extreme":
+      return "EXTREME HEAT RISK";
+    case "Severe":
+      return "SEVERE HEAT RISK";
+    case "High":
+      return "HIGH HEAT RISK";
+    case "Moderate":
+      return "MODERATE HEAT RISK";
+    case "Low":
+      return "LOW HEAT RISK";
+    default:
+      return "LIVE WEATHER UNAVAILABLE";
+  }
+}
+
+function getRiskDescription(region, hasLiveWeather) {
+  if (!hasLiveWeather) {
+    return `Live Open-Meteo weather data is unavailable for ${region.name}. The current risk assessment cannot be confirmed.`;
+  }
+
+  const temperature = validNumber(region.temperature);
+  const departure = validNumber(region.departure);
+
+  const parts = [
+    `HeatCast's rule-based assessment for ${region.name}.`,
+  ];
+
+  if (temperature !== null) {
+    parts.push(`Current air temperature is ${temperature.toFixed(1)}°C.`);
+  } else {
+    parts.push("Current air temperature is unavailable.");
+  }
+
+  if (departure !== null) {
+    parts.push(
+      `The temperature departure from the regional reference is ${
+        departure > 0 ? "+" : ""
+      }${departure.toFixed(1)}°C.`
+    );
+  }
+
+  parts.push(
+    "This is a project risk assessment, not an official meteorological warning."
+  );
+
+  return parts.join(" ");
+}
 
 function Dashboard() {
-
-  const [dashboard, setDashboard] =
-    useState(null);
-
-  const [regions, setRegions] =
-    useState([]);
-
-  const [selectedRegion, setSelectedRegion] =
-    useState("Delhi NCR");
+  const [dashboard, setDashboard] = useState(null);
+  const [regions, setRegions] = useState([]);
+  const [selectedRegion, setSelectedRegion] = useState("Delhi NCR");
 
   const [liveWeather, setLiveWeather] = useState([]);
   const [lastUpdated, setLastUpdated] = useState(null);
 
+  const [weatherLoading, setWeatherLoading] = useState(true);
+  const [weatherError, setWeatherError] = useState(false);
 
   useEffect(() => {
+    let cancelled = false;
 
-    getDashboard()
-      .then((data) =>
-        setDashboard(data)
-      )
-      .catch((error) => {
+    async function loadStaticStructure() {
+      try {
+        const [dashboardData, regionData] = await Promise.all([
+          getDashboard(),
+          getRegions(),
+        ]);
 
-        console.error(
-          "Dashboard data error:",
-          error
-        );
+        if (cancelled) return;
 
-      });
+        setDashboard(dashboardData);
+        setRegions(Array.isArray(regionData) ? regionData : []);
+      } catch (error) {
+        console.error("Dashboard setup data error:", error);
+      }
+    }
 
+    async function loadWeather() {
+      try {
+        const [weatherData, statusData] = await Promise.all([
+          getLiveWeather(),
+          getWeatherStatus().catch(() => []),
+        ]);
 
-    getRegions()
-      .then((data) =>
-        setRegions(data)
-      )
-      .catch((error) => {
-        console.error("Regions data error:", error);
-      });
+        if (cancelled) return;
 
-    getLiveWeather()
-      .then((data) => setLiveWeather(data))
-      .catch((error) => {
-        console.error("Live weather data error:", error);
-      });
+        setLiveWeather(Array.isArray(weatherData) ? weatherData : []);
+        setWeatherError(false);
 
-    getWeatherStatus()
-      .then((data) => {
-        const latest = data
-          .map((item) => item.refreshedAt)
-          .filter(Boolean)
-          .sort()
-          .at(-1);
+        const latestStatus = Array.isArray(statusData)
+          ? statusData
+              .map((item) => item.refreshedAt)
+              .filter(Boolean)
+              .sort()
+              .at(-1)
+          : null;
 
-        if (latest) setLastUpdated(latest);
-      })
-      .catch((error) => {
-        console.error("Weather status error:", error);
-      });
+        const latestRecord = Array.isArray(weatherData)
+          ? weatherData
+              .map((item) => item.refreshedAt || item.updatedAt)
+              .filter(Boolean)
+              .sort()
+              .at(-1)
+          : null;
 
+        setLastUpdated(latestStatus || latestRecord || null);
+      } catch (error) {
+        console.error("Live weather request failed:", error);
+
+        if (!cancelled) {
+          setWeatherError(true);
+        }
+      } finally {
+        if (!cancelled) {
+          setWeatherLoading(false);
+        }
+      }
+    }
+
+    loadStaticStructure();
+    loadWeather();
+
+    const intervalId = setInterval(loadWeather, REFRESH_INTERVAL);
+
+    return () => {
+      cancelled = true;
+      clearInterval(intervalId);
+    };
   }, []);
 
-
-  if (
-    !dashboard ||
-    regions.length === 0
-  ) {
-
+  if (!dashboard || regions.length === 0) {
     return (
-
       <div className="page">
-
         <div className="page-placeholder">
-
-          <h2>
-            Loading HeatCast data...
-          </h2>
-
+          <h2>Loading HeatCast data...</h2>
         </div>
-
       </div>
-
     );
-
   }
 
-
   const baseRegion =
-    regions.find(
-      (item) => item.name === selectedRegion
-    ) || regions[0];
+    regions.find((item) => item.name === selectedRegion) || regions[0];
 
   const liveRegion = findLiveRegion(liveWeather, baseRegion?.name);
   const metrics = getHeatMetrics(baseRegion, liveRegion);
-  const region = { ...baseRegion, ...metrics };
 
-  const dynamicRegions = regions.map((item) => ({
-    ...item,
-    ...getHeatMetrics(item, findLiveRegion(liveWeather, item.name)),
-  }));
+  // Never present a static regional temperature as a live observation.
+  const hasLiveWeather = Boolean(liveRegion && metrics.hasLiveWeather);
 
-  const hottestRegion = dynamicRegions
-    .filter((item) => Number.isFinite(Number(item.temperature)))
-    .sort((a, b) => Number(b.temperature) - Number(a.temperature))[0];
+  const region = {
+    ...baseRegion,
+    ...metrics,
+    temperature: hasLiveWeather ? metrics.temperature : null,
+    heatIndicator: hasLiveWeather ? metrics.heatIndicator : null,
+    humidity: hasLiveWeather ? metrics.humidity : null,
+    minTemp: hasLiveWeather ? metrics.minTemp : null,
+    departure: hasLiveWeather ? metrics.departure : null,
+    severity: hasLiveWeather ? metrics.severity : "Unavailable",
+    risk: hasLiveWeather ? metrics.risk : "Unavailable",
+    status: hasLiveWeather ? metrics.status : "LIVE WEATHER UNAVAILABLE",
+    hasLiveWeather,
+  };
 
-  const highestRiskRegion = dynamicRegions
-    .filter((item) => item.severity !== "Unavailable")
-    .sort((a, b) => {
-      const rank = { Low: 0, Moderate: 1, High: 2, Severe: 3, Extreme: 4 };
-      return (rank[b.severity] ?? -1) - (rank[a.severity] ?? -1);
-    })[0];
+  const dynamicRegions = regions.map((item) => {
+    const itemLive = findLiveRegion(liveWeather, item.name);
+    const itemMetrics = getHeatMetrics(item, itemLive);
+    const itemHasLive = Boolean(itemLive && itemMetrics.hasLiveWeather);
 
-  const updatedLabel = lastUpdated
-    ? new Intl.DateTimeFormat("en-IN", {
-        dateStyle: "medium",
-        timeStyle: "short",
-        timeZone: "Asia/Kolkata"
-      }).format(new Date(lastUpdated)) + " IST"
-    : dashboard.updated;
+    return {
+      ...item,
+      ...itemMetrics,
+      temperature: itemHasLive ? itemMetrics.temperature : null,
+      severity: itemHasLive ? itemMetrics.severity : "Unavailable",
+      status: itemHasLive ? itemMetrics.status : "LIVE WEATHER UNAVAILABLE",
+      hasLiveWeather: itemHasLive,
+    };
+  });
 
+  const availableRegions = dynamicRegions.filter(
+    (item) => item.hasLiveWeather && validNumber(item.temperature) !== null
+  );
+
+  const hottestRegion = [...availableRegions].sort(
+    (a, b) => Number(b.temperature) - Number(a.temperature)
+  )[0];
+
+  const riskRank = {
+    Low: 0,
+    Moderate: 1,
+    High: 2,
+    Severe: 3,
+    Extreme: 4,
+  };
+
+  const highestRiskRegion = [...availableRegions]
+    .filter((item) => item.severity in riskRank)
+    .sort(
+      (a, b) =>
+        riskRank[b.severity] - riskRank[a.severity]
+    )[0];
+
+  const updatedLabel =
+    formatUpdatedAt(lastUpdated) ||
+    (weatherLoading ? "Loading weather..." : "Update time unavailable");
+
+  const warningTitle = getRiskTitle(region.severity);
 
   return (
-
     <div className="page">
-
-
-      {/* =====================================================
-          PAGE HEADER
-      ====================================================== */}
-
+      {/* PAGE HEADER */}
       <div className="page-heading">
-
         <div>
+          <div className="eyebrow">DECISION SUPPORT</div>
 
-          <div className="eyebrow">
-            DECISION SUPPORT
-          </div>
-
-          <h1>
-            Heatwave Situation Dashboard
-          </h1>
+          <h1>Heatwave Situation Dashboard</h1>
 
           <p>
-            A single-screen view of current heatwave
-            conditions, risk, forecasts and active warnings.
+            A single-screen view of current heat conditions, risk,
+            forecasts and heat advisories.
           </p>
-
         </div>
 
-
         <div className="heading-control">
-
-          <label htmlFor="region-select">
-            REGION
-          </label>
-
+          <label htmlFor="region-select">REGION</label>
 
           <select
             id="region-select"
-            value={selectedRegion}
-            onChange={(event) =>
-              setSelectedRegion(
-                event.target.value
-              )
-            }
+            value={region.name}
+            onChange={(event) => setSelectedRegion(event.target.value)}
           >
-
-            {regions.map(
-              (item) => (
-
-                <option
-                  key={item.name}
-                  value={item.name}
-                >
-                  {item.name}
-                </option>
-
-              )
-            )}
-
+            {regions.map((item) => (
+              <option key={item.name} value={item.name}>
+                {item.name}
+              </option>
+            ))}
           </select>
-
         </div>
-
       </div>
 
-
-      {/* =====================================================
-          CURRENT REGION STATUS
-      ====================================================== */}
-
+      {/* CURRENT REGION STATUS */}
       <section className="hero-status">
-
         <div className="hero-main">
-
           <div className="micro-label">
-
-            SELECTED REGION •{" "}
-            {updatedLabel}
-
+            SELECTED REGION • {updatedLabel}
           </div>
 
+          <h2>{region.name}</h2>
 
-          <h2>
-            {region.name}
-          </h2>
-
-
-          <span className="location-text">
-            {region.state}
-          </span>
+          <span className="location-text">{region.state}</span>
 
           <p className="live-weather-note">
-            {metrics.hasLiveWeather
-              ? `Live weather connected${metrics.refreshedAt ? ` · Updated ${new Intl.DateTimeFormat("en-IN", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Kolkata" }).format(new Date(metrics.refreshedAt))} IST` : ""}`
-              : "Live weather unavailable — showing regional reference data."}
+            {hasLiveWeather
+              ? weatherError
+                ? "Showing the last successfully retrieved weather record."
+                : `Weather data connected${metrics.refreshedAt
+                    ? ` · Updated ${formatUpdatedAt(metrics.refreshedAt)}`
+                    : ""}`
+              : weatherLoading
+                ? "Retrieving weather data..."
+                : "Live weather unavailable — current conditions cannot be confirmed."}
           </p>
 
-
           <div className="hero-temp">
-
-            {region.temperature}
-
-            <small>
-              °C
-            </small>
-
+            {formatTemperature(region.temperature) === "—"
+              ? "—"
+              : Number(region.temperature).toFixed(1)}
+            {validNumber(region.temperature) !== null && <small>°C</small>}
           </div>
-
 
           <div className="hero-status-line">
-
-            <strong>
-              {region.status}
-            </strong>
-
-
-            <SeverityBadge>
-              {region.severity}
-            </SeverityBadge>
-
-
-            <SeverityBadge>
-              {region.risk}
-            </SeverityBadge>
-
+            <strong>{region.status}</strong>
+            <SeverityBadge>{region.severity}</SeverityBadge>
+            <SeverityBadge>{region.risk}</SeverityBadge>
           </div>
-
         </div>
-
 
         <div className="hero-mini-grid">
-
-
           <div>
-
-            <span>
-              NORMAL MAX
-            </span>
-
-            <strong>
-              {region.normal}°C
-            </strong>
-
+            <span>NORMAL MAX</span>
+            <strong>{formatTemperature(region.normal)}</strong>
           </div>
 
-
           <div>
-
-            <span>
-              DEPARTURE
-            </span>
-
-            <strong>
-              +{region.departure}°C
-            </strong>
-
+            <span>DEPARTURE</span>
+            <strong>{formatDeparture(region.departure)}</strong>
           </div>
 
-
           <div>
-
-            <span>
-              MIN TEMP
-            </span>
-
-            <strong>
-              {region.minTemp}°C
-            </strong>
-
+            <span>MIN TEMP</span>
+            <strong>{formatTemperature(region.minTemp)}</strong>
           </div>
 
-
           <div>
-
-            <span>
-              HUMIDITY
-            </span>
-
+            <span>HUMIDITY</span>
             <strong>
-              {region.humidity ?? "—"}%
+              {validNumber(region.humidity) === null
+                ? "—"
+                : `${Number(region.humidity).toFixed(0)}%`}
             </strong>
-
           </div>
-
-
         </div>
-
       </section>
 
-
-      {/* =====================================================
-          STAT CARDS
-      ====================================================== */}
-
+      {/* SUMMARY STAT CARDS */}
       <div className="stats-grid">
-
-
         <StatCard
           label="MAX TEMPERATURE"
           value={
-            (hottestRegion?.temperature ?? dashboard.maxTemperature)
+            hottestRegion
+              ? Number(hottestRegion.temperature).toFixed(1)
+              : "—"
           }
-          unit="°C"
+          unit={hottestRegion ? "°C" : ""}
           subtext={
-            `Normal ${(hottestRegion?.normal ?? dashboard.normalMax)}°C`
+            hottestRegion
+              ? `Current reading · ${hottestRegion.name}`
+              : "Live data unavailable"
           }
         />
-
 
         <StatCard
           label="HEATWAVE RISK"
-          value={
-            (highestRiskRegion?.severity ?? dashboard.heatwaveRisk)
-          }
-          subtext={
-            (highestRiskRegion?.status ?? dashboard.heatwaveStatus)
-          }
+          value={highestRiskRegion?.severity || "Unavailable"}
+          subtext={highestRiskRegion?.status || "Live data unavailable"}
           tone="red"
         />
-
 
         <StatCard
           label="SEVERITY"
-          value={
-            (highestRiskRegion?.severity ?? dashboard.severity)
-          }
-          subtext="Current classification"
+          value={region.severity}
+          subtext="Selected region classification"
           tone="orange"
         />
 
-
         <StatCard
           label="FORECAST PEAK"
-          value={
-            dashboard.forecastPeak
-          }
-          unit="°C"
-          subtext={
-            `Expected ${dashboard.forecastPeakDay}`
-          }
+          value="—"
+          subtext="Forecast maximum not available in this view"
         />
-
 
         <StatCard
           label="ACTIVE ALERTS"
-          value={
-            dashboard.activeAlerts
-          }
-          subtext="Across monitored regions"
+          value="—"
+          subtext="Official alert count not connected"
           tone="red"
         />
-
-
       </div>
 
-
-      {/* =====================================================
-          HEAT INTELLIGENCE
-          Heat Risk + Heatwave Probability
-          are direct children of the grid.
-      ====================================================== */}
-
+      {/* HEAT INTELLIGENCE */}
       <div className="dashboard-intelligence-grid">
-
-
-        <HeatRiskCard
-          region={region}
-        />
-
-
-        <HeatwaveProbability
-          region={region}
-        />
-
-
+        <HeatRiskCard region={region} />
+        <HeatwaveProbability region={region} />
       </div>
 
+      {/* RISK + STAKEHOLDER INTELLIGENCE */}
+      <div className="dashboard-support-grid">
+        <div className="dashboard-support-risk">
+          <RiskExplanation region={region} />
+        </div>
 
-{/* =====================================================
-    RISK + STAKEHOLDER INTELLIGENCE
-====================================================== */}
+        <div className="dashboard-support-advisory">
+          <StakeholderAdvisory region={region} />
+        </div>
+      </div>
 
-<div className="dashboard-support-grid">
-
-  {/* LEFT — EXPLAINABLE RISK */}
-
-  <div className="dashboard-support-risk">
-
-    <RiskExplanation
-      region={region}
-    />
-
-  </div>
-
-
-  {/* RIGHT — STAKEHOLDER ADVISORY */}
-
-  <div className="dashboard-support-advisory">
-
-    <StakeholderAdvisory
-      region={region}
-    />
-
-  </div>
-
-</div>
-
-
-      {/* =====================================================
-          TEMPERATURE + WARNING
-      ====================================================== */}
-
+      {/* TEMPERATURE + CURRENT HEAT ADVISORY */}
       <div className="dashboard-grid">
-
-
-        {/* TEMPERATURE CHART */}
-
         <section className="panel">
-
           <div className="panel-title-row">
-
             <div>
-
-              <h3>
-                Temperature trend — last 14 days
-              </h3>
-
-
+              <h3>Temperature trend</h3>
               <p>
-                Observed maximum temperature for the
-                selected region.
+                Available temperature data for the selected region.
+                Historical observations are shown only when available.
               </p>
-
             </div>
-
 
             <div className="chart-legend">
-
-              <span className="legend-orange"></span>
-
+              <span className="legend-orange" />
               Temperature
-
             </div>
-
-
           </div>
-
 
           <TemperatureChart
             regionName={region.name}
-            normalTemperature={
-              region.normal
-            }
+            normalTemperature={region.normal}
           />
-
-
         </section>
 
-
-        {/* ACTIVE WARNING */}
-
+        {/* DYNAMIC HEAT ADVISORY */}
         <section className="panel warning-panel">
-
-
           <div className="panel-title-row">
-
-            <h3>
-              Active warning
-            </h3>
-
+            <h3>Current heat advisory</h3>
           </div>
-
 
           <div className="warning-card">
+            <div className="warning-title">{warningTitle}</div>
 
+            <SeverityBadge>{region.severity}</SeverityBadge>
 
-            <div className="warning-title">
-
-              {region.name ===
-              dashboard.activeWarning.region
-                ? dashboard.activeWarning.title
-                : `Heatwave monitoring — ${region.name}`}
-
-            </div>
-
-
-            <SeverityBadge>
-
-              {region.name ===
-              dashboard.activeWarning.region
-                ? dashboard.activeWarning.severity
-                : region.severity}
-
-            </SeverityBadge>
-
-
-            <p>
-
-              {region.name ===
-              dashboard.activeWarning.region
-                ? dashboard.activeWarning.description
-                : `${region.status}. Current heat indicator: ${region.heatIndicator ?? "—"}°C.`}
-
-            </p>
-
+            <p>{getRiskDescription(region, hasLiveWeather)}</p>
 
             <div className="warning-meta">
-
-
               <span>
-
                 Region
-
-                <strong>
-                  {region.name}
-                </strong>
-
+                <strong>{region.name}</strong>
               </span>
-
 
               <span>
-
-                Expected max
-
-                <strong>
-
-                  {region.name ===
-                  dashboard.activeWarning.region
-                    ? dashboard.activeWarning.expectedMax
-                    : `${region.temperature}°C`}
-
-                </strong>
-
+                Current temperature
+                <strong>{formatTemperature(region.temperature)}</strong>
               </span>
-
 
               <span>
-
-                Valid until
-
-                <strong>
-
-                  {region.name ===
-                  dashboard.activeWarning.region
-                    ? dashboard.activeWarning.validUntil
-                    : "Current monitoring period"}
-
-                </strong>
-
+                Departure from normal
+                <strong>{formatDeparture(region.departure)}</strong>
               </span>
-
-
             </div>
-
-
           </div>
 
-
-          <Link
-            to="/alerts"
-            className="primary-btn"
-          >
+          <Link to="/alerts" className="primary-btn">
             Open alerts & advisories
           </Link>
-
-
         </section>
-
-
       </div>
 
-
-      {/* =====================================================
-          REGIONAL SUMMARY
-      ====================================================== */}
-
+      {/* REGIONAL SUMMARY */}
       <section>
-
-
         <div className="section-heading">
-
-
           <div>
-
-            <h3>
-              Regional summary
-            </h3>
-
-
-            <p>
-              Current heatwave conditions across
-              monitored regions.
-            </p>
-
+            <h3>Regional summary</h3>
+            <p>Current heat conditions across monitored regions.</p>
           </div>
 
-
-          <Link
-            to="/monitoring"
-            className="text-link"
-          >
+          <Link to="/monitoring" className="text-link">
             Regional monitoring →
           </Link>
-
-
         </div>
 
-
         <RegionalTable />
-
-
       </section>
-
-
     </div>
-
   );
-
 }
-
 
 export default Dashboard;

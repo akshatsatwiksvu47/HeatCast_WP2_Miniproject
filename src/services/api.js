@@ -30,30 +30,98 @@ export function getRegions() {
 ========================================= */
 
 export async function getTemperatureData(regionName) {
-  const data = await fetchJSON("/data/temperature.json");
+  const records = await getLiveWeatherData();
+  const list = Array.isArray(records)
+    ? records
+    : Array.isArray(records?.data)
+    ? records.data
+    : records
+    ? [records]
+    : [];
 
-  if (data && !Array.isArray(data) && regionName && data[regionName]) {
-    return data[regionName];
+  const normalizedName = String(regionName || "").trim().toLowerCase();
+  const record = list.find((item) =>
+    String(item.region || item.name || "").trim().toLowerCase() === normalizedName
+  );
+
+  if (!record) {
+    throw new Error(`No live weather record found for ${regionName}.`);
   }
 
-  if (data?.regions && regionName && data.regions[regionName]) {
-    return data.regions[regionName];
+  const current = record.current || {};
+  const forecastRoot = record.forecast || {};
+  const daily = forecastRoot.daily || forecastRoot;
+  const numberOrNull = (...values) => {
+    for (const value of values) {
+      if (value !== null && value !== undefined && value !== "" && Number.isFinite(Number(value))) {
+        return Number(value);
+      }
+    }
+    return null;
+  };
+
+  let temperatures = [];
+  let labels = [];
+  let sourceLabel = "";
+
+  // Open-Meteo daily response shape: parallel arrays for date and daily maximum.
+  const dailyMax = daily.temperature_2m_max || daily.temperatureMax || daily.maxTemperature;
+  const dailyTimes = daily.time || daily.dates || daily.labels;
+
+  if (Array.isArray(dailyMax) && dailyMax.length > 0) {
+    temperatures = dailyMax.map(Number).filter(Number.isFinite);
+    labels = temperatures.map((_, index) => {
+      const rawDate = Array.isArray(dailyTimes) ? dailyTimes[index] : null;
+      if (!rawDate) return `Day ${index + 1}`;
+      const parsed = new Date(`${rawDate}T12:00:00`);
+      return Number.isNaN(parsed.getTime())
+        ? String(rawDate)
+        : parsed.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+    });
+    sourceLabel = "Daily maximum temperatures from the available weather forecast";
+  } else if (Array.isArray(forecastRoot) && forecastRoot.length > 0) {
+    const points = forecastRoot.map((point) => ({
+      temperature: numberOrNull(point.temperature_2m_max, point.max, point.maxTemperature, point.temperature),
+      label: point.time || point.date || point.label,
+    })).filter((point) => point.temperature !== null);
+
+    temperatures = points.map((point) => point.temperature);
+    labels = points.map((point, index) => {
+      if (!point.label) return `Day ${index + 1}`;
+      const parsed = new Date(`${point.label}T12:00:00`);
+      return Number.isNaN(parsed.getTime())
+        ? String(point.label)
+        : parsed.toLocaleDateString("en-IN", { day: "numeric", month: "short" });
+    });
+    sourceLabel = "Daily maximum temperatures from the available weather forecast";
   }
 
-  if (Array.isArray(data)) {
-    const regionData = data.find(
-      (item) => item.region === regionName || item.name === regionName
+  // Do not fabricate a 7/14/30-day history when the backend only has current weather.
+  if (temperatures.length === 0) {
+    const currentTemperature = numberOrNull(
+      current.temperature_2m,
+      current.temperature,
+      record.temperature_2m,
+      record.temperature
     );
 
-    if (regionData) return regionData;
-    if (data.length > 0) return data[0];
+    if (currentTemperature === null) {
+      throw new Error(`No current temperature or daily forecast data is available for ${regionName}.`);
+    }
+
+    temperatures = [currentTemperature];
+    labels = ["Now"];
+    sourceLabel = "Current observation only — historical/daily forecast data is unavailable";
   }
 
-  if (data && Array.isArray(data.temperatures)) {
-    return data;
-  }
-
-  throw new Error(`Temperature data not found for ${regionName}`);
+  return {
+    region: record.region || record.name || regionName,
+    temperatures,
+    labels,
+    sourceLabel,
+    dataKind: labels.length === 1 && labels[0] === "Now" ? "current" : "forecast",
+    refreshedAt: record.refreshedAt || record.updatedAt || null,
+  };
 }
 
 /* =========================================

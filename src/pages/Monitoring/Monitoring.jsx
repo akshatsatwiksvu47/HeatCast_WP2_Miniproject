@@ -423,6 +423,12 @@ function Monitoring() {
      REGIONAL COMPARISON
   ===================================================== */
 
+  /*
+   * Regional comparison uses the SAME shared metrics helper as the
+   * selected-region panel. This prevents the selector, summary cards,
+   * charts and table from using different temperature fields or stale
+   * JSON risk labels.
+   */
   const comparisonData =
     comparisonRegions
       .map((name) => {
@@ -432,35 +438,13 @@ function Monitoring() {
 
         if (!item) return null;
 
-        const live = liveWeather.find(
-          (weather) =>
-            weather.region?.trim().toLowerCase() ===
-            item.name?.trim().toLowerCase()
-        );
-
-        const temperature =
-          live?.current?.temperature ?? item.temperature;
-
-        const humidity =
-          live?.current?.humidity ?? item.humidity;
-
-        const minTemp =
-          live?.forecast?.[0]?.min ?? item.minTemp;
-
-        const normal = Number(item.normal ?? 0);
-
-        const departure =
-          temperature != null
-            ? Number((Number(temperature) - normal).toFixed(1))
-            : item.departure;
+        const live = findLiveRegion(liveWeather, item.name);
+        const metrics = getHeatMetrics(item, live);
 
         return {
           ...item,
-          temperature,
-          humidity,
-          minTemp,
-          departure,
-          liveWeather: live || null,
+          ...metrics,
+          liveWeather: live,
         };
       })
       .filter(Boolean);
@@ -765,15 +749,15 @@ function Monitoring() {
             {[
               {
                 value: "7",
-                label: "Last 7 days",
+                label: "7 points",
               },
               {
                 value: "14",
-                label: "Last 14 days",
+                label: "14 points",
               },
               {
                 value: "30",
-                label: "Last 30 days",
+                label: "30 points",
               },
             ].map(
               (item) => (
@@ -907,13 +891,11 @@ function Monitoring() {
             <div>
 
               <h3>
-                Temperature trend —
-                last {period} days
+                Temperature trend — available weather data
               </h3>
 
               <p>
-                {region.name} — observed maximum
-                temperature versus normal.
+                {region.name} — {temperatureData?.sourceLabel || "available weather data"}.
               </p>
 
             </div>
@@ -1487,7 +1469,10 @@ function Monitoring() {
 
 
                     <b>
-                      {item.temperature}°C
+                      {getHeatMetrics(
+                        item,
+                        findLiveRegion(liveWeather, item.name)
+                      ).temperature ?? "—"}°C
                     </b>
 
                   </button>
@@ -1630,11 +1615,11 @@ function Monitoring() {
                   <div>
 
                     <h4>
-                      Maximum temperature
+                      Current temperature
                     </h4>
 
                     <p>
-                      Current observed temperature
+                      Current observed air temperature
                     </p>
 
                   </div>
@@ -1725,7 +1710,7 @@ function Monitoring() {
                     </h4>
 
                     <p>
-                      Difference from normal maximum
+                      Current temperature minus regional normal
                     </p>
 
                   </div>
