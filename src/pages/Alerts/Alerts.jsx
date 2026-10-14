@@ -1116,589 +1116,78 @@ function Alerts() {
 
 
         <section className="alerts-column">
-
-
-
           <div className="alerts-section-heading">
-
-
-
-            <h3>
-
-
-
-              Active warnings
-
-
-
-            </h3>
-
-
-
-            <span>
-
-
-
-              {alerts.length} in force
-
-
-
-            </span>
-
-
-
-            <span className="alerts-live-count">
-
-
-
-              {liveWeather.length} live regions
-
-
-
-            </span>
-
-
-
+            <h3>Active warnings</h3>
+            <div className="alerts-heading-counts">
+              <span>{alerts.length} in force</span>
+              <span className="alerts-live-count">{liveWeather.length} live regions</span>
+            </div>
           </div>
 
-
-
-          <div className="alerts-list">
-
-
-
-            {alerts.map((alert, index) => {
-
-
-
-              const alertId =
-
-
-
-                getValue(
-
-
-
-                  alert,
-
-
-
-                  "id",
-
-
-
-                  "alertId",
-
-
-
-                  "code"
-
-
-
+          <div className="alerts-dropdown-wrap">
+            <label className="alerts-dropdown-label" htmlFor="active-alert-select">Select a region</label>
+            <select
+              id="active-alert-select"
+              className="alerts-dropdown-select"
+              value={selectedAlert ? getValue(selectedAlert, "region", "location") : ""}
+              onChange={(event) => {
+                const nextAlert = alerts.find((alert) => getValue(alert, "region", "location") === event.target.value);
+                if (nextAlert) {
+                  setSelectedAlert(nextAlert);
+                  setSelectedStakeholder("citizen");
+                }
+              }}
+              disabled={alerts.length === 0}
+            >
+              {alerts.length === 0 ? (
+                <option value="">No active alerts</option>
+              ) : alerts.map((alert, index) => {
+                const region = getValue(alert, "region", "location");
+                const severity = getValue(alert, "severity", "level");
+                return (
+                  <option key={getValue(alert, "id", "alertId", "code") || `${region}-${index}`} value={region}>
+                    {region} — {severity}
+                  </option>
                 );
-
-
-
-              const title =
-
-
-
-                getValue(
-
-
-
-                  alert,
-
-
-
-                  "title",
-
-
-
-                  "name",
-
-
-
-                  "type"
-
-
-
-                );
-
-
-
-              const severity =
-
-
-
-                getValue(
-
-
-
-                  alert,
-
-
-
-                  "severity",
-
-
-
-                  "level"
-
-
-
-                );
-
-
-
-              const description =
-
-
-
-                getValue(
-
-
-
-                  alert,
-
-
-
-                  "description",
-
-
-
-                  "message",
-
-
-
-                  "text"
-
-
-
-                );
-
-
-
-              const region =
-
-
-
-                getValue(
-
-
-
-                  alert,
-
-
-
-                  "region",
-
-
-
-                  "location"
-
-
-
-                );
-
-
-
-              const alertLiveWeather = liveWeather.find(
-
-
-
-                (item) =>
-
-
-
-                  item.region?.toString().trim().toLowerCase() ===
-
-
-
-                  region?.toString().trim().toLowerCase()
-
-
-
-              );
-
-
-
-              const expectedMax =
-
-
-
-                getValue(
-
-
-
-                  alert,
-
-
-
-                  "expectedMax",
-
-
-
-                  "expected_max",
-
-
-
-                  "maxTemperature"
-
-
-
-                );
-
-
-
-              const validUntil =
-
-
-
-                getValue(
-
-
-
-                  alert,
-
-
-
-                  "validUntil",
-
-
-
-                  "valid_until",
-
-
-
-                  "expires"
-
-
-
-                );
-
-
-
-              const isSelected =
-
-
-
-                selectedAlert === alert;
-
-
-
-              return (
-
-
-
-                <button
-
-
-
-                  key={
-
-
-
-                    alertId !== "—"
-
-
-
-                      ? alertId
-
-
-
-                      : `${region}-${index}`
-
-
-
-                  }
-
-
-
-                  className={
-
-
-
-                    isSelected
-
-
-
-                      ? "alert-list-card selected"
-
-
-
-                      : "alert-list-card"
-
-
-
-                  }
-
-
-
-                  onClick={() => {
-
-
-
-                    setSelectedAlert(alert);
-
-
-
-                    setSelectedStakeholder(
-
-
-
-                      "citizen"
-
-
-
-                    );
-
-
-
-                  }}
-
-
-
-                >
-
-
-
-                  <div className="alert-card-top">
-
-
-
-                    <div>
-
-
-
-                      <div className="alert-title">
-
-
-
-                        {title}
-
-
-
-                      </div>
-
-
-
-                      <div className="alert-id">
-
-
-
-                        {alertId}
-
-
-
-                      </div>
-
-
-
-                    </div>
-
-
-
-                    <SeverityBadge>
-
-
-
-                      {severity}
-
-
-
-                    </SeverityBadge>
-
-
-
+              })}
+            </select>
+
+            {selectedAlert && (
+              <div className="alerts-dropdown-summary">
+                <div className="alert-card-top">
+                  <div>
+                    <div className="alert-title">{getValue(selectedAlert, "title", "name", "type")}</div>
+                    <div className="alert-id">{getValue(selectedAlert, "id", "alertId", "code")}</div>
                   </div>
-
-
-
-                  <p className="alert-description">
-
-
-
-                    {description}
-
-
-
-                  </p>
-
-
-
-                  <div className="alert-meta">
-
-
-
-                    <span>
-
-
-
-                      <small>
-
-
-
-                        Region
-
-
-
-                      </small>
-
-
-
-                      <strong>
-
-
-
-                        {region}
-
-
-
-                      </strong>
-
-
-
-                    </span>
-
-
-
-                    <span>
-
-
-
-                      <small>
-
-
-
-                        Expected max
-
-
-
-                      </small>
-
-
-
-                      <strong>
-
-
-
-                        {expectedMax}
-
-
-
-                      </strong>
-
-
-
-                    </span>
-
-
-
-                    <span>
-
-
-
-                      <small>
-
-
-
-                        Valid until
-
-
-
-                      </small>
-
-
-
-                      <strong>
-
-
-
-                        {validUntil}
-
-
-
-                      </strong>
-
-
-
-                    </span>
-
-
-
-                    <span>
-
-
-
-                      <small>Live temperature</small>
-
-
-
-                      <strong>
-
-
-
-                        {(alertLiveWeather?.current?.temperature_2m ?? alertLiveWeather?.current?.temperature) != null
-
-
-
-                          ? `${alertLiveWeather.current.temperature_2m ?? alertLiveWeather.current.temperature}°C`
-
-
-
-                          : "Unavailable"}
-
-
-
-                      </strong>
-
-
-
-                    </span>
-
-
-
-                  </div>
-
-
-
-                  <div className="alert-card-action">
-
-
-
-                    {isSelected
-
-
-
-                      ? "Showing advisory"
-
-
-
-                      : "View advisory"}
-
-
-
-                  </div>
-
-
-
-                </button>
-
-
-
-              );
-
-
-
-            })}
-
-
-
+                  <SeverityBadge>{getValue(selectedAlert, "severity", "level")}</SeverityBadge>
+                </div>
+                <p className="alert-description">{getValue(selectedAlert, "description", "message", "text")}</p>
+                <div className="alert-meta">
+                  <span><small>Region</small><strong>{getValue(selectedAlert, "region", "location")}</strong></span>
+                  <span><small>Expected max</small><strong>{getValue(selectedAlert, "expectedMax", "expected_max", "maxTemperature")}</strong></span>
+                  <span><small>Valid until</small><strong>{getValue(selectedAlert, "validUntil", "valid_until", "expires")}</strong></span>
+                  <span><small>Live temperature</small><strong>
+                    {(() => {
+                      const regionName = String(getValue(selectedAlert, "region", "location")).trim().toLowerCase();
+                      const live = liveWeather.find((item) => item.region?.toString().trim().toLowerCase() === regionName);
+                      const temp = live?.current?.temperature_2m ?? live?.current?.temperature;
+                      return temp != null ? `${temp}°C` : "Unavailable";
+                    })()}
+                  </strong></span>
+                </div>
+                <div className="alert-card-action">Showing advisory on the right</div>
+              </div>
+            )}
+            {alerts.length === 0 && (
+              <div className="alerts-empty-message">
+                <h3>{loadError ? "Alerts unavailable" : liveWeather.length === 0 ? "Waiting for live weather" : "No active heat-risk alerts"}</h3>
+                <p>{loadError || (liveWeather.length === 0
+                  ? "Live weather has not loaded yet. Check that the backend is running and weather records are available."
+                  : "No regions currently meet the configured Moderate-or-higher heat-risk threshold.")}</p>
+                {liveWeather.length > 0 && <p>Live weather is connected for {liveWeather.length} regions.</p>}
+              </div>
+            )}
           </div>
-
-
-
         </section>
 
 
